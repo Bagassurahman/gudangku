@@ -32,7 +32,10 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name',
+        'warehouse_name',
         'email',
+        'phone',
+        'address',
         'email_verified_at',
         'password',
         'remember_token',
@@ -76,5 +79,10 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function outlet()
+    {
+        return $this->hasOne(Outlet::class, 'user_id', 'id');
     }
 }

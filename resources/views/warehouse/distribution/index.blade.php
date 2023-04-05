@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 @section('content')
-    @can('material_data_create')
+    @can('inventory_create')
         <div class="block my-4">
-            <a class="btn-md btn-green" href="{{ route('admin.data-bahan.create') }}">
-                Tambah Data
+            <a class="btn-md btn-green" href="{{ route('warehouse.distribusi.create') }}">
+                Distribusi
             </a>
         </div>
     @endcan
     <div class="main-card">
         <div class="header">
-            Daftar Bahan
+            Data Distribusi
         </div>
         <div class="body">
             <div class="w-full">
@@ -26,13 +26,16 @@
                                 Nama Bahan
                             </th>
                             <th>
-                                Kategori
+                                Jumlah Masuk
                             </th>
                             <th>
-                                Satuan Gudang
+                                Jumlah Keluar
                             </th>
                             <th>
-                                Satuan Outlet
+                                Jumlah Sisa
+                            </th>
+                            <th>
+                                HPP
                             </th>
                             <th>
                                 Harga Jual
@@ -43,46 +46,52 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($materials as $key => $material)
-                            <tr data-entry-id="{{ $material->id }}">
+                        @foreach ($distributions as $key => $inventory)
+                            <tr data-entry-id="{{ $inventory->id }}">
                                 <td>
 
                                 </td>
                                 <td>
-                                    {{ $material->id ?? '' }}
+                                    {{ $loop->iteration }}
                                 </td>
                                 <td>
-                                    {{ $material->name ?? '' }}
+                                    {{ $inventory->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $material->category ?? '' }}
+                                    @foreach ($inventory->inventories as $inv)
+                                        {{ $inv->entry_amount ?? '0' }}
+                                    @endforeach
                                 </td>
                                 <td>
-                                    {{ $material->unit->warehouse_unit ?? '' }}
+                                    @foreach ($inventory->inventories as $inv)
+                                        {{ $inv->exit_amount ?? '0' }}
+                                    @endforeach
                                 </td>
                                 <td>
-                                    {{ $material->unit->outlet_unit ?? '' }}
+                                    {{ ($inventory->material ? $inventory->material->entry_amount ?? 0 : 0) - ($inventory->material ? $inventory->material->exit_amount ?? 0 : 0) }}
                                 </td>
                                 <td>
-                                    {{ $material->price ?? '' }}
-
+                                    {{ $inventory->hpp ?? '0' }}
                                 </td>
                                 <td>
-                                    @can('unit_data_show')
+                                    {{ $inventory->price ?? '0' }}
+                                </td>
+                                <td>
+                                    @can('inventory_show')
                                         <a class="btn-sm btn-indigo"
-                                            href="{{ route('admin.data-satuan.show', $material->id) }}">
+                                            href="{{ route('warehouse.persediaan.show', $inventory->id) }}">
                                             {{ trans('global.view') }}
                                         </a>
                                     @endcan
                                     @can('unit_data_show')
-                                        <a class="btn-sm btn-blue" href="{{ route('admin.data-bahan.edit', $material->id) }}">
+                                        <a class="btn-sm btn-blue" href="{{ route('admin.data-bahan.edit', $inventory->id) }}">
                                             {{ trans('global.edit') }}
                                         </a>
                                     @endcan
 
 
-                                    @can('material_data_delete')
-                                        <form action="{{ route('admin.data-bahan.destroy', $material->id) }}" method="POST"
+                                    @can('unit_data_delete')
+                                        <form action="{{ route('admin.data-satuan.destroy', $inventory->id) }}" method="POST"
                                             onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                             style="display: inline-block;">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -112,7 +121,7 @@
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
                 order: [
-                    [1, 'desc']
+                    [1, 'asc']
                 ],
                 pageLength: 100,
             });

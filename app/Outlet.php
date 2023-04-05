@@ -10,10 +10,24 @@ class Outlet extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
+        'target',
         'name',
-        'address',
-        'phone',
-        'email',
-        'status',
+        'warehouse_id'
     ];
+
+    public function warehouse()
+    {
+        return $this->belongsTo(User::class, 'warehouse_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function getTargetAttribute()
+    {
+        return 'Rp. ' . number_format($this->attributes['target'], 0, ',', '.');
+    }
 }

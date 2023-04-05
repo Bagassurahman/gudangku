@@ -22,9 +22,11 @@
                     <label for="unit_id" class="text-xs required">Satuan Bahan</label>
                     <div class="form-group">
                         <select name="unit_id" id="unit_id"
-                            class="form-control select2 {{ $errors->has('unit_id') ? ' ' : '' }}" required>
-                            @foreach ($units as $id => $unit)
-                                <option value="{{ $id }}" {{ old('unit_id') == $id ? 'selected' : '' }}>
+                            class="form-control select {{ $errors->has('unit_id') ? ' ' : '' }}" required>
+                            <option value="" selected>Pilih
+                                Satuan</option>
+                            @foreach ($units as $unit)
+                                <option value="{{ $unit->id }}">
                                     {{ $unit->warehouse_unit }}/{{ $unit->outlet_unit }}
                                 </option>
                             @endforeach
@@ -49,7 +51,9 @@
                     <label for="category" class="text-xs required">Kategori Bahan</label>
                     <div class="form-group">
                         <select name="category" id="category"
-                            class="form-control select2 {{ $errors->has('category') ? ' ' : '' }}" required>
+                            class="form-control select {{ $errors->has('category') ? ' ' : '' }}" required>
+                            <option value="" selected>Pilih
+                                Kategori</option>
                             <option value="Produk">
                                 Produk
                             </option>

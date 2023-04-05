@@ -86,6 +86,12 @@ class MaterialDataController extends Controller
      */
     public function destroy($id)
     {
-        //
+        abort_if(Gate::denies('material_data_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $material = MaterialData::findOrFail($id);
+
+        $material->delete();
+
+        return back();
     }
 }

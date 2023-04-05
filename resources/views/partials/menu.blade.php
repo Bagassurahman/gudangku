@@ -14,6 +14,26 @@
 
             <span class="mx-4">Dashboard</span>
         </a>
+        @can('inventory_access')
+            <a class="nav-link{{ request()->is('gudang/persediaan*') ? ' active' : '' }}"
+                href="{{ route('warehouse.persediaan.index') }}">
+                <i class="fas fa fa-cubes">
+
+                </i>
+
+                <span class="mx-4">Persediaan</span>
+            </a>
+        @endcan
+        @can('distribution_access')
+            <a class="nav-link{{ request()->is('gudang/distribusi*') ? ' active' : '' }}"
+                href="{{ route('warehouse.distribusi.index') }}">
+                <i class="fas fa fa-cubes">
+
+                </i>
+
+                <span class="mx-4">Distribusi</span>
+            </a>
+        @endcan
         @can('transaction_access')
             <div class="nav-dropdown">
                 <a class="nav-link" href="#">
@@ -24,19 +44,7 @@
                     <span class="mx-4">Transaksi</span>
                     <i class="fa fa-caret-down ml-auto" aria-hidden="true"></i>
                 </a>
-                <div class="dropdown-items mb-1 hidden">
-                    @can('purchase_of_material_access')
-                        <a class="nav-link{{ request()->is('gudang/pembelian-bahan*') ? ' active' : '' }}"
-                            href="{{ route('warehouse.pembelian-bahan.index') }}">
-                            <i class="fa-fw fas fa-database">
 
-                            </i>
-
-                            <span class="mx-4">Pembelian Bahan</span>
-                        </a>
-                    @endcan
-
-                </div>
             </div>
         @endcan
         @can('master_data_access')
@@ -68,6 +76,16 @@
                             </i>
 
                             <span class="mx-4">Data Bahan</span>
+                        </a>
+                    @endcan
+                    @can('cost_access')
+                        <a class="nav-link{{ request()->is('admin/biaya*') ? ' active' : '' }}"
+                            href="{{ route('admin.biaya.index') }}">
+                            <i class="fa-fw fas fa-credit-card">
+
+                            </i>
+
+                            <span class="mx-4">Biaya Biaya</span>
                         </a>
                     @endcan
                     @can('supplier_access')
@@ -122,6 +140,22 @@
                             </i>
 
                             <span class="mx-4">{{ trans('cruds.user.title') }}</span>
+                        </a>
+                    @endcan
+                    @can('user_access')
+                        <a class="nav-link{{ request()->is('admin/manajemen-gudang*') ? ' active' : '' }}"
+                            href="{{ route('admin.manajemen-gudang.index') }}">
+                            <i class="fa-fw fas fa-user">
+                            </i>
+                            <span class="mx-4">Manajemen Gudag</span>
+                        </a>
+                    @endcan
+                    @can('user_access')
+                        <a class="nav-link{{ request()->is('admin/manajemen-outlet*') ? ' active' : '' }}"
+                            href="{{ route('admin.manajemen-outlet.index') }}">
+                            <i class="fa-fw fas fa-user">
+                            </i>
+                            <span class="mx-4">Manajemen Outlet</span>
                         </a>
                     @endcan
                 </div>

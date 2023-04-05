@@ -42,4 +42,9 @@ class MaterialData extends Model
     {
         return $this->belongsTo(UnitData::class, 'unit_id');
     }
+
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class, 'material_data_id', 'id');
+    }
 }

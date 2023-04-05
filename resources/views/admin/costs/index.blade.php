@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 @section('content')
-    @can('material_data_create')
+    @can('cost_create')
         <div class="block my-4">
-            <a class="btn-md btn-green" href="{{ route('admin.data-bahan.create') }}">
-                Tambah Data
+            <a class="btn-md btn-green" href="{{ route('admin.biaya.create') }}">
+                Tambah Biaya
             </a>
         </div>
     @endcan
@@ -23,66 +23,38 @@
                                 No
                             </th>
                             <th>
-                                Nama Bahan
-                            </th>
-                            <th>
-                                Kategori
-                            </th>
-                            <th>
-                                Satuan Gudang
-                            </th>
-                            <th>
-                                Satuan Outlet
-                            </th>
-                            <th>
-                                Harga Jual
+                                Biaya Biaya
                             </th>
                             <th>
                                 Aksi
                             </th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($materials as $key => $material)
-                            <tr data-entry-id="{{ $material->id }}">
+                        @foreach ($costs as $key => $cost)
+                            <tr data-entry-id="{{ $cost->id }}">
                                 <td>
 
                                 </td>
                                 <td>
-                                    {{ $material->id ?? '' }}
+                                    {{ $cost->id ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $material->name ?? '' }}
+                                    {{ $cost->name ?? '' }}
                                 </td>
-                                <td>
-                                    {{ $material->category ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $material->unit->warehouse_unit ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $material->unit->outlet_unit ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $material->price ?? '' }}
 
-                                </td>
                                 <td>
-                                    @can('unit_data_show')
-                                        <a class="btn-sm btn-indigo"
-                                            href="{{ route('admin.data-satuan.show', $material->id) }}">
+                                    @can('cost_show')
+                                        <a class="btn-sm btn-indigo" href="{{ route('admin.biaya.show', $cost->id) }}">
                                             {{ trans('global.view') }}
                                         </a>
                                     @endcan
-                                    @can('unit_data_show')
-                                        <a class="btn-sm btn-blue" href="{{ route('admin.data-bahan.edit', $material->id) }}">
-                                            {{ trans('global.edit') }}
-                                        </a>
-                                    @endcan
 
 
-                                    @can('material_data_delete')
-                                        <form action="{{ route('admin.data-bahan.destroy', $material->id) }}" method="POST"
+
+                                    @can('cost_delete')
+                                        <form action="{{ route('admin.biaya.destroy', $cost->id) }}" method="POST"
                                             onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                             style="display: inline-block;">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -112,7 +84,7 @@
             $.extend(true, $.fn.dataTable.defaults, {
                 orderCellsTop: true,
                 order: [
-                    [1, 'desc']
+                    [1, 'asc']
                 ],
                 pageLength: 100,
             });

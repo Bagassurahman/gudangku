@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\WarehouseManagementController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,11 +30,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::resource('users', 'UsersController');
 
+    // Gudang
+    Route::resource('manajemen-gudang', 'WarehouseManagementController');
+
+    // Outlet
+    Route::resource('manajemen-outlet', 'OutletManagementController');
+
     // Data Satuan
     Route::resource('data-satuan', 'UnitDataController');
 
     // Data Bahan
     Route::resource('data-bahan', 'MaterialDataController');
+
+    // Biaya
+    Route::resource('biaya', 'CostController');
 });
 
 Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Warehouse', 'middleware' => ['auth']], function () {
@@ -41,6 +51,10 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
     Route::resource('suppliers', 'SupplierController');
 
     Route::resource('pembelian-bahan', 'PurchaseOfMaterialController');
+
+    Route::resource('persediaan', 'InventoryController');
+
+    Route::resource('distribusi', 'DistributionController');
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

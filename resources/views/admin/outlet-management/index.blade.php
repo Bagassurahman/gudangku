@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 @section('content')
-    @can('material_data_create')
+    @can('user_create')
         <div class="block my-4">
-            <a class="btn-md btn-green" href="{{ route('admin.data-bahan.create') }}">
-                Tambah Data
+            <a class="btn-md btn-green" href="{{ route('admin.manajemen-gudang.create') }}">
+                Tambah Manajemen
             </a>
         </div>
     @endcan
     <div class="main-card">
         <div class="header">
-            Daftar Bahan
+            Daftar Manajemen Gudang
         </div>
         <div class="body">
             <div class="w-full">
@@ -23,66 +23,65 @@
                                 No
                             </th>
                             <th>
-                                Nama Bahan
+                                Nama Outlet
                             </th>
                             <th>
-                                Kategori
+                                Penangung Jawab
                             </th>
                             <th>
-                                Satuan Gudang
+                                Alamat
                             </th>
                             <th>
-                                Satuan Outlet
+                                Nomer Hp
                             </th>
                             <th>
-                                Harga Jual
+                                Target
                             </th>
+
                             <th>
                                 Aksi
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($materials as $key => $material)
-                            <tr data-entry-id="{{ $material->id }}">
+                        @foreach ($outlets as $key => $user)
+                            <tr data-entry-id="{{ $user->id }}">
                                 <td>
 
                                 </td>
                                 <td>
-                                    {{ $material->id ?? '' }}
+                                    {{ $loop->iteration }}
                                 </td>
                                 <td>
-                                    {{ $material->name ?? '' }}
+                                    {{ $user->outlet->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $material->category ?? '' }}
+                                    {{ $user->name ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $material->unit->warehouse_unit ?? '' }}
+                                    {{ $user->address ?? '' }}
                                 </td>
                                 <td>
-                                    {{ $material->unit->outlet_unit ?? '' }}
+                                    {{ $user->phone }}
                                 </td>
                                 <td>
-                                    {{ $material->price ?? '' }}
-
+                                    {{ $user->outlet->target }}
                                 </td>
                                 <td>
-                                    @can('unit_data_show')
-                                        <a class="btn-sm btn-indigo"
-                                            href="{{ route('admin.data-satuan.show', $material->id) }}">
+                                    @can('user_show')
+                                        <a class="btn-sm btn-indigo" href="{{ route('admin.users.show', $user->id) }}">
                                             {{ trans('global.view') }}
                                         </a>
                                     @endcan
-                                    @can('unit_data_show')
-                                        <a class="btn-sm btn-blue" href="{{ route('admin.data-bahan.edit', $material->id) }}">
+
+                                    @can('user_edit')
+                                        <a class="btn-sm btn-blue" href="{{ route('admin.users.edit', $user->id) }}">
                                             {{ trans('global.edit') }}
                                         </a>
                                     @endcan
 
-
-                                    @can('material_data_delete')
-                                        <form action="{{ route('admin.data-bahan.destroy', $material->id) }}" method="POST"
+                                    @can('user_delete')
+                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
                                             onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                             style="display: inline-block;">
                                             <input type="hidden" name="_method" value="DELETE">
@@ -101,7 +100,6 @@
         </div>
     </div>
 @endsection
-
 @section('scripts')
     @parent
     <script>
