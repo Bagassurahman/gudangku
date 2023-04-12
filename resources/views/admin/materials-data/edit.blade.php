@@ -1,73 +1,102 @@
-@extends('layouts.admin')
+@extends('layouts.admin-new')
 @section('content')
-    <div class="main-card">
-        <div class="header">
-            Edit Bahan
+    <div id="main-wrapper">
+        <div class="pageheader pd-t-25 pd-b-35">
+            <div class="pd-t-5 pd-b-5">
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Edit Data Bahan</h1>
+            </div>
+
+        </div>
+        <div class="row row-xs clearfix">
+            <!--================================-->
+            <!-- Top Label Layout Start -->
+            <!--================================-->
+            <div class="col-md-12 col-lg-12">
+                <div class="card mg-b-20">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Edit Data Bahan
+                        </h4>
+                        <div class="card-header-btn">
+                            <a href="" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
+                                aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
+                            <a href="" data-toggle="refresh" class="btn card-refresh"><i
+                                    class="ion-android-refresh"></i></a>
+                            <a href="" data-toggle="expand" class="btn card-expand"><i
+                                    class="ion-android-expand"></i></a>
+                            <a href="" data-toggle="remove" class="btn card-remove"><i
+                                    class="ion-android-close"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body collapse show" id="collapse1">
+                        <form class="form-layout form-layout-1" method="POST"
+                            action="{{ route('admin.data-bahan.update', $material->id) }}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Nama Bahan<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('name')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="name" value="{{ $material->name }}">
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Satuan Bahan<span
+                                        class="tx-danger">*</span></label>
+                                <select name="unit_id" class="form-control">
+                                    <option value="" selected>Pilih Satuan</option>
+                                    @foreach ($units as $unit)
+                                        <option value="{{ $unit->id }}"
+                                            {{ $material->unit_id == $unit->id ? 'selected' : '' }}>
+                                            {{ $unit->warehouse_unit }}/{{ $unit->outlet_unit }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Harga Jual<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('selling_price')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="selling_price" value="{{ $material->selling_price }}">
+                                @error('selling_price')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Kategori Bahan<span
+                                        class="tx-danger">*</span></label>
+                                <select name="category" class="form-control">
+                                    <option value="" selected>Pilih Kategori</option>
+                                    <option value="Produk" {{ $material->category == 'Produk' ? 'selected' : '' }}>Produk
+                                    </option>
+                                    <option value="Bahan Baku" {{ $material->category == 'Non-Produk' ? 'selected' : '' }}>
+                                        Non-Produk</option>
+                                </select>
+                            </div>
+                            <!-- row -->
+                            <div class="form-layout-footer mt-3">
+                                <button class="btn btn-custom-primary" type="submit">Update</button>
+                                <a href="{{ route('admin.data-bahan.index') }}" class="btn btn-secondary">Cancel</a>
+                            </div>
+                            <!-- form-layout-footer -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <form method="POST" action="{{ route('admin.data-bahan.update', $material->id) }}" enctype="multipart/form-data">
-            @method('PUT')
-            @csrf
-            <div class="body">
-                <div class="mb-3">
-                    <label for="name" class="text-xs required">Nama Bahan</label>
-                    <div class="form-group">
-                        <input type="text" id="name" name="name" class="{{ $errors->has('name') ? ' ' : '' }}"
-                            value="{{ $material->name }}" required>
-                    </div>
-                    @if ($errors->has('name'))
-                        <p class="invalid-feedback">{{ $errors->first('name') }}</p>
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="unit_id" class="text-xs required">Satuan Bahan</label>
-                    <div class="form-group">
-                        <select name="unit_id" id="unit_id"
-                            class="form-control select2 {{ $errors->has('unit_id') ? ' ' : '' }}" required>
-                            @foreach ($units as $id => $unit)
-                                <option value="{{ $id }}" {{ old('unit_id') == $id ? 'selected' : '' }}>
-                                    {{ $unit->warehouse_unit }}/{{ $unit->outlet_unit }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    @if ($errors->has('unit_id'))
-                        <p class="invalid-feedback">{{ $errors->first('unit_id') }}</p>
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="selling_price" class="text-xs required">Harga Jual</label>
-                    <div class="form-group">
-                        <input type="number" id="selling_price" name="selling_price"
-                            class="{{ $errors->has('selling_price') ? ' ' : '' }}" value="{{ $material->selling_price }}"
-                            required>
-                    </div>
-                    @if ($errors->has('selling_price'))
-                        <p class="invalid-feedback">{{ $errors->first('selling_price') }}</p>
-                    @endif
-                </div>
-                <div class="mb-3">
-                    <label for="category" class="text-xs required">Kategori Bahan</label>
-                    <div class="form-group">
-                        <select name="category" id="category"
-                            class="form-control select2 {{ $errors->has('category') ? ' ' : '' }}" required>
-                            <option value="Produk">
-                                Produk
-                            </option>
-                            <option value="Bahan Baku">
-                                Bahan Baku
-                            </option>
-                        </select>
-                    </div>
-                    @if ($errors->has('category'))
-                        <p class="invalid-feedback">{{ $errors->first('category') }}</p>
-                    @endif
-                </div>
-            </div>
 
-            <div class="footer">
-                <button type="submit" class="submit-button">Update</button>
-            </div>
-        </form>
+
     </div>
 @endsection

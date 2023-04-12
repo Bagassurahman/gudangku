@@ -1,83 +1,101 @@
-@extends('layouts.admin')
+@extends('layouts.admin-new')
+@section('style')
+    <link type="text/css" rel="stylesheet"
+        href="{{ asset('assets/plugins/datatables/extensions/dataTables.jqueryui.min.css') }}">
+@endsection
 @section('content')
-    @can('unit_data_create')
-        <div class="block my-4">
-            <a class="btn-md btn-green" href="{{ route('admin.data-satuan.create') }}">
-                Tambah Satuan
-            </a>
-        </div>
-    @endcan
-    <div class="main-card">
-        <div class="header">
-            Daftar Satuan
-        </div>
-
-        <div class="body">
-            <div class="w-full">
-                <table class="stripe hover bordered datatable datatable-User">
-                    <thead>
-                        <tr>
-                            <th width="10">
-
-                            </th>
-                            <th>
-                                No
-                            </th>
-                            <th>
-                                Satuan Gudang
-                            </th>
-                            <th>
-                                Satuan Outlet
-                            </th>
-                            <th>
-                                Aksi
-                            </th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($units as $key => $unit)
-                            <tr data-entry-id="{{ $unit->id }}">
-                                <td>
-
-                                </td>
-                                <td>
-                                    {{ $unit->id ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $unit->warehouse_unit ?? '' }}
-                                </td>
-                                <td>
-                                    {{ $unit->outlet_unit ?? '' }}
-                                </td>
+    <div id="main-wrapper">
 
 
-                                <td>
-                                    @can('unit_data_show')
-                                        <a class="btn-sm btn-indigo" href="{{ route('admin.data-satuan.show', $unit->id) }}">
-                                            {{ trans('global.view') }}
-                                        </a>
-                                    @endcan
+        <div class="row row-xs clearfix">
+            @can('unit_data_create')
+                <div class="my-4">
+                    <a class="btn btn-primary" href="{{ route('admin.data-satuan.create') }}">
+                        Tambah Satuan
+                    </a>
+                </div>
+            @endcan
+            <!--================================-->
+            <!-- Basic dataTable Start -->
+            <!--================================-->
+            <div class="col-md-12 col-lg-12">
+                <div class="card mg-b-20">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Data Satuan
+                        </h4>
+                        <div class="card-header-btn">
+                            <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
+                                aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
+                            <a href="#" data-toggle="refresh" class="btn card-refresh"><i
+                                    class="ion-android-refresh"></i></a>
+                            <a href="#" data-toggle="expand" class="btn card-expand"><i
+                                    class="ion-android-expand"></i></a>
+                            <a href="#" data-toggle="remove" class="btn card-remove"><i
+                                    class="ion-android-close"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body collapse show" id="collapse1">
+                        <table class="table stripe hover bordered datatable datatable-Role">
+                            <thead>
+                                <tr>
+                                    <th width="10">
+
+                                    </th>
+                                    <th>No</th>
+                                    <th>Satuan Gudang</th>
+                                    <th>Satuan Outlet</th>
+                                    <th>Aksi</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($units as $key => $unit)
+                                    <tr data-entry-id="{{ $unit->id }}">
+                                        <td></td>
+                                        <td>
+                                            {{ $loop->iteration }}
+                                        </td>
+                                        <td>
+                                            {{ $unit->warehouse_unit ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $unit->outlet_unit ?? '' }}
+                                        </td>
+
+
+                                        <td>
+                                            @can('unit_data_show')
+                                                <a class="btn btn-primary"
+                                                    href="{{ route('admin.data-satuan.show', $unit->id) }}">
+                                                    {{ trans('global.view') }}
+                                                </a>
+                                            @endcan
 
 
 
-                                    @can('unit_data_delete')
-                                        <form action="{{ route('admin.data-satuan.destroy', $unit->id) }}" method="POST"
-                                            onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
-                                            style="display: inline-block;">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="submit" class="btn-sm btn-red" value="{{ trans('global.delete') }}">
-                                        </form>
-                                    @endcan
+                                            @can('unit_data_delete')
+                                                <form action="{{ route('admin.data-satuan.destroy', $unit->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
+                                                    style="display: inline-block;">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="submit" class="btn btn-danger"
+                                                        value="{{ trans('global.delete') }}">
+                                                </form>
+                                            @endcan
 
-                                </td>
+                                        </td>
 
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 @endsection
@@ -87,15 +105,7 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-
-            $.extend(true, $.fn.dataTable.defaults, {
-                orderCellsTop: true,
-                order: [
-                    [1, 'desc']
-                ],
-                pageLength: 100,
-            });
-            let table = $('.datatable-User:not(.ajaxTable)').DataTable({
+            let table = $('.datatable-Role:not(.ajaxTable)').DataTable({
                 buttons: dtButtons
             })
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {

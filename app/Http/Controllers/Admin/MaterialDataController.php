@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMaterialDataRequest;
+use App\Http\Requests\UpdateMaterialDataRequest;
 use App\MaterialData;
 use App\UnitData;
 use Illuminate\Http\Request;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
+
 
 class MaterialDataController extends Controller
 {
@@ -35,6 +38,8 @@ class MaterialDataController extends Controller
     public function store(StoreMaterialDataRequest $request)
     {
         $material = MaterialData::create($request->all());
+
+        SweetAlert::toast('Data bahan berhasil ditambahkan', 'success')->timerProgressBar();
 
         return redirect()->route('admin.data-bahan.index');
     }
@@ -73,9 +78,15 @@ class MaterialDataController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateMaterialDataRequest $request, $id)
     {
-        //
+        $material = MaterialData::findOrFail($id);
+
+        $material->update($request->all());
+
+        SweetAlert::toast('Data bahan berhasil diubah', 'success')->timerProgressBar();
+
+        return redirect()->route('admin.data-bahan.index');
     }
 
     /**
@@ -91,6 +102,8 @@ class MaterialDataController extends Controller
         $material = MaterialData::findOrFail($id);
 
         $material->delete();
+
+        SweetAlert::toast('Data satuan berhasil dihapus', 'success')->timerProgressBar();
 
         return back();
     }

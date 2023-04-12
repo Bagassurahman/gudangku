@@ -44,6 +44,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Biaya
     Route::resource('biaya', 'CostController');
+
+    // Produk
+    Route::resource('produk', 'ProductController');
 });
 
 Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Warehouse', 'middleware' => ['auth']], function () {

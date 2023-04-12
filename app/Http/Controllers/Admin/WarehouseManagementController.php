@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class WarehouseManagementController extends Controller
 {
@@ -35,6 +36,8 @@ class WarehouseManagementController extends Controller
     {
         $user = User::create($request->all());
         $user->roles()->sync('2');
+
+        SweetAlert::toast('Data berhasil ditambahkan', 'success');
 
         return redirect()->route('admin.manajemen-gudang.index');
     }
@@ -81,6 +84,11 @@ class WarehouseManagementController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $warehouse = User::findOrFail($id);
+        $warehouse->delete();
+
+        SweetAlert::toast('Data berhasil dihapus', 'success');
+
+        return redirect()->route('admin.manajemen-gudang.index');
     }
 }

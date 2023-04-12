@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Cost;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCostRequest;
 use Illuminate\Http\Request;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
+
 
 class CostController extends Controller
 {
@@ -34,20 +37,13 @@ class CostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCostRequest $request)
     {
-        //
-    }
+        $cost = Cost::create($request->all());
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        SweetAlert::toast('Data biaya berhasil ditambahkan', 'success');
+
+        return redirect()->route('admin.biaya.index');
     }
 
     /**
@@ -58,7 +54,11 @@ class CostController extends Controller
      */
     public function edit($id)
     {
-        //
+        abort_if(Gate::denies('cost_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $cost = Cost::findOrFail($id);
+
+        return view('admin.costs.edit', compact('cost'));
     }
 
     /**
@@ -66,11 +66,18 @@ class CostController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\
+     * Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCostRequest $request, $id)
     {
-        //
+        $cost = Cost::findOrFail($id);
+
+        $cost->update($request->all());
+
+        SweetAlert::toast('Data biaya berhasil diubah', 'success');
+
+        return redirect()->route('admin.biaya.index');
     }
 
     /**
@@ -81,6 +88,12 @@ class CostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cost = Cost::findOrFail($id);
+
+        $cost->delete();
+
+        SweetAlert::toast('Data biaya berhasil dihapus', 'success');
+
+        return redirect()->route('admin.biaya.index');
     }
 }

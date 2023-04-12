@@ -1,93 +1,131 @@
-@extends('layouts.admin')
+@extends('layouts.admin-new')
 @section('content')
-    <div class="main-card">
-        <div class="header">
-            Tambah Manajemen
+    <div id="main-wrapper">
+        <div class="pageheader pd-t-25 pd-b-35">
+            <div class="pd-t-5 pd-b-5">
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Input Data Manajemen Gudang</h1>
+            </div>
+
+        </div>
+        <div class="row row-xs clearfix">
+            <!--================================-->
+            <!-- Top Label Layout Start -->
+            <!--================================-->
+            <div class="col-md-12 col-lg-12">
+                <div class="card mg-b-20">
+                    <div class="card-header">
+                        <h4 class="card-header-title">
+                            Input Data Manajemen Gudang
+                        </h4>
+                        <div class="card-header-btn">
+                            <a href="" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
+                                aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
+                            <a href="" data-toggle="refresh" class="btn card-refresh"><i
+                                    class="ion-android-refresh"></i></a>
+                            <a href="" data-toggle="expand" class="btn card-expand"><i
+                                    class="ion-android-expand"></i></a>
+                            <a href="" data-toggle="remove" class="btn card-remove"><i
+                                    class="ion-android-close"></i></a>
+                        </div>
+                    </div>
+                    <div class="card-body collapse show" id="collapse1">
+                        <form class="form-layout form-layout-1" method="POST"
+                            action="{{ route('admin.manajemen-gudang.store') }}" enctype="multipart/form-data">
+                            @csrf
+
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Nama Gudang<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('warehouse_name')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="warehouse_name" value="{{ old('warehouse_name') }}">
+                                @error('warehouse_name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Penangung Jawab<span
+                                        class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('name')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="name" value="{{ old('name') }}">
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">No Telp<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('phone')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="phone" value="{{ old('phone') }}">
+                                @error('phone')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Alamat<span class="tx-danger">*</span></label>
+                                <textarea
+                                    class="form-control @error('address')
+                                            is-invalid
+                                        @enderror"
+                                    name="address" id="address" required>{{ old('address') }}</textarea>
+                                @error('address')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Email<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('email')
+                                            is-invalid
+                                        @enderror"
+                                    type="email" name="email" value="{{ old('email') }}">
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Password<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('password')
+                                            is-invalid
+                                        @enderror"
+                                    type="password" name="password" value="{{ old('password') }}">
+                                @error('password')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <!-- row -->
+                            <div class="form-layout-footer mt-3">
+                                <button class="btn btn-custom-primary" type="submit">Simpan</button>
+                                <a href="{{ route('admin.manajemen-gudang.index') }}" class="btn btn-secondary">Cancel</a>
+                            </div>
+                            <!-- form-layout-footer -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <form method="POST" action="{{ route('admin.manajemen-gudang.store') }}" enctype="multipart/form-data">
-            @csrf
-            <div class="body">
-                <div class="mb-3">
-                    <label for="warehouse_name" class="text-xs required">Nama Gudang</label>
 
-                    <div class="form-group">
-                        <input type="text" id="warehouse_name" name="warehouse_name"
-                            class="{{ $errors->has('warehouse_name') ? ' is-invalid' : '' }}"
-                            value="{{ old('warehouse_name') }}" required>
-                    </div>
-                    @if ($errors->has('warehouse_name'))
-                        <p class="invalid-feedback">{{ $errors->first('warehouse_name') }}</p>
-                    @endif
 
-                </div>
-                <div class="mb-3">
-                    <label for="name" class="text-xs required">Penanggung Jawab</label>
-
-                    <div class="form-group">
-                        <input type="text" id="name" name="name"
-                            class="{{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" required>
-                    </div>
-                    @if ($errors->has('name'))
-                        <p class="invalid-feedback">{{ $errors->first('name') }}</p>
-                    @endif
-                    <span class="block">{{ trans('cruds.user.fields.name_helper') }}</span>
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="text-xs required">No Telp</label>
-
-                    <div class="form-group">
-                        <input type="number" id="phone" name="phone"
-                            class="{{ $errors->has('phone') ? ' is-invalid' : '' }}" value="{{ old('phone') }}" required>
-                    </div>
-                    @if ($errors->has('phone'))
-                        <p class="invalid-feedback">{{ $errors->first('phone') }}</p>
-                    @endif
-
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="text-xs required">Alamat</label>
-
-                    <div class="form-group">
-                        <textarea
-                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500   {{ $errors->has('address') ? ' is-invalid' : '' }} "
-                            name="address" id="address" required>{{ old('address') }}</textarea>
-                    </div>
-                    @if ($errors->has('address'))
-                        <p class="invalid-feedback">{{ $errors->first('address') }}</p>
-                    @endif
-
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="text-xs required">{{ trans('cruds.user.fields.email') }}</label>
-
-                    <div class="form-group">
-                        <input type="email" id="email" name="email"
-                            class="{{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" required>
-                    </div>
-                    @if ($errors->has('email'))
-                        <p class="invalid-feedback">{{ $errors->first('email') }}</p>
-                    @endif
-                    <span class="block">{{ trans('cruds.user.fields.email_helper') }}</span>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="text-xs required">{{ trans('cruds.user.fields.password') }}</label>
-
-                    <div class="form-group">
-                        <input type="password" id="password" name="password"
-                            class="{{ $errors->has('password') ? ' is-invalid' : '' }}" value="{{ old('password') }}">
-                    </div>
-                    @if ($errors->has('password'))
-                        <p class="invalid-feedback">{{ $errors->first('password') }}</p>
-                    @endif
-                    <span class="block">{{ trans('cruds.user.fields.password_helper') }}</span>
-                </div>
-
-            </div>
-
-            <div class="footer">
-                <button type="submit" class="submit-button">{{ trans('global.save') }}</button>
-            </div>
-        </form>
     </div>
 @endsection

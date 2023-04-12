@@ -4,15 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Gate;
-use Illuminate\Support\Facades\Response as FacadesResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Response;
 
 class UpdateMaterialDataRequest extends FormRequest
 {
 
     public function authorize()
     {
-        abort_if(Gate::denies('material_data_edit'), FacadesResponse::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('material_data_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return true;
     }

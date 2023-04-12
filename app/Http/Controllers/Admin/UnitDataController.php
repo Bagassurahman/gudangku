@@ -8,6 +8,7 @@ use App\UnitData;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Gate;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class UnitDataController extends Controller
 {
@@ -32,6 +33,8 @@ class UnitDataController extends Controller
     {
 
         $unit = UnitData::create($request->all());
+
+        SweetAlert::toast('Data satuan berhasil ditambahkan', 'success')->timerProgressBar();
 
         return redirect()->route('admin.data-satuan.index');
     }
@@ -66,6 +69,8 @@ class UnitDataController extends Controller
         $unit = UnitData::findOrFail($id);
 
         $unit->delete();
+
+        SweetAlert::toast('Data satuan berhasil dihapus', 'success')->timerProgressBar();
 
         return back();
     }

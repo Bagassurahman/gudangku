@@ -12,7 +12,7 @@ class Outlet extends Model
     protected $fillable = [
         'user_id',
         'target',
-        'name',
+        'outlet_name',
         'warehouse_id'
     ];
 
