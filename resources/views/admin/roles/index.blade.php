@@ -10,8 +10,8 @@
         <div class="row row-xs clearfix">
             @can('unit_data_create')
                 <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('admin.permissions.create') }}">
-                        Tambah Izin
+                    <a class="btn btn-primary" href="{{ route('admin.roles.create') }}">
+                        Tambah Role
                     </a>
                 </div>
             @endcan
@@ -22,7 +22,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Izin
+                            Data Role
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"

@@ -8,13 +8,15 @@
 
 
         <div class="row row-xs clearfix">
-            @can('unit_data_create')
+
+            @can('request_create')
                 <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('admin.data-bahan.create') }}">
-                        Tambah Bahan
+                    <a class="btn btn-primary" href="{{ route('outlet.request.create') }}">
+                        Request Bahan
                     </a>
                 </div>
             @endcan
+
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -22,7 +24,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Bahan
+                            Data Request
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -43,57 +45,34 @@
 
                                     </th>
                                     <th>No</th>
-                                    <th>Nama Bahan</th>
-                                    <th>Kategori</th>
-                                    <th>Satuan</th>
-                                    <th>Harga Jual</th>
+                                    <th>Kode Request</th>
+                                    <th>Status</th>
+                                    <th>Gudang</th>
                                     <th>Aksi</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($materials as $key => $material)
-                                    <tr data-entry-id="{{ $material->id }}">
+                                @foreach ($requests as $key => $request)
+                                    <tr data-entry-id="{{ $request->id }}">
                                         <td></td>
                                         <td>
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $material->name ?? '' }}
+                                            {{ $request->code ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $material->category ?? '' }}
+                                            {{ $request->status ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $material->unit->warehouse_unit ?? '' }}/{{ $material->unit->outlet_unit ?? '' }}
+                                            {{ $request->warehouse->warehouse_name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $material->price ?? '' }}
-                                        </td>
-                                        <td>
-                                            @can('material_data_show')
-                                                <a class="btn btn-primary"
-                                                    href="{{ route('admin.data-bahan.show', $material->id) }}">
-                                                    {{ trans('global.view') }}
-                                                </a>
-                                            @endcan
-                                            @can('material_data_edit')
-                                                <a class="btn btn-warning text-white"
-                                                    href="{{ route('admin.data-bahan.edit', $material->id) }}">
-                                                    Edit
-                                                </a>
-                                            @endcan
-                                            @can('material_data_delete')
-                                                <form action="{{ route('admin.data-bahan.destroy', $material->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
-                                                    style="display: inline-block;">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="submit" class="btn btn-danger"
-                                                        value="{{ trans('global.delete') }}">
-                                                </form>
-                                            @endcan
+                                            <a href="{{ route('outlet.request.show', $request->id) }}"
+                                                class="btn btn-primary">
+                                                Lihat Data
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

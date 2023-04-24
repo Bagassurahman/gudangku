@@ -1,39 +1,41 @@
 <?php
 
-namespace App\Http\Controllers\Warehouse;
+namespace App\Http\Controllers\Outlet;
 
-use App\Distribution;
 use App\Http\Controllers\Controller;
-use App\Inventory;
 use App\MaterialData;
-use App\Outlet;
 use Illuminate\Http\Request;
 use Gate;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class DistributionController extends Controller
+class InventoryController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        abort_if(Gate::denies('distribution_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('inventory_outlet_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $distributions = Distribution::where('warehouse_id', Auth::user()->id)->get();
+        $userId = Auth::id();
+        $inventories = MaterialData::with(['inventories' => function ($query) use ($userId) {
+            $query->where('outlet_id', $userId);
+        }])->get();
 
-        return view('warehouse.distribution.index', compact('distributions'));
+        return view('outlet.inventory.index', compact('inventories'));
     }
 
-
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        abort_if(Gate::denies('distribution_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $outlets = Outlet::where('warehouse_id', Auth::user()->id)->get();
-        $materials = Inventory::where('warehouse_id', Auth::user()->id)->get();
-
-
-        return view('warehouse.distribution.create', compact('outlets', 'materials'));
+        //
     }
 
     /**
@@ -44,7 +46,7 @@ class DistributionController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        //
     }
 
     /**

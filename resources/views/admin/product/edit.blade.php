@@ -3,7 +3,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Input Data Produk</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Edit Data Produk</h1>
             </div>
 
         </div>
@@ -15,7 +15,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Input Data Produk
+                            Edit Data Produk
                         </h4>
                         <div class="card-header-btn">
                             <a href="" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -39,7 +39,7 @@
                                     class="form-control @error('name')
                                             is-invalid
                                         @enderror"
-                                    type="text" name="name" value="{{ old('name') }}">
+                                    type="text" name="name" value="{{ $product->name }}">
                                 @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -65,7 +65,9 @@
                                 <select class="form-control select2" name="materials[]" id="materials" multiple>
                                     <option value="">Pilih Bahan</option>
                                     @foreach ($materials as $material)
-                                        <option value="{{ $material->id }}">{{ $material->name }}</option>
+                                        {{-- <option value="{{ $material->id }}"
+                                            {{ in_array($material->id, $product->material->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                            {{ $material->name }}</option> --}}
                                     @endforeach
                                 </select>
                                 @error('materials')
@@ -78,11 +80,11 @@
                             <div id="takaran-form"></div>
                             <div class="form-group mg-b-10-force">Harga Normal<span class="tx-danger">*</span></label>
                                 <input
-                                    class="form-control @error('general_price')
+                                    class="form-control @error('normal_price')
                                             is-invalid
                                         @enderror"
-                                    type="text" name="general_price" value="{{ old('general_price') }}">
-                                @error('general_price')
+                                    type="text" name="normal_price" value="{{ $product->normal_price }}">
+                                @error('normal_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -93,7 +95,7 @@
                                     class="form-control @error('member_price')
                                             is-invalid
                                         @enderror"
-                                    type="text" name="member_price" value="{{ old('member_price') }}">
+                                    type="text" name="member_price" value="{{ $product->member_price }}">
                                 @error('member_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -105,7 +107,7 @@
                                     class="form-control @error('online_price')
                                             is-invalid
                                         @enderror"
-                                    type="text" name="online_price" value="{{ old('online_price') }}">
+                                    type="text" name="online_price" value="{{ $product->online_price }}">
                                 @error('online_price')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -114,7 +116,7 @@
                             </div>
                             <!-- row -->
                             <div class="form-layout-footer mt-3">
-                                <button class="btn btn-custom-primary" type="submit">Simpan</button>
+                                <button class="btn btn-custom-primary" type="submit">Update</button>
                                 <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                             <!-- form-layout-footer -->

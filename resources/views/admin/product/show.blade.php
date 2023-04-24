@@ -7,7 +7,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-a5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Data Supplier {{ $supplier->name }}</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Detail Produk {{ $product->name }}</h1>
             </div>
 
         </div>
@@ -21,7 +21,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Supplier {{ $supplier->name }}
+                            Detail Produk
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -39,33 +39,60 @@
                             <tbody>
                                 <tr>
                                     <th>
-                                        Nama
+                                        Nama Produk
                                     </th>
                                     <td>
-                                        {{ $supplier->name }}
+                                        {{ $product->name }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        Alamat
+                                        Harga Umum
                                     </th>
                                     <td>
-                                        {{ $supplier->address }}
+                                        {{ $product->general_price }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Harga Member
+                                    </th>
+                                    <td>
+                                        {{ $product->member_price }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Harga Online
+                                    </th>
+                                    <td>
+                                        {{ $product->online_price }}
                                     </td>
                                 </tr>
 
                                 <tr>
                                     <th>
-                                        No. Telepon
+                                        Foto
                                     </th>
                                     <td>
-                                        {{ $supplier->phone }}
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt=""
+                                            class="img-thumbnail" width="200">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Bahan Yang Diperlukan</th>
+                                    <td>
+                                        <ul>
+                                            @foreach ($product->details as $detail)
+                                                <li>{{ $detail->material->name }} ({{ $detail->dose }})</li>
+                                            @endforeach
+                                        </ul>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="form-layout-footer mt-3">
-                            <a href="{{ route('warehouse.suppliers.index') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>

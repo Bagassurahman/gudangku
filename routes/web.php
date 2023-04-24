@@ -60,6 +60,13 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
     Route::resource('distribusi', 'DistributionController');
 });
 
+Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 'middleware' => ['auth']], function () {
+
+    Route::resource('request', 'RequestController');
+
+    Route::resource('persediaan', 'InventoryController');
+});
+
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
     if (file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php'))) {

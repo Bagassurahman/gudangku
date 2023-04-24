@@ -49,40 +49,27 @@
                                 <label class="text-xs required"
                                     for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
                                 <div style="padding-bottom: 4px">
-                                    <span class="btn-sm btn-indigo select-all"
+                                    <span class="btn btn-primary select-all"
                                         style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                    <span class="btn-sm btn-indigo deselect-all"
+                                    <span class="btn btn-primary deselect-all"
                                         style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                                </div>
+                                </div> <select class="select2{{ $errors->has('users') ? ' is-invalid' : '' }} form-control"
+                                    name="permissions[]" id="permissions" multiple required>
+                                    @foreach ($permissions as $id => $permissions)
+                                        <option value="{{ $id }}"
+                                            {{ in_array($id, old('permissions', [])) || $role->permissions->contains($id) ? 'selected' : '' }}>
+                                            {{ $permissions }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('permissions'))
+                                    <p class="invalid-feedback">{{ $errors->first('permissions') }}</p>
+                                @endif
+                                <span class="block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
                             </div>
-                            <div class="body">
 
-                                <div class="mb-3">
-                                    <label class="text-xs required"
-                                        for="permissions">{{ trans('cruds.role.fields.permissions') }}</label>
-                                    <div style="padding-bottom: 4px">
-                                        <span class="btn-sm btn-indigo select-all"
-                                            style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                                        <span class="btn-sm btn-indigo deselect-all"
-                                            style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                                    </div>
-                                    <select class="select2{{ $errors->has('users') ? ' is-invalid' : '' }}"
-                                        name="permissions[]" id="permissions" multiple required>
-                                        @foreach ($permissions as $id => $permissions)
-                                            <option value="{{ $id }}"
-                                                {{ in_array($id, old('permissions', [])) || $role->permissions->contains($id) ? 'selected' : '' }}>
-                                                {{ $permissions }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if ($errors->has('permissions'))
-                                        <p class="invalid-feedback">{{ $errors->first('permissions') }}</p>
-                                    @endif
-                                    <span class="block">{{ trans('cruds.role.fields.permissions_helper') }}</span>
-                                </div>
-                            </div>
 
                             <div class="footer">
-                                <button type="submit" class="submit-button">{{ trans('global.save') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ trans('global.save') }}</button>
                             </div>
                         </form>
                     </div>
@@ -93,4 +80,11 @@
 
 
     </div>
+@endsection
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('select2').select2();
+        });
+    </script>
 @endsection

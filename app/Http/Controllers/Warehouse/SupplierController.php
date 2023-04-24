@@ -8,6 +8,7 @@ use App\Supplier;
 use Illuminate\Http\Request;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class SupplierController extends Controller
 {
@@ -33,6 +34,8 @@ class SupplierController extends Controller
     public function store(StoreSupplierRequest $request)
     {
         $supplier = Supplier::create($request->all());
+
+        SweetAlert::toast('Suplier berhasil ditambahkan', 'success');
 
         return redirect()->route('warehouse.suppliers.index');
     }

@@ -5,23 +5,29 @@ namespace App;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductDetail extends Model
+class RequestDetail extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
+        'request_id',
         'material_id',
-        'dose'
+        'qty',
+
     ];
 
-    public function product()
+    public function request()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Request::class);
     }
 
     public function material()
     {
         return $this->belongsTo(MaterialData::class);
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::parse($value)->format('d-m-Y H:i:s');
     }
 }

@@ -8,13 +8,13 @@
 
 
         <div class="row row-xs clearfix">
-
-            <div class="my-4">
-                <a class="btn btn-primary" href="{{ route('admin.produk.create') }}">
-                    Tambah Produk
-                </a>
-            </div>
-
+            @can('product_create')
+                <div class="my-4">
+                    <a class="btn btn-primary" href="{{ route('admin.produk.create') }}">
+                        Tambah Produk
+                    </a>
+                </div>
+            @endcan
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -69,7 +69,24 @@
                                         <td>
                                             {{ $product->online_price ?? '' }}
                                         </td>
+                                        <td>
+                                            <a href="{{ route('admin.produk.show', $product->id) }}"
+                                                class="btn btn-primary">Lihat</a>
+                                            @can('product_edit')
+                                                <a href="{{ route('admin.produk.edit', $product->id) }}"
+                                                    class="btn btn-info">Edit</a>
+                                            @endcan
 
+                                            @can('product_delete')
+                                                <form action="{{ route('admin.produk.destroy', $product->id) }}" method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin?');"
+                                                    style="display: inline-block;">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="submit" class="btn btn-danger" value="Hapus">
+                                                </form>
+                                            @endcan
+                                        </td>
 
                                     </tr>
                                 @endforeach

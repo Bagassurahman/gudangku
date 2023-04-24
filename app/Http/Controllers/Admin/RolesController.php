@@ -11,6 +11,7 @@ use App\Role;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class RolesController extends Controller
 {
@@ -55,6 +56,8 @@ class RolesController extends Controller
     {
         $role->update($request->all());
         $role->permissions()->sync($request->input('permissions', []));
+
+        SweetAlert::toast('Izin berhasil diubah', 'success')->timerProgressBar();
 
         return redirect()->route('admin.roles.index');
     }

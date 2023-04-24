@@ -58,8 +58,16 @@
                                 </div>
                             </div>
 
-                            <a href="page-singin.html" class="dropdown-item"><i class="icon-power"
-                                    aria-hidden="true"></i> Sign-out</a>
+                            <a href="{{ route('logout') }}" class="dropdown-item"
+                                onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                <i class="icon ion-power"></i> Sign Out
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
                         </div>
                     </div>
                 </li>

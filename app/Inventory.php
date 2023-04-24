@@ -12,6 +12,7 @@ class Inventory extends Model
     protected $fillable = [
         'material_data_id',
         'warehouse_id',
+        'outlet_id',
         'entry_amount',
         'exit_amount',
         'remaining_amount',

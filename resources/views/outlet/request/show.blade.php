@@ -7,7 +7,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-a5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Data Supplier {{ $supplier->name }}</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Detail Request {{ $request->code }}</h1>
             </div>
 
         </div>
@@ -21,7 +21,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Supplier {{ $supplier->name }}
+                            Detail Request
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -39,33 +39,52 @@
                             <tbody>
                                 <tr>
                                     <th>
-                                        Nama
+                                        Tanggal Request
                                     </th>
                                     <td>
-                                        {{ $supplier->name }}
+                                        {{ $request->created_at }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        Alamat
+                                        Kode Request
                                     </th>
                                     <td>
-                                        {{ $supplier->address }}
+                                        {{ $request->code }}
                                     </td>
                                 </tr>
-
                                 <tr>
                                     <th>
-                                        No. Telepon
+                                        Outlet
                                     </th>
                                     <td>
-                                        {{ $supplier->phone }}
+                                        {{ $request->outlet->outlet_name }}
                                     </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <td>
+                                        {{ $request->status }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Bahan Yang Di Request
+                                    </th>
+                                    <th>
+                                        <ul>
+                                            @foreach ($request->details as $detail)
+                                                <li>{{ $detail->material->name }} ({{ $detail->qty }})</li>
+                                            @endforeach
+                                        </ul>
+                                    </th>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="form-layout-footer mt-3">
-                            <a href="{{ route('warehouse.suppliers.index') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('outlet.request.index') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>

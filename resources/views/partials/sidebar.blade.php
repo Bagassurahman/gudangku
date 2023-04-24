@@ -16,8 +16,30 @@
                     <a href="{{ route('admin.home') }}"><i data-feather="layout"></i>
                         <span>Dashboard</span></a>
                 </li>
+                @can('request_access')
+                    <li class="{{ request()->is('outlet/request*') ? ' active' : '' }}"><a
+                            href="{{ route('outlet.request.index') }}">Request Bahan</a>
+                    </li>
+                @endcan
+                @can('inventory_outlet_access')
+                    <li class="{{ request()->is('outlet/persediaan*') ? ' active' : '' }}"><a
+                            href="{{ route('outlet.persediaan.index') }}">Persediaan</a>
+                    </li>
+                @endcan
+                @can('inventory_access')
+                    <li class="{{ request()->is('gudang/persediaan*') ? ' active' : '' }}"><a
+                            href="{{ route('warehouse.persediaan.index') }}">Persediaan</a>
+                    </li>
+                @endcan
+                @can('distribution_access')
+                    <li class="{{ request()->is('gudang/distribusi*') ? ' active' : '' }}"><a
+                            href="{{ route('warehouse.distribusi.index') }}">Distribusi</a>
+                    </li>
+                @endcan
                 @can('master_data_access')
-                    <li class="open active">
+                    <li
+                        class="{{ request()->is('admin/data-satuan*', 'admin/data-bahan*', 'admin/produk*', 'admin/biaya*', 'admin/suppliers*') ? ' active open' : '' }}">
+
                         <a href=""><i data-feather="home"></i>
                             <span>Master Data</span><i class="accordion-icon fa fa-angle-left"></i></a>
                         <ul class="sub-menu" style="display: block;">
@@ -31,20 +53,27 @@
                                         href="{{ route('admin.data-bahan.index') }}">Data Bahan</a>
                                 </li>
                             @endcan
-                            <li class="{{ request()->is('admin/produk*') ? ' active' : '' }}"><a
-                                    href="{{ route('admin.produk.index') }}">Data Produk</a>
-                            </li>
+                            @can('product_access')
+                                <li class="{{ request()->is('admin/produk*') ? ' active' : '' }}"><a
+                                        href="{{ route('admin.produk.index') }}">Data Produk</a>
+                                </li>
+                            @endcan
                             @can('cost_access')
                                 <li class="{{ request()->is('admin/biaya*') ? ' active' : '' }}"><a
                                         href="{{ route('admin.biaya.index') }}">Biaya Biaya</a>
                                 </li>
                             @endcan
-
+                            @can('supplier_access')
+                                <li class="{{ request()->is('admin/suppliers*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.suppliers.index') }}">Supplier</a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
                 @can('user_management_access')
-                    <li class="open active">
+                    <li
+                        class="{{ request()->is('admin/permissions*', 'admin/roles*', 'admin/users*', 'admin/manajemen-gudang*', 'admin/manajemen-outlet*') ? 'open active' : '' }}">
                         <a href=""><i data-feather="user"></i>
                             <span>Manajemen User</span><i class="accordion-icon fa fa-angle-left"></i></a>
                         <ul class="sub-menu" style="display: block;">

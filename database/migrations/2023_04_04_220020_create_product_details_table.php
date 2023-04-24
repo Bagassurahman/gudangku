@@ -18,7 +18,7 @@ class CreateProductDetailsTable extends Migration
 
             $table->integer('product_id');
             $table->integer('material_id');
-            $table->integer('quantity');
+            $table->integer('dose');
 
             $table->timestamps();
         });
