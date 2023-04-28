@@ -58,6 +58,16 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
     Route::resource('persediaan', 'InventoryController');
 
     Route::resource('distribusi', 'DistributionController');
+
+    Route::get('distribusi/{outlet_id}', 'DistributionController@show')->name('distribusi.show');
+
+    Route::resource('laporan-pembelian', 'PurchaseReportController');
+    // detail laporan
+    Route::get('laporan-pembelian/{date}', 'PurchaseReportController@show')->name('laporan-pembelian.show');
+
+    Route::resource('laporan-distribusi', 'DistributionReportController');
+    // detail laporan
+    Route::get('laporan-distribusi/{date}', 'DistributionReportController@show')->name('laporan-distribusi.show');
 });
 
 Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 'middleware' => ['auth']], function () {

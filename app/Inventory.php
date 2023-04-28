@@ -16,7 +16,8 @@ class Inventory extends Model
         'entry_amount',
         'exit_amount',
         'remaining_amount',
-        'hpp'
+        'hpp',
+
     ];
 
     public function warehouse()
@@ -27,20 +28,5 @@ class Inventory extends Model
     public function material()
     {
         return $this->belongsTo(MaterialData::class, 'material_data_id', 'id');
-    }
-
-    public function getHppAttribute()
-    {
-        return 'Rp. ' . number_format($this->attributes['hpp'], 0, ',', '.');
-    }
-
-    public function getEntryAmountAttribute()
-    {
-        return number_format($this->attributes['entry_amount'], 0, ',', '.');
-    }
-
-    public function getExitAmountAttribute()
-    {
-        return number_format($this->attributes['exit_amount'], 0, ',', '.');
     }
 }

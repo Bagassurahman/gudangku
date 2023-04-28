@@ -36,6 +36,24 @@
                             href="{{ route('warehouse.distribusi.index') }}">Distribusi</a>
                     </li>
                 @endcan
+                @can('report_access')
+                    <li
+                        class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*') ? ' active open' : '' }}">
+
+                        <a href=""><i data-feather="clipboard"></i>
+                            <span>Laporan</span><i class="accordion-icon fa fa-angle-left"></i></a>
+                        <ul class="sub-menu" style="display: block;">
+
+                            <li class="{{ request()->is('gudang/laporan-pembelian*') ? ' active' : '' }}"><a
+                                    href="{{ route('warehouse.laporan-pembelian.index') }}">Laporan Pembelian</a>
+                            </li>
+                            <li class="{{ request()->is('gudang/laporan-distribusi*') ? ' active' : '' }}"><a
+                                    href="{{ route('warehouse.laporan-distribusi.index') }}">Laporan Distribusi</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                @endcan
                 @can('master_data_access')
                     <li
                         class="{{ request()->is('admin/data-satuan*', 'admin/data-bahan*', 'admin/produk*', 'admin/biaya*', 'admin/suppliers*') ? ' active open' : '' }}">

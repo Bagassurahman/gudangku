@@ -4,7 +4,7 @@
 
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Pembelian Bahan</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Distribusi Bahan</h1>
             </div>
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cart">Keranjang (<span
                     class="total-count"></span>)</button>
@@ -57,8 +57,8 @@
                                 name="outlet_id" id="outlet-id">
                                 <option value="">Pilih Outlet</option>
                                 @foreach ($outlets as $outlet)
-                                    <option value="{{ $outlet->id }}"
-                                        {{ old('outlet_id') == $outlet->id ? 'selected' : '' }}>
+                                    <option value="{{ $outlet->user_id }}"
+                                        {{ old('outlet_id') == $outlet->user_id ? 'selected' : '' }}>
                                         {{ $outlet->outlet_name }}</option>
                                 @endforeach
                             </select>
@@ -364,11 +364,11 @@
         beliBtn.addEventListener('click', function() {
             // Ambil nilai input tanggal dan supplier
             const poDate = document.querySelector('#po-date').value;
-            const supplierId = document.querySelector('#supplier-id').value;
+            const outletId = document.querySelector('#outlet-id').value;
 
-            // Validasi input tanggal dan supplier
-            if (!poDate || !supplierId) {
-                alert('Harap masukkan tanggal dan pilih supplier');
+            // Validasi input tanggal dan outlet
+            if (!poDate || !outletId) {
+                alert('Harap masukkan tanggal dan pilih outlet');
                 return;
             }
 
@@ -378,20 +378,20 @@
             cartInput.name = 'cart_items';
             cartInput.value = JSON.stringify(cartItems);
 
-            // Tambahkan input tanggal dan supplier ke dalam form
+            // Tambahkan input tanggal dan outlet ke dalam form
             const poDateInput = document.createElement('input');
             poDateInput.type = 'hidden';
             poDateInput.name = 'po_date';
             poDateInput.value = poDate;
 
-            const supplierIdInput = document.createElement('input');
-            supplierIdInput.type = 'hidden';
-            supplierIdInput.name = 'supplier_id';
-            supplierIdInput.value = supplierId;
+            const outletIdInput = document.createElement('input');
+            outletIdInput.type = 'hidden';
+            outletIdInput.name = 'outlet_id';
+            outletIdInput.value = outletId;
 
             cartForm.appendChild(cartInput);
             cartForm.appendChild(poDateInput);
-            cartForm.appendChild(supplierIdInput);
+            cartForm.appendChild(outletIdInput);
             cartForm.submit();
         });
 

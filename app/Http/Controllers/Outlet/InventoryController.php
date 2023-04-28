@@ -20,7 +20,9 @@ class InventoryController extends Controller
     {
         abort_if(Gate::denies('inventory_outlet_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $userId = Auth::id();
+        $userId = Auth::user()->id;
+
+
         $inventories = MaterialData::with(['inventories' => function ($query) use ($userId) {
             $query->where('outlet_id', $userId);
         }])->get();

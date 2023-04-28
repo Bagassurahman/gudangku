@@ -14,7 +14,8 @@ class Distribution extends Model
         'distribution_number',
         'distribution_date',
         'outlet_id',
-        'fee'
+        'fee',
+        'status'
     ];
 
     public function outlet()

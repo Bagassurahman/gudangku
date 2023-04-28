@@ -53,6 +53,7 @@ class PurchaseOfMaterialController extends Controller
             'po_number' => 'PO' . sprintf('%06d', mt_rand(1, 999999)),
             'supplier_id' => $request->supplier_id,
             'po_date' => $request->po_date,
+            'warehouse_id' => Auth::user()->id,
         ]);
 
         foreach ($cartItems as $cartItem) {
@@ -68,11 +69,14 @@ class PurchaseOfMaterialController extends Controller
                 ->where('warehouse_id', Auth::user()->id)
                 ->first();
 
+
+
             if ($inventory) {
                 $inventory->update([
                     'entry_amount' => $inventory->entry_amount + $cartItem['count'],
                     'remaining_amount' => $inventory->remaining_amount + $cartItem['count'],
-                    'hpp' => $cartItem['price'],
+                    'hpp' => (intval($inventory->hpp) * intval($inventory->entry_amount) + intval($cartItem['total'])) / ($inventory->entry_amount + $cartItem['count']),
+
                 ]);
             } else {
                 Inventory::create([
@@ -81,9 +85,11 @@ class PurchaseOfMaterialController extends Controller
                     'entry_amount' => $cartItem['count'],
                     'remaining_amount' => $cartItem['count'],
                     'hpp' => $cartItem['price'],
+
                 ]);
             }
         }
+
 
         SweetAlert::success('Berhasil', 'Pembelian bahan berhasil ditambahkan');
 

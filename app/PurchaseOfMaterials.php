@@ -13,6 +13,7 @@ class PurchaseOfMaterials extends Model
         'po_number',
         'po_date',
         'supplier_id',
+        'warehouse_id'
     ];
 
     public function supplier()

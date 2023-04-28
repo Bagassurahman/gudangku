@@ -5,14 +5,15 @@
 @endsection
 @section('content')
     <div id="main-wrapper">
+        <div class="pageheader pd-t-25 pd-b-35">
+            <div class="pd-t-5 pd-b-5">
+                <h1 class="pd-0 mg-0 tx-20 text-overflow"> Data Distribusi</h1>
+            </div>
+
+        </div>
         <div class="row row-xs clearfix">
-            @can('inventory_create')
-                <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('warehouse.distribusi.create') }}">
-                        Distribusi
-                    </a>
-                </div>
-            @endcan
+
+
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -20,7 +21,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Distibusi
+                            Data Distribusi
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -44,13 +45,19 @@
                                         No
                                     </th>
                                     <th>
-                                        Outlet
+                                        Tanggal Distribusi
                                     </th>
                                     <th>
                                         Biaya Kirim
                                     </th>
                                     <th>
+                                        SubTotal
+                                    </th>
+                                    <th>
                                         Total
+                                    </th>
+                                    <th>
+                                        Status
                                     </th>
                                     <th>
                                         Aksi
@@ -58,7 +65,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($distributions as $key => $distribution)
+                                @php
+                                    $total = 0;
+                                @endphp
+                                @foreach ($distributionDetails as $key => $distribution)
                                     <tr data-entry-id="{{ $distribution->id }}">
                                         <td>
 
@@ -67,21 +77,38 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $distribution->outlet_name ?? '' }}
+                                            {{ $distribution->distribution_date }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($distribution->total_fee, 0, ',', '.') }}
+                                            Rp {{ number_format($distribution->fee, 0, ',', '.') }}
                                         </td>
                                         <td>
                                             Rp {{ number_format($distribution->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('warehouse.distribusi.show', $distribution->outlet_id) }}"
-                                                class="btn btn-primary">Detail</a>
+                                            Rp {{ number_format($distribution->total + $distribution->fee, 0, ',', '.') }}
                                         </td>
+                                        <td>
+                                            @if ($distribution->status == 'accepted')
+                                                <span class="badge badge-success">Diterima</span>
+                                            @endif
+                                            @if ($distribution->status == 'on_progres')
+                                                <span class="badge badge-warning">Dalam Proses</span>
+                                            @endif
+                                        </td>
+
                                     </tr>
+                                    @php
+                                        $total += $distribution->total + $distribution->fee;
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="5" style="text-align: right;">Total:</th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>

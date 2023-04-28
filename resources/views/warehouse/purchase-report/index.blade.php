@@ -5,14 +5,14 @@
 @endsection
 @section('content')
     <div id="main-wrapper">
+        <div class="pageheader pd-t-25 pd-b-35">
+            <div class="pd-t-5 pd-b-5">
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Laporan Pembelian</h1>
+            </div>
+
+        </div>
         <div class="row row-xs clearfix">
-            @can('inventory_create')
-                <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('warehouse.distribusi.create') }}">
-                        Distribusi
-                    </a>
-                </div>
-            @endcan
+
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -20,7 +20,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Distibusi
+                            Laporan Pembelian
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -44,10 +44,7 @@
                                         No
                                     </th>
                                     <th>
-                                        Outlet
-                                    </th>
-                                    <th>
-                                        Biaya Kirim
+                                        Tanggal
                                     </th>
                                     <th>
                                         Total
@@ -55,11 +52,16 @@
                                     <th>
                                         Aksi
                                     </th>
+
+
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($distributions as $key => $distribution)
-                                    <tr data-entry-id="{{ $distribution->id }}">
+                                @php
+                                    $total = 0;
+                                @endphp
+                                @foreach ($purchases as $key => $purchase)
+                                    <tr data-entry-id="{{ $purchase->id }}">
                                         <td>
 
                                         </td>
@@ -67,21 +69,27 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $distribution->outlet_name ?? '' }}
+                                            {{ $purchase->po_date }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($distribution->total_fee, 0, ',', '.') }}
+                                            Rp {{ number_format($purchase->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($distribution->total, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('warehouse.distribusi.show', $distribution->outlet_id) }}"
+                                            <a href="{{ route('warehouse.laporan-pembelian.show', $purchase->po_date) }}"
                                                 class="btn btn-primary">Detail</a>
                                         </td>
                                     </tr>
+                                    @php
+                                        $total += $purchase->total;
+                                    @endphp
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4" style="text-align: right;">Total:</th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>
