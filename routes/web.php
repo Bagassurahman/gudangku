@@ -59,6 +59,8 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
 
     Route::resource('distribusi', 'DistributionController');
 
+    Route::get('check-stock', 'DistributionController@checkStock')->name('check-stock');
+
     Route::get('distribusi/{outlet_id}', 'DistributionController@show')->name('distribusi.show');
 
     Route::resource('laporan-pembelian', 'PurchaseReportController');
@@ -75,6 +77,14 @@ Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 
     Route::resource('request', 'RequestController');
 
     Route::resource('persediaan', 'InventoryController');
+
+    Route::get('detail-produk', 'ProductController@getProductDetails')->name('detail-produk');
+    // stok
+    Route::get('stok-produk', 'ProductController@getProductStockByMaterial')->name('stok-produk');
+
+    Route::get('decrease-stok-produk', 'ProductController@reduceProductStockByMaterial')->name('decrease-stok-produk');
+
+    Route::get('increase-stok-produk', 'ProductController@increaseProductStockByMaterial')->name('increase-stok-produk');
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

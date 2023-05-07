@@ -61,7 +61,8 @@ class DistributionController extends Controller
             'distribution_number' => 'DIS' . date('Ymd') . sprintf('%06d', mt_rand(1, 999999)),
             'outlet_id' => $request->outlet_id,
             'distribution_date' => $request->po_date,
-            'fee' => '0'
+            'fee' => '0',
+            'status' => 'accepted'
         ]);
 
 
@@ -152,5 +153,31 @@ class DistributionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function checkStock(Request $request)
+    {
+        $inventory = DB::table('inventories')
+            ->where('material_data_id', '=', $request->input('material_id'))
+            ->where('warehouse_id', '=', Auth::user()->id)
+            ->select('remaining_amount')
+            ->first();
+
+        return response()->json($inventory->remaining_amount);
+    }
+
+    public function reduceStock(Request $request)
+    {
+        $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $request->material_id)->first();
+
+        $inventory->update([
+            'exit_amount' => $inventory->exit_amount + $request->quantity,
+            'remaining_amount' => $inventory->remaining_amount - $request->quantity
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stok berhasil dikurangi'
+        ]);
     }
 }

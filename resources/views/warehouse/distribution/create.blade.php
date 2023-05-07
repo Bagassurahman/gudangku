@@ -139,7 +139,7 @@
         // Shopping Cart API
         // ************************************************
 
-        var shoppingCart = (function() {
+        var distributionCart = (function() {
             // =============================
             // Private methods and propeties
             // =============================
@@ -155,14 +155,14 @@
 
             // Save cart
             function saveCart() {
-                sessionStorage.setItem('shoppingCart', JSON.stringify(cart));
+                sessionStorage.setItem('distributionCart', JSON.stringify(cart));
             }
 
             // Load cart
             function loadCart() {
-                cart = JSON.parse(sessionStorage.getItem('shoppingCart'));
+                cart = JSON.parse(sessionStorage.getItem('distributionCart'));
             }
-            if (sessionStorage.getItem("shoppingCart") != null) {
+            if (sessionStorage.getItem("distributionCart") != null) {
                 loadCart();
             }
 
@@ -292,21 +292,65 @@
                     return;
                 }
                 this.setAttribute('data-price', price.toFixed(0));
-                shoppingCart.addItemToCart(id, name, price, 1);
-                displayCart();
+
+                console.log(id)
+
+                const stock = checkStock(id);
+
+                if (stock <= 0) {
+                    alert('Stok tidak mencukupi');
+                    return;
+                }
+
+                distributionCart.addItemToCart(id, name, price, 1);
+
+
+                // distributionCart.addItemToCart(id, name, price, 1);
+                // displayCart();
             });
         });
+
+        function checkStock(id) {
+            var stock = 0;
+
+            $.ajax({
+                url: '/gudang/check-stock',
+                async: false,
+                data: {
+                    material_id: id
+                },
+                success: function(data) {
+                    stock = data;
+                }
+            });
+
+            return stock;
+        }
+
+
+        function reduceStock(id) {
+            $.ajax({
+                url: '/gudang/reduce-stock',
+                async: false,
+                data: {
+                    material_id: id
+                },
+                success: function(data) {
+                    console.log(data)
+                }
+            });
+        }
 
 
         // Clear items
         $('.clear-cart').click(function() {
-            shoppingCart.clearCart();
+            distributionCart.clearCart();
             displayCart();
         });
 
 
         function displayCart() {
-            var cartArray = shoppingCart.listCart();
+            var cartArray = distributionCart.listCart();
             var output = "";
             for (var i in cartArray) {
                 output += "<tr>" +
@@ -324,29 +368,29 @@
                     "</tr>";
             }
             $('.show-cart').html(output);
-            $('.total-cart').html(shoppingCart.totalCart());
-            $('.total-count').html(shoppingCart.totalCount());
+            $('.total-cart').html(distributionCart.totalCart());
+            $('.total-count').html(distributionCart.totalCount());
         }
 
         // Delete item button
 
         $('.show-cart').on("click", ".delete-item", function(event) {
             var id = $(this).data('id');
-            shoppingCart.removeItemFromCartAll(id);
+            distributionCart.removeItemFromCartAll(id);
             displayCart();
         })
 
         // -1
         $('.show-cart').on("click", ".minus-item", function(event) {
             var id = $(this).data('id');
-            shoppingCart.removeItemFromCart(id);
+            distributionCart.removeItemFromCart(id);
             displayCart();
         })
 
         // +1
         $('.show-cart').on("click", ".plus-item", function(event) {
             var id = $(this).data('id');
-            shoppingCart.addItemToCart(id);
+            distributionCart.addItemToCart(id);
             displayCart();
         })
 
@@ -354,7 +398,7 @@
         $('.show-cart').on("change", ".item-count", function(event) {
             var id = $(this).data('id');
             var count = Number($(this).val());
-            shoppingCart.setCountForItem(id, count);
+            distributionCart.setCountForItem(id, count);
             displayCart();
         });
 
@@ -372,7 +416,7 @@
                 return;
             }
 
-            const cartItems = shoppingCart.listCart();
+            const cartItems = distributionCart.listCart();
             const cartInput = document.createElement('input');
             cartInput.type = 'hidden';
             cartInput.name = 'cart_items';

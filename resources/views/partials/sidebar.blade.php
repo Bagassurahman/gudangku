@@ -26,14 +26,23 @@
                             href="{{ route('outlet.persediaan.index') }}">Persediaan</a>
                     </li>
                 @endcan
-                @can('inventory_access')
-                    <li class="{{ request()->is('gudang/persediaan*') ? ' active' : '' }}"><a
-                            href="{{ route('warehouse.persediaan.index') }}">Persediaan</a>
-                    </li>
-                @endcan
-                @can('distribution_access')
-                    <li class="{{ request()->is('gudang/distribusi*') ? ' active' : '' }}"><a
-                            href="{{ route('warehouse.distribusi.index') }}">Distribusi</a>
+                @can('transaction_access')
+                    <li class="{{ request()->is('gudang/persediaan*', 'gudang/distribusi*') ? ' active open' : '' }}">
+
+                        <a href=""><i data-feather="clipboard"></i>
+                            <span>Transaksi</span><i class="accordion-icon fa fa-angle-left"></i></a>
+                        <ul class="sub-menu" style="display: block;">
+                            @can('inventory_access')
+                                <li class="{{ request()->is('gudang/persediaan*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.persediaan.index') }}">Persediaan</a>
+                                </li>
+                            @endcan
+                            @can('distribution_access')
+                                <li class="{{ request()->is('gudang/distribusi*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.distribusi.index') }}">Distribusi</a>
+                                </li>
+                            @endcan
+                        </ul>
                     </li>
                 @endcan
                 @can('report_access')

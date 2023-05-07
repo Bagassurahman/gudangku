@@ -10,6 +10,7 @@ use App\ProductDetail;
 use Illuminate\Http\Request;
 use Gate;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class ProductController extends Controller

@@ -34,90 +34,94 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table stripe hover bordered datatable datatable-Role">
-                            <thead>
-                                <tr>
-                                    <th width="10">
+                        <div class="table-responsive">
+                            <table class="table stripe hover bordered datatable datatable-Role">
+                                <thead>
+                                    <tr>
+                                        <th width="10">
 
-                                    </th>
-                                    <th>
-                                        No
-                                    </th>
-                                    <th>
-                                        Nama Outlet
-                                    </th>
-                                    <th>
-                                        Penangung Jawab
-                                    </th>
-                                    <th>
-                                        Alamat
-                                    </th>
-                                    <th>
-                                        Nomer Hp
-                                    </th>
-                                    <th>
-                                        Target
-                                    </th>
+                                        </th>
+                                        <th>
+                                            No
+                                        </th>
+                                        <th>
+                                            Nama Outlet
+                                        </th>
+                                        <th>
+                                            Penangung Jawab
+                                        </th>
+                                        <th>
+                                            Alamat
+                                        </th>
+                                        <th>
+                                            Nomer Hp
+                                        </th>
+                                        <th>
+                                            Target
+                                        </th>
 
-                                    <th>
-                                        Aksi
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($outlets as $key => $user)
-                                    <tr data-entry-id="{{ $user->id }}">
-                                        <td>
-
-                                        </td>
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        <td>
-                                            {{ $user->outlet->outlet_name ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $user->name ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $user->address ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $user->phone }}
-                                        </td>
-                                        <td>
-                                            {{ $user->outlet->target }}
-                                        </td>
-                                        <td>
-                                            @can('user_show')
-                                                <a class="btn btn-warning" href="{{ route('admin.users.show', $user->id) }}">
-                                                    {{ trans('global.view') }}
-                                                </a>
-                                            @endcan
-
-                                            @can('user_edit')
-                                                <a class="btn btn-primary" href="{{ route('admin.users.edit', $user->id) }}">
-                                                    {{ trans('global.edit') }}
-                                                </a>
-                                            @endcan
-
-                                            @can('user_delete')
-                                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
-                                                    onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
-                                                    style="display: inline-block;">
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="submit" class="btn btn-danger"
-                                                        value="{{ trans('global.delete') }}">
-                                                </form>
-                                            @endcan
-
-                                        </td>
-
+                                        <th>
+                                            Aksi
+                                        </th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($outlets as $key => $user)
+                                        <tr data-entry-id="{{ $user->id }}">
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>
+                                                {{ $user->outlet->outlet_name ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $user->name ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $user->address ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $user->phone }}
+                                            </td>
+                                            <td>
+                                                {{ $user->outlet->target }}
+                                            </td>
+                                            <td>
+                                                @can('user_show')
+                                                    <a class="btn btn-warning"
+                                                        href="{{ route('admin.users.show', $user->id) }}">
+                                                        {{ trans('global.view') }}
+                                                    </a>
+                                                @endcan
+
+                                                @can('user_edit')
+                                                    <a class="btn btn-primary"
+                                                        href="{{ route('admin.users.edit', $user->id) }}">
+                                                        {{ trans('global.edit') }}
+                                                    </a>
+                                                @endcan
+
+                                                @can('user_delete')
+                                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                                        onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
+                                                        style="display: inline-block;">
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                        <input type="submit" class="btn btn-danger"
+                                                            value="{{ trans('global.delete') }}">
+                                                    </form>
+                                                @endcan
+
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
