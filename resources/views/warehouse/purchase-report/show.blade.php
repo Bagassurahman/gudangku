@@ -48,7 +48,7 @@
                                         Nama Bahan
                                     </th>
                                     <th>
-                                        Harga Jual
+                                        Harga Beli
                                     </th>
                                     <th>
                                         Jumlah
@@ -74,14 +74,14 @@
                                             {{ $purchase->material_name }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($purchase->selling_price, 0, ',', '.') }}
+                                            Rp {{ number_format($purchase->price, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            {{ $purchase->total_quantity }}
+                                            {{ $purchase->qty }}
                                         </td>
 
                                         <td>
-                                            Rp {{ number_format($purchase->total_sales, 0, ',', '.') }}
+                                            Rp {{ number_format($purchase->total, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                     @php

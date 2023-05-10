@@ -3,15 +3,9 @@
 namespace App\Http\Controllers\Outlet;
 
 use App\Http\Controllers\Controller;
-use App\MaterialData;
-use App\Outlet;
-use App\Request as ModelRequest;
-use App\RequestDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
-class RequestController extends Controller
+class DistributionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,9 +14,7 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $requests = ModelRequest::where('outlet_id', Auth::user()->id)->get();
-
-        return view('outlet.request.index', compact('requests'));
+        //
     }
 
     /**
@@ -32,9 +24,7 @@ class RequestController extends Controller
      */
     public function create()
     {
-        $materials = MaterialData::all();
-
-        return view('outlet.request.create', compact('materials'));
+        //
     }
 
     /**
@@ -45,31 +35,8 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        $outlet = Outlet::where('user_id', Auth::user()->id)->first();
-
-
-        $newRequest = ModelRequest::create([
-            'outlet_id' => Auth::user()->id,
-            'warehouse_id' => $outlet->warehouse_id,
-            'code' => 'REQ-' . rand(100000, 999999),
-            'status' => 'pending'
-        ]);
-
-        if (is_iterable($request->materials)) {
-            foreach ($request->materials as $material) {
-                RequestDetail::create([
-                    'request_id' => $newRequest->id,
-                    'material_id' => $material,
-                    'qty' => $request->qty[$material],
-                ]);
-            }
-        }
-
-        SweetAlert::success('Success', 'Request Bahan Berhasil Mohon Tunggu Gudang Mengonfirmasi');
-
-        return redirect()->route('outlet.request.index');
+        //
     }
-
 
     /**
      * Display the specified resource.
@@ -79,10 +46,7 @@ class RequestController extends Controller
      */
     public function show($id)
     {
-        $request = ModelRequest::findOrFail($id);
-
-
-        return view('outlet.request.show', compact('request'));
+        //
     }
 
     /**

@@ -44,12 +44,14 @@
             <div class="pageheader pd-t-25 pd-b-35">
                 <div class="pd-t-5 pd-b-5">
                     <h1 class="pd-0 mg-0 tx-20">Menu Zam-Zam Time</h1>
-                    <select name="customer_type" id="cs_type" class="custom-select mt-3">
-                        <option value="1">Umum</option>
-                        <option value="2">Member</option>
-                        <option value="3">Online</option>
-                    </select>
+
                 </div>
+                <label class="form-label mt-3">Pilih Jenis Customer</label>
+                <select id="tipe_harga" class="tipe-harga-select custom-select">
+                    <option value="umum">Umum</option>
+                    <option value="member">Member</option>
+                    <option value="online">Online</option>
+                </select>
 
             </div>
             <div class="row justify-content-between">
@@ -61,14 +63,20 @@
                                     <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="...">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ $product->name }}</h5>
-                                        <p class="card-text">
-                                            <span id="price_cs">
-                                                Rp. {{ number_format($product->general_price, 0, ',', '.') }}
+                                        <p>Rp <span class="harga-produk" data-harga-umum="{{ $product->general_price }}"
+                                                data-harga-member="{{ $product->member_price }}"
+                                                data-harga-online="{{ $product->online_price }}">
+                                                {{ number_format($product->general_price, 0, ',', '.') }}
                                             </span>
                                         </p>
-                                        <a href="#" class="add-to-cart btn btn-primary w-100" data-id={{ $product->id }}
-                                            data-name="{{ $product->name }}"
-                                            data-price="{{ $product->general_price }}">Tambahkan Ke Keranjang</a>
+
+                                        <a href="#" class="add-to-cart btn btn-primary w-100"
+                                            data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                                            data-harga-umum="{{ $product->general_price }}"
+                                            data-harga-member="{{ $product->member_price }}"
+                                            data-harga-online="{{ $product->online_price }}"
+                                            data-price="{{ $product->general_price }}" data-tipe-harga="umum">Tambahkan
+                                            ke Keranjang</a>
                                     </div>
                                 </div>
                             </div>
@@ -76,13 +84,24 @@
                     </div>
                 </div>
                 <div class="col-xl-5">
+
                     <div class="card p-2">
+                        <form action="{{ route('outlet.transaction.store') }}" method="POST" id="cart-form">
+                            @csrf
+                            <table class="show-cart table">
 
-                        <table class="show-cart table">
+                            </table>
+                            <h6>Total Harga: <span class="total-cart"></span></h6>
+                            <input type="number" class="form-control mt-3" name="total_price" id="total-price" value=""
+                                hidden>
+                            <input type="number" class="form-control mt-3" name="paid_amount" placeholder="Jumlah Bayar"
+                                id="paid_amount">
+                            <h6 class="mt-3">Kembalian: <span class="total-change"></span></h6>
+                            <button class="btn btn-primary mt-3 w-100" type="submit" id="btn-submit">Beli</button>
 
-                        </table>
-                        <div>Total price: $<span class="total-cart"></span></div>
-                        <button class="clear-cart btn btn-danger mt-3">Clear Cart</button>
+                        </form>
+                        {{-- <button class="clear-cart btn btn-danger mt-3 w-100">Clear Cart</button> --}}
+
                     </div>
                 </div>
             </div>
@@ -116,7 +135,7 @@
                                     </div>
                                     <div>
                                         <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                            Rp<span class="counter">30.000</span></h2>
+                                            Rp 30.000</h2>
 
                                     </div>
                                 </div>
@@ -138,7 +157,8 @@
                                     </div>
                                     <div>
                                         <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                            Rp<span class="counter">0</span></h2>
+                                            Rp0
+                                        </h2>
 
                                     </div>
                                 </div>
@@ -160,7 +180,7 @@
                                     </div>
                                     <div>
                                         <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                            Rp<span class="counter">{{ $totalPembelianPerBulan[0]->total_pembelian }}</span>
+                                            Rp {{ number_format($totalPembelianPerBulan[0]->total_pembelian, 0, ',', '.') }}
                                         </h2>
 
                                     </div>
@@ -183,7 +203,8 @@
                                     </div>
                                     <div>
                                         <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                            Rp<span class="counter">9,900</span></h2>
+                                            Rp 9,900
+                                        </h2>
 
                                     </div>
                                 </div>
@@ -278,7 +299,48 @@
 @endsection
 @section('scripts')
     @parent
+    <script>
+        // hide btn-submit
+        $('#btn-submit').hide();
+        $('#paid_amount').on('keyup', function() {
+            var total = parseInt($('#total-price').val()) ||
+                0; // menggunakan parseInt untuk mengambil nilai integer dari input
+            var paid = parseInt($(this).val()) || 0;
+            var due = paid - total;
+            $('.total-change').html(due.toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            }));
+            if (due > 0) {
+                $('#btn-submit').show();
+            } else {
+                $('#btn-submit').hide();
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Simpan elemen DOM dalam variabel lokal
+            var $hargaProduk = $('.harga-produk');
+            var $addToCart = $('.add-to-cart');
 
+            $('.tipe-harga-select').on('change', function() {
+                var tipeHarga = $(this).val();
+
+                // Loop melalui elemen harga produk dan ubah konten
+                $hargaProduk.each(function() {
+                    var harga = $(this).data('harga-' + tipeHarga);
+                    $(this).html(harga);
+                });
+
+                // Loop melalui elemen tambah ke keranjang dan ubah atribut data-price
+                $addToCart.each(function() {
+                    var harga = $(this).data('harga-' + tipeHarga);
+                    $(this).attr('data-price', harga);
+                });
+            });
+        });
+    </script>
     <script>
         var shoppingCart = (function() {
             // =============================
@@ -317,7 +379,7 @@
             // Add to cart
             obj.addItemToCart = function(id, name, price, count) {
                 for (var item in cart) {
-                    if (cart[item].name === name) {
+                    if (cart[item].id === id) {
                         cart[item].count++;
                         saveCart();
                         return;
@@ -352,14 +414,31 @@
 
             // Remove all items from cart
             obj.removeItemFromCartAll = function(id) {
-                for (var item in cart) {
-                    if (cart[item].id === id) {
-                        cart.splice(item, 1);
-                        break;
+                var removedItemIndex;
+
+                cart.forEach(function(item, index) {
+                    if (item.id === id) {
+                        removedItemIndex = index;
+
+                        $.get('outlet/detail-produk', {
+                            id: id
+                        }, function(materials) {
+                            materials.forEach(function(material) {
+                                var materialId = material.material_id;
+                                var dose = material.dose * item.count;
+
+                                increaseProductStockByMaterial(materialId, dose);
+                            });
+                        });
                     }
+                });
+
+                if (removedItemIndex !== undefined) {
+                    cart.splice(removedItemIndex, 1);
+                    saveCart();
                 }
-                saveCart();
-            }
+            };
+
 
             // Clear cart
             obj.clearCart = function() {
@@ -420,28 +499,21 @@
             var id = $(this).data('id');
             var name = $(this).data('name')
             var price = Number($(this).data('price'));
-            var materials = []
-            // shoppingCart.addItemToCart(id, name, price, 1);
-            // displayCart();
+
             // melakukan request AJAX untuk mendapatkan informasi bahan dan dosis
             $.get('outlet/detail-produk', {
                 id: id
-            }, function(materials) {
-                var allMaterialsAvailable = true;
-
+            }).then(async function(materials) {
                 // memeriksa apakah persediaan cukup untuk setiap bahan pada produk
+                var allMaterialsAvailable = true;
                 for (var i = 0; i < materials.length; i++) {
                     var material = materials[i];
-                    var materialId = material.material_id;
-                    var dose = material.dose;
+                    var availableStock = await getProductStockByMaterial(material.material_id);
 
-                    var availableStock = getProductStockByMaterial(materialId);
-
-
-
-                    if (availableStock < dose) {
+                    if (availableStock < material.dose) {
+                        // alert se
+                        alert('Persediaan ' + material.material_name + ' tidak cukup!')
                         allMaterialsAvailable = false;
-                        alert('Persediaan bahan ' + material.material_name + ' tidak cukup!');
                         break;
                     }
                 }
@@ -449,64 +521,72 @@
                 // jika persediaan cukup, tambahkan produk ke dalam keranjang
                 if (allMaterialsAvailable) {
                     shoppingCart.addItemToCart(id, name, price, 1);
-
                     for (var i = 0; i < materials.length; i++) {
                         var material = materials[i];
-                        var materialId = material.material_id;
-                        var dose = material.dose;
-
-                        reduceProductStockByMaterial(materialId, dose);
+                        reduceProductStockByMaterial(material.material_id, material.dose);
                     }
-
                     displayCart();
                 }
             });
         });
 
+
         function getProductStockByMaterial(materialId) {
-            var stock = 0;
-            $.ajax({
-                url: 'outlet/stok-produk',
-                async: false,
-                data: {
-                    material_id: materialId
-                },
-                success: function(data) {
-                    stock = data;
-                }
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: 'outlet/stok-produk',
+                    data: {
+                        material_id: materialId
+                    },
+                    success: function(data) {
+                        resolve(data)
+                    },
+                    error: function(error) {
+                        reject(error);
+                    }
+                });
             });
-            return stock;
         }
+
 
 
         function reduceProductStockByMaterial(materialId, dose) {
-            $.ajax({
-                url: 'outlet/decrease-stok-produk',
-                async: false,
-                data: {
-                    material_id: materialId,
-                    dose: dose
-                },
-                success: function(data) {
-
-                }
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: 'outlet/decrease-stok-produk',
+                    data: {
+                        material_id: materialId,
+                        dose: dose
+                    },
+                    success: function(data) {
+                        resolve(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        reject(errorThrown);
+                    }
+                });
             });
         }
-
 
         function increaseProductStockByMaterial(materialId, dose) {
-            $.ajax({
-                url: 'outlet/increase-stok-produk',
-                async: false,
-                data: {
-                    material_id: materialId,
-                    dose: dose
-                },
-                success: function(data) {
-
-                }
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: 'outlet/increase-stok-produk',
+                    async: false,
+                    data: {
+                        material_id: materialId,
+                        dose: dose
+                    },
+                    success: function(data) {
+                        resolve(data);
+                    },
+                    error: function(error) {
+                        reject(error);
+                    }
+                });
             });
         }
+
 
 
         function displayCart() {
@@ -516,62 +596,168 @@
                 output += "<tr>" +
                     "<td>" + cartArray[i].name + "</td>" +
                     "<td>(" + cartArray[i].price + ")</td>" +
-                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-name=" +
-                    cartArray[i].name + ">-</button>" +
-                    "<input type='number' class='item-count form-control' data-name='" + cartArray[i].name +
+                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-id=" +
+                    cartArray[i].id + " type='button'>-</button>" +
+                    "<input type='number' class='item-count form-control' data-id='" + cartArray[i].name +
                     "' value='" +
                     cartArray[i].count + "'>" +
-                    "<button class='plus-item btn btn-primary input-group-addon' data-name=" + cartArray[i].name +
-                    ">+</button></div></td>" +
-                    "<td><button class='delete-item btn btn-danger' data-name=" + cartArray[i].name +
-                    ">X</button></td>" +
+                    "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
+                    " type='button'>+</button></div></td>" +
+                    "<td><button class='delete-item btn btn-danger' data-id=" + cartArray[i].id +
+                    " >X</button></td>" +
                     " = " +
                     "<td>" + cartArray[i].total + "</td>" +
                     "</tr>";
             }
             $('.show-cart').html(output);
-            $('.total-cart').html(shoppingCart.totalCart());
+            $('.total-cart').html(shoppingCart.totalCart().toLocaleString('id-ID', {
+                style: 'currency',
+                currency: 'IDR'
+            }));
+            $('#total-price').val(shoppingCart.totalCart());
+            $('#total-price').attr('value', shoppingCart.totalCart());
             $('.total-count').html(shoppingCart.totalCount());
         }
 
-        $('.clear-cart').click(function() {
-            for (var i = 0; i < cart.length; i++) {
-                var item = cart[i];
-                var id = item.id;
-                var materials = [];
-                $.get('outlet/detail-produk', {
+        // $('.clear-cart').click(function() {
+        //     for (var i = 0; i < cart.length; i++) {
+        //         var item = cart[i];
+        //         var id = item.id;
+        //         var materials = [];
+        //         $.ajax({
+        //             url: 'outlet/detail-produk',
+        //             data: {
+        //                 id: id
+        //             },
+        //             async: false,
+        //             success: function(materials) {
+        //                 for (var j = 0; j < cart.length; j++) {
+        //                     if (cart[j].id === id) {
+        //                         var count = cart[j].count;
+        //                         for (var k = 0; k < materials.length; k++) {
+        //                             var material = materials[k];
+        //                             var materialId = material.material_id;
+        //                             var dose = material.dose;
+        //                             increaseProductStockByMaterial(materialId, dose);
+        //                         }
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        //         });
+        //     }
+
+        //     setTimeout(function() {
+        //         shoppingCart.clearCart();
+        //         displayCart();
+        //     }, 1000);
+        // });
+
+
+        $('.show-cart').on("click", ".delete-item", function(event) {
+            event.preventDefault();
+            var id = $(this).data('id');
+
+            shoppingCart.removeItemFromCartAll(id);
+
+            displayCart();
+
+        })
+
+
+        $('.show-cart').on("click", ".minus-item", function(event) {
+            var id = $(this).data('id');
+
+            // membuat array promise untuk setiap bahan pada produk
+            var promises = [];
+
+            $.get('outlet/detail-produk', {
+                id: id
+            }, function(materials) {
+                for (var i = 0; i < materials.length; i++) {
+                    var material = materials[i];
+                    var materialId = material.material_id;
+                    var dose = material.dose;
+
+                    // menambahkan promise untuk setiap bahan pada produk
+                    promises.push(increaseProductStockByMaterial(materialId, dose));
+                }
+            });
+
+            // menunggu semua promise selesai
+            Promise.all(promises).then(function() {
+                shoppingCart.removeItemFromCart(id);
+                displayCart();
+            }).catch(function(error) {
+                console.log(error);
+            });
+        });
+
+
+        $('.show-cart').on("click", ".plus-item", function(event) {
+            var id = $(this).data('id');
+
+            $.get('outlet/detail-produk', {
                     id: id
-                }, function(materials) {
-                    for (var i = 0; i < materials.length; i++) {
-                        var material = materials[i];
+                })
+                .then(function(materials) {
+                    var allMaterialsAvailable = true;
+
+                    // memeriksa apakah persediaan cukup untuk setiap bahan pada produk
+                    var promises = materials.map(function(material) {
                         var materialId = material.material_id;
                         var dose = material.dose;
 
-                        for (var j = 0; j < cart.length; j++) {
-                            // console log
-
-                            if (cart[j].id === id) {
-                                var count = cart[j].count;
-
-                                for (var k = 0; k < materials.length; k++) {
-                                    var material = materials[k];
-                                    var materialId = material.material_id;
-                                    var dose = material.dose * count;
-
-                                    increaseProductStockByMaterial(materialId, dose);
+                        return getProductStockByMaterial(materialId)
+                            .then(function(availableStock) {
+                                if (availableStock < dose) {
+                                    allMaterialsAvailable = false;
+                                    alert('Persediaan bahan ' + material.material_name +
+                                        ' tidak cukup!');
+                                    throw new Error('Material ' + material.material_name +
+                                        ' tidak cukup');
                                 }
-                            }
+                            });
+                    });
+
+                    // jika persediaan cukup, tambahkan produk ke dalam keranjang
+                    Promise.all(promises).then(function() {
+                        if (allMaterialsAvailable) {
+                            shoppingCart.addItemToCart(id);
+
+                            materials.forEach(function(material) {
+                                var materialId = material.material_id;
+                                var dose = material.dose;
+
+                                reduceProductStockByMaterial(materialId, dose);
+                            });
+
+                            displayCart();
                         }
-                    }
+                    }).catch(function(error) {
+                        console.error(error);
+                    });
                 });
-            }
-
-            setTimeout(function() {
-                shoppingCart.clearCart();
-                displayCart();
-            }, 1000);
+        });
 
 
+        const cartForm = document.querySelector('#cart-form');
+        const beliBtn = document.querySelector('#btn-submit');
+
+        beliBtn.addEventListener('click', function() {
+
+            const cartItems = shoppingCart.listCart();
+            const cartInput = document.createElement('input');
+            cartInput.type = 'hidden';
+            cartInput.name = 'cart_items';
+            cartInput.value = JSON.stringify(cartItems);
+
+
+            cartForm.appendChild(cartInput);
+            cartForm.submit();
+
+
+            shoppingCart.clearCart();
         });
 
         displayCart();

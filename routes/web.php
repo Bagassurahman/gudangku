@@ -59,7 +59,10 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
 
     Route::resource('distribusi', 'DistributionController');
 
+    Route::resource('data-request-bahan', 'RequestDistributionController');
+
     Route::get('check-stock', 'DistributionController@checkStock')->name('check-stock');
+    Route::get('reduce-stock', 'DistributionController@reduceStock')->name('reduce-stock');
 
     Route::get('distribusi/{outlet_id}', 'DistributionController@show')->name('distribusi.show');
 
@@ -85,6 +88,8 @@ Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 
     Route::get('decrease-stok-produk', 'ProductController@reduceProductStockByMaterial')->name('decrease-stok-produk');
 
     Route::get('increase-stok-produk', 'ProductController@increaseProductStockByMaterial')->name('increase-stok-produk');
+
+    Route::resource('transaction', 'TransactionController');
 });
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

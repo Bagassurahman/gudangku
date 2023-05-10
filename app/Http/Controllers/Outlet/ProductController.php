@@ -32,8 +32,14 @@ class ProductController extends Controller
             ->select('remaining_amount')
             ->first();
 
-        return response()->json($inventory->remaining_amount);
+        // cek apakah data persediaan ditemukan
+        if ($inventory) {
+            return response()->json($inventory->remaining_amount);
+        } else {
+            return response()->json(0);
+        }
     }
+
 
     public function reduceProductStockByMaterial(Request $request)
     {

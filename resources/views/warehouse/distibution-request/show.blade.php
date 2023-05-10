@@ -9,9 +9,7 @@
             <div class="pd-t-a5 pd-b-5">
                 <h1 class="pd-0 mg-0 tx-20 text-overflow">Detail Request {{ $request->code }}</h1>
             </div>
-
         </div>
-
         <div class="row row-xs clearfix">
 
             <!--================================-->
@@ -89,8 +87,12 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="form-layout-footer mt-3">
-                            <a href="{{ route('outlet.request.index') }}" class="btn btn-secondary">Kembali</a>
+                        <div class="form-layout-footer mt-3 d-flex">
+                            <form action="{{ route('warehouse.data-request-bahan.store') }}">
+                                <button class="btn btn-primary" type="submit">Distribusikan</button>
+                            </form>
+                            <a href="{{ route('warehouse.data-request-bahan.index') }}"
+                                class="btn btn-secondary ml-2">Kembali</a>
                         </div>
                     </div>
                 </div>

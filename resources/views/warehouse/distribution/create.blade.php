@@ -281,19 +281,12 @@
         // Add item
         const addBtns = document.querySelectorAll('.add-to-cart');
         addBtns.forEach(btn => {
-            btn.addEventListener('click', function(event) {
+            btn.addEventListener('click', async function(event) {
                 event.preventDefault();
                 const id = this.getAttribute('data-id');
                 const name = this.getAttribute('data-name');
                 const priceInput = document.querySelector(`#data-price-${id}`);
-                const price = parseFloat(priceInput.value);
-                if (isNaN(price) || price <= 0) {
-                    alert('Masukan harga yang valid');
-                    return;
-                }
-                this.setAttribute('data-price', price.toFixed(0));
-
-                console.log(id)
+                const price = parseFloat(priceInput?.value);
 
                 const stock = checkStock(id);
 
@@ -302,42 +295,47 @@
                     return;
                 }
 
+                await reduceStock(id);
+
                 distributionCart.addItemToCart(id, name, price, 1);
-
-
-                // distributionCart.addItemToCart(id, name, price, 1);
-                // displayCart();
+                displayCart();
             });
         });
 
+
         function checkStock(id) {
-            var stock = 0;
-
-            $.ajax({
-                url: '/gudang/check-stock',
-                async: false,
-                data: {
-                    material_id: id
-                },
-                success: function(data) {
-                    stock = data;
-                }
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: '/gudang/check-stock',
+                    data: {
+                        material_id: id
+                    },
+                    success: function(data) {
+                        resolve(data);
+                    },
+                    error: function(xhr, status, error) {
+                        reject(error);
+                    }
+                });
             });
-
-            return stock;
         }
 
 
+
         function reduceStock(id) {
-            $.ajax({
-                url: '/gudang/reduce-stock',
-                async: false,
-                data: {
-                    material_id: id
-                },
-                success: function(data) {
-                    console.log(data)
-                }
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: '/gudang/reduce-stock',
+                    data: {
+                        material_id: id
+                    },
+                    success: function(data) {
+                        resolve(data);
+                    },
+                    error: function(xhr, status, error) {
+                        reject(error);
+                    }
+                });
             });
         }
 

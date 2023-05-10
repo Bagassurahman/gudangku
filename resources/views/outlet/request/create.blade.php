@@ -32,9 +32,6 @@
                         <form class="form-layout form-layout-1" method="POST" action="{{ route('outlet.request.store') }}"
                             enctype="multipart/form-data">
                             @csrf
-
-
-
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label active">Pilih Bahan<span class="tx-danger">*</span></label>
                                 {{-- select2 --}}
@@ -56,7 +53,7 @@
                             <!-- row -->
                             <div class="form-layout-footer mt-3">
                                 <button class="btn btn-custom-primary" type="submit">Simpan</button>
-                                <a href="{{ route('admin.produk.index') }}" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ route('outlet.request.index') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                             <!-- form-layout-footer -->
                         </form>

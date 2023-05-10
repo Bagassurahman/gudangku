@@ -76,7 +76,7 @@
                                                 <input type="number" id="data-price-{{ $material->id }}"
                                                     name="data-price-{{ $material->id }}" class="form-control mb-3"
                                                     placeholder="Masukan Harga">
-                                                <a href="#" data-id={{ $material->id }}
+                                                <a href="#" data-id="{{ $material->id }}"
                                                     data-name="{{ $material->name }}" data-price="1.22"
                                                     class="add-to-cart btn btn-primary w-100">Tambahkan Ke Keranjang</a>
                                             </div>
@@ -115,7 +115,7 @@
                             <table class="show-cart table">
 
                             </table>
-                            <div>Total Harga: Rp<span class="total-cart"></span></div>
+                            <div>Total Harga:<span class="total-cart"></span></div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -173,9 +173,10 @@
 
             // Add to cart
             obj.addItemToCart = function(id, name, price, count) {
-                for (var i in cart) {
-                    if (cart[i].id === id) {
-                        cart[i].count++;
+                for (var item in cart) {
+
+                    if (cart[item].id === id) {
+                        cart[item].count++;
                         saveCart();
                         return;
                     }
@@ -240,8 +241,9 @@
                 for (var item in cart) {
                     totalCart += cart[item].price * cart[item].count;
                 }
-                return Number(totalCart.toFixed(0));
+                return 'Rp ' + Number(totalCart).toLocaleString('id-ID');
             }
+
 
             // List cart
             obj.listCart = function() {
@@ -282,7 +284,7 @@
         addBtns.forEach(btn => {
             btn.addEventListener('click', function(event) {
                 event.preventDefault();
-                const id = this.getAttribute('data-id');
+                const id = parseInt(this.getAttribute('data-id'), 10);
                 const name = this.getAttribute('data-name');
                 const priceInput = document.querySelector(`#data-price-${id}`);
                 const price = parseFloat(priceInput.value);
@@ -312,13 +314,13 @@
                 output += "<tr>" +
                     "<td>" + cartArray[i].name + "</td>" +
                     "<td>(" + cartArray[i].price + ")</td>" +
-                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-name=" +
+                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-id=" +
                     cartArray[i].id + ">-</button>" +
-                    "<input type='number' class='item-count form-control' data-name='" + cartArray[i].id + "' value='" +
+                    "<input type='number' class='item-count form-control' data-id='" + cartArray[i].id + "' value='" +
                     cartArray[i].count + "'>" +
-                    "<button class='plus-item btn btn-primary input-group-addon' data-name=" + cartArray[i].id +
+                    "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
                     ">+</button></div></td>" +
-                    "<td><button class='delete-item btn btn-danger' data-name=" + cartArray[i].id + ">X</button></td>" +
+                    "<td><button class='delete-item btn btn-danger' data-id=" + cartArray[i].id + ">X</button></td>" +
                     " = " +
                     "<td>" + cartArray[i].total + "</td>" +
                     "</tr>";
@@ -331,30 +333,31 @@
         // Delete item button
 
         $('.show-cart').on("click", ".delete-item", function(event) {
-            var name = $(this).data('name')
-            purchaseCart.removeItemFromCartAll(name);
+            var id = $(this).data('id')
+            purchaseCart.removeItemFromCartAll(id);
             displayCart();
         })
 
 
         // -1
         $('.show-cart').on("click", ".minus-item", function(event) {
-            var name = $(this).data('name')
-            purchaseCart.removeItemFromCart(name);
+            var id = $(this).data('id')
+            purchaseCart.removeItemFromCart(id);
             displayCart();
         })
         // +1
         $('.show-cart').on("click", ".plus-item", function(event) {
-            var name = $(this).data('name')
-            purchaseCart.addItemToCart(name);
+            var id = $(this).data('id')
+
+            purchaseCart.addItemToCart(id);
             displayCart();
         })
 
         // Item count input
         $('.show-cart').on("change", ".item-count", function(event) {
-            var name = $(this).data('name');
+            var id = $(this).data('id');
             var count = Number($(this).val());
-            purchaseCart.setCountForItem(name, count);
+            purchaseCart.setCountForItem(id, count);
             displayCart();
         });
 

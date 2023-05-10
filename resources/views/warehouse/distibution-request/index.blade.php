@@ -5,15 +5,14 @@
 @endsection
 @section('content')
     <div id="main-wrapper">
-        <div class="pageheader pd-t-25 pd-b-35">
-            <div class="pd-t-5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20">Data Persedian Outlet</h1>
-
-            </div>
-        </div>
-
         <div class="row row-xs clearfix">
-
+            @can('inventory_create')
+                <div class="my-4">
+                    <a class="btn btn-primary" href="{{ route('warehouse.distribusi.create') }}">
+                        Distribusi
+                    </a>
+                </div>
+            @endcan
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -21,7 +20,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Persediaan
+                            Data Distibusi
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -45,29 +44,22 @@
                                         No
                                     </th>
                                     <th>
-                                        Nama Bahan
+                                        Outlet
                                     </th>
                                     <th>
-                                        Jumlah Masuk
+                                        Code
                                     </th>
                                     <th>
-                                        Jumlah Keluar
+                                        Status
                                     </th>
                                     <th>
-                                        Jumlah Sisa
+                                        Aksi
                                     </th>
-                                    <th>
-                                        HPP
-                                    </th>
-                                    <th>
-                                        Harga Jual
-                                    </th>
-
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($inventories as $key => $inventory)
-                                    <tr data-entry-id="{{ $inventory->id }}">
+                                @foreach ($requests as $key => $request)
+                                    <tr data-entry-id="{{ $request->id }}">
                                         <td>
 
                                         </td>
@@ -75,32 +67,26 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $inventory->name ?? '' }}
+                                            {{ $request->outlet->outlet_name ?? '' }}
                                         </td>
                                         <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->entry_amount ?? '0' }}
-                                            @endforeach
+                                            {{ $request->code ?? '' }}
                                         </td>
                                         <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->exit_amount ?? '0' }}
-                                            @endforeach
+                                            <span
+                                                class="badge
+                                            {{ $request->status == 'pending' ? 'badge-warning' : '' }}
+                                            {{ $request->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
+                                            text-white">
+                                                {{ $request->status ?? '' }}</span>
                                         </td>
                                         <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->remaining_amount ?? '0' }}
-                                            @endforeach
+                                            <a href="{{ route('warehouse.data-request-bahan.show', $request->id) }}"
+                                                class="btn btn-primary">
+                                                Lihat Data
+                                            </a>
                                         </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->hpp ?? '0' }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            {{ $inventory->price ?? '0' }}
-                                        </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>

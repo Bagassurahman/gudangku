@@ -171,8 +171,7 @@ class DistributionController extends Controller
         $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $request->material_id)->first();
 
         $inventory->update([
-            'exit_amount' => $inventory->exit_amount + $request->quantity,
-            'remaining_amount' => $inventory->remaining_amount - $request->quantity
+            'remaining_amount' => $inventory->remaining_amount - 1
         ]);
 
         return response()->json([

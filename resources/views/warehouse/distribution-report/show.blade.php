@@ -62,8 +62,8 @@
                                 @php
                                     $total = 0;
                                 @endphp
-                                @foreach ($distributionDetails as $key => $purchase)
-                                    <tr data-entry-id="{{ $purchase->id }}">
+                                @foreach ($distributionDetails as $key => $distribution)
+                                    <tr data-entry-id="{{ $distribution->id }}">
                                         <td>
 
                                         </td>
@@ -71,20 +71,20 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $purchase->material_name }}
+                                            {{ $distribution->material_name }}
                                         </td>
                                         <td>
-                                            {{ $purchase->qty }}
+                                            {{ $distribution->total_quantity }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($purchase->price, 0, ',', '.') }}
+                                            Rp {{ number_format($distribution->selling_price, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($purchase->total, 0, ',', '.') }}
+                                            Rp {{ number_format($distribution->total_sales, 0, ',', '.') }}
                                         </td>
                                     </tr>
                                     @php
-                                        $total += $purchase->total;
+                                        $total += $distribution->total_sales;
                                     @endphp
                                 @endforeach
                             </tbody>

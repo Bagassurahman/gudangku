@@ -63,7 +63,13 @@
                                             {{ $request->code ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $request->status ?? '' }}
+                                            <span
+                                                class="badge
+                                            {{ $request->status == 'pending' ? 'badge-warning' : '' }}
+                                            {{ $request->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
+                                            text-white">
+                                                {{ $request->status ?? '' }}</span>
                                         </td>
                                         <td>
                                             {{ $request->warehouse->warehouse_name ?? '' }}
