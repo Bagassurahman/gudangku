@@ -34,63 +34,65 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table stripe hover bordered datatable datatable-Role">
-                            <thead>
-                                <tr>
-                                    <th width="10">
+                        <div class="table-repsonsive">
+                            <table class="table stripe hover bordered datatable datatable-Role">
+                                <thead>
+                                    <tr>
+                                        <th width="10">
 
-                                    </th>
-                                    <th>
-                                        No
-                                    </th>
-                                    <th>
-                                        Outlet
-                                    </th>
-                                    <th>
-                                        Code
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>
-                                        Aksi
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($requests as $key => $request)
-                                    <tr data-entry-id="{{ $request->id }}">
-                                        <td>
+                                        </th>
+                                        <th>
+                                            No
+                                        </th>
+                                        <th>
+                                            Outlet
+                                        </th>
+                                        <th>
+                                            Code
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th>
+                                            Aksi
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($requests as $key => $request)
+                                        <tr data-entry-id="{{ $request->id }}">
+                                            <td>
 
-                                        </td>
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        <td>
-                                            {{ $request->outlet->outlet_name ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $request->code ?? '' }}
-                                        </td>
-                                        <td>
-                                            <span
-                                                class="badge
+                                            </td>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>
+                                                {{ $request->outlet->outlet_name ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $request->code ?? '' }}
+                                            </td>
+                                            <td>
+                                                <span
+                                                    class="badge
                                             {{ $request->status == 'pending' ? 'badge-warning' : '' }}
-                                            {{ $request->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $request->status == 'approved' ? 'badge-success' : '' }}
                                             {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
-                                                {{ $request->status ?? '' }}</span>
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('warehouse.data-request-bahan.show', $request->id) }}"
-                                                class="btn btn-primary">
-                                                Lihat Data
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                    {{ $request->status ?? '' }}</span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('warehouse.data-request-bahan.show', $request->id) }}"
+                                                    class="btn btn-primary">
+                                                    Lihat Data
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>

@@ -36,76 +36,78 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table stripe hover bordered datatable datatable-Role">
-                            <thead>
-                                <tr>
-                                    <th width="10">
+                        <div class="table-responsive">
+                            <table class="table stripe hover bordered datatable datatable-Role">
+                                <thead>
+                                    <tr>
+                                        <th width="10">
 
-                                    </th>
-                                    <th>
-                                        No
-                                    </th>
-                                    <th>
-                                        Nama Bahan
-                                    </th>
-                                    <th>
-                                        Jumlah Masuk
-                                    </th>
-                                    <th>
-                                        Jumlah Keluar
-                                    </th>
-                                    <th>
-                                        Jumlah Sisa
-                                    </th>
-                                    <th>
-                                        HPP
-                                    </th>
-                                    <th>
-                                        Harga Jual
-                                    </th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($inventories as $key => $inventory)
-                                    <tr data-entry-id="{{ $inventory->id }}">
-                                        <td>
-
-                                        </td>
-                                        <td>
-                                            {{ $loop->iteration }}
-                                        </td>
-                                        <td>
-                                            {{ $inventory->name ?? '' }}
-                                        </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->entry_amount ?? '0' }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->exit_amount ?? '0' }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->remaining_amount ?? '0' }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->hpp ?? '0' }}
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            {{ $inventory->price ?? '0' }}
-                                        </td>
+                                        </th>
+                                        <th>
+                                            No
+                                        </th>
+                                        <th>
+                                            Nama Bahan
+                                        </th>
+                                        <th>
+                                            Jumlah Masuk
+                                        </th>
+                                        <th>
+                                            Jumlah Keluar
+                                        </th>
+                                        <th>
+                                            Jumlah Sisa
+                                        </th>
+                                        <th>
+                                            HPP
+                                        </th>
+                                        <th>
+                                            Harga Jual
+                                        </th>
 
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($inventories as $key => $inventory)
+                                        <tr data-entry-id="{{ $inventory->id }}">
+                                            <td>
+
+                                            </td>
+                                            <td>
+                                                {{ $loop->iteration }}
+                                            </td>
+                                            <td>
+                                                {{ $inventory->name ?? '' }}
+                                            </td>
+                                            <td>
+                                                @foreach ($inventory->inventories as $inv)
+                                                    {{ $inv->entry_amount ?? '0' }}
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach ($inventory->inventories as $inv)
+                                                    {{ $inv->exit_amount ?? '0' }}
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach ($inventory->inventories as $inv)
+                                                    {{ $inv->remaining_amount ?? '0' }}
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach ($inventory->inventories as $inv)
+                                                    {{ $inv->hpp ?? '0' }}
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                {{ $inventory->price ?? '0' }}
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
                     </div>
                 </div>

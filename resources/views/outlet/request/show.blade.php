@@ -69,7 +69,7 @@
                                         <span
                                             class="badge
                                             {{ $request->status == 'pending' ? 'badge-warning' : '' }}
-                                            {{ $request->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $request->status == 'approved' ? 'badge-success' : '' }}
                                             {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
                                             {{ $request->status ?? '' }}</span>

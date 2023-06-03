@@ -2,6 +2,28 @@
 @section('style')
     <link type="text/css" rel="stylesheet"
         href="{{ asset('assets/plugins/datatables/extensions/dataTables.jqueryui.min.css') }}">
+
+    <style>
+        body.modal-open .row {
+            -webkit-filter: blur(4px);
+            -moz-filter: blur(4px);
+            -o-filter: blur(4px);
+            -ms-filter: blur(4px);
+            filter: blur(4px);
+            filter: url("https://gist.githubusercontent.com/amitabhaghosh197/b7865b409e835b5a43b5/raw/1a255b551091924971e7dee8935fd38a7fdf7311/blur".svg#blur);
+            filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
+        }
+
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+        }
+
+        .modal-content .modal-header {
+            background-color: #f6f8fd;
+            border-radius: 16px 16px 0 0;
+        }
+    </style>
 @endsection
 @section('content')
     <div id="main-wrapper">
@@ -67,7 +89,7 @@
                                         <span
                                             class="badge
                                             {{ $request->status == 'pending' ? 'badge-warning' : '' }}
-                                            {{ $request->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $request->status == 'approved' ? 'badge-success' : '' }}
                                             {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
                                             {{ $request->status ?? '' }}</span>
@@ -88,9 +110,8 @@
                             </tbody>
                         </table>
                         <div class="form-layout-footer mt-3 d-flex">
-                            <form action="{{ route('warehouse.data-request-bahan.store') }}">
-                                <button class="btn btn-primary" type="submit">Distribusikan</button>
-                            </form>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#m_modal_1">
+                                Distribusikan</button>
                             <a href="{{ route('warehouse.data-request-bahan.index') }}"
                                 class="btn btn-secondary ml-2">Kembali</a>
                         </div>
@@ -98,6 +119,45 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <div class="modal" id="m_modal_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel_1"
+        style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel_1">Konfirmasi Distribusi</h5>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="ion-ios-close-empty"></i></span>
+                    </button>
+                </div>
+                <form action="{{ route('warehouse.data-request-bahan.update', $request->id) }}" method="POST">
+                    <div class="modal-body">
+                        @csrf
+                        @method('PUT')
+                        <div class="form-group mg-b-10-force">
+                            <label class="form-control-label active">Biaya Pengiriman</label>
+                            <input
+                                class="form-control @error('fee')
+                                            is-invalid
+                                        @enderror"
+                                type="number" name="fee" value="{{ old('fee') }}">
+                            @error('fee')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Distribusikan</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection

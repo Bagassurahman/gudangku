@@ -101,6 +101,18 @@
                 </div>
             </div>
         @endcan
+        @can('data_outlet_access')
+            <div class="nav-dropdown">
+                <a href="#" class="nav-link">
+                    <i class="fa-fw fas fa-users">
+
+                    </i>
+
+                    <span class="mx-4">{{ trans('cruds.userManagement.title') }}</span>
+                    <i class="fa fa-caret-down ml-auto" aria-hidden="true"></i>
+                </a>
+            </div>
+        @endcan
         @can('user_management_access')
             <div class="nav-dropdown">
                 <a class="nav-link" href="#">

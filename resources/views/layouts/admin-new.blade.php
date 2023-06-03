@@ -205,15 +205,7 @@
         </div>
         <!--/ Page Content End -->
     </div>
-    <!--/ Page Container End -->
-    <!--================================-->
-    <!-- Scroll To Top Start-->
-    <!--================================-->
-    <a href="" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
-    <!--/ Scroll To Top End -->
-    <!--================================-->
-    <!-- Setting Sidebar Start -->
-    <!--================================-->
+
 
 
     <!--/ Demo Sidebar End  -->

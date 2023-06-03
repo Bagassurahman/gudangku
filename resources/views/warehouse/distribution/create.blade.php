@@ -1,13 +1,37 @@
 @extends('layouts.admin-new')
+@section('style')
+    <style>
+        .btn-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 50px;
+            height: 50px;
+            background-color: #5d78ff;
+            border: none;
+            color: white;
+            border-radius: 50%;
+        }
+
+        .btn .badge {
+            position: relative;
+            top: -1px;
+            right: 0px;
+        }
+    </style>
+@endsection
 @section('content')
     <div id="main-wrapper">
-
+        <button type="button" class="btn btn-primary btn-cart" data-toggle="modal" data-target="#cart" type="button">
+            <span class="total-count position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"></span>
+            <i class="fa fa-shopping-cart"></i>
+        </button>
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-5 pd-b-5">
                 <h1 class="pd-0 mg-0 tx-20 text-overflow">Distribusi Bahan</h1>
             </div>
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#cart">Keranjang (<span
-                    class="total-count"></span>)</button>
+
             <button class="clear-cart btn btn-danger me-4">Kosongkan Keranjang</button>
         </div>
         <div class="row row-xs clearfix">

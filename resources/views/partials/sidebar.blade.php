@@ -53,6 +53,26 @@
                         </ul>
                     </li>
                 @endcan
+                @can('data_outlet_access')
+                    <li
+                        class="{{ request()->is('gudang/persediaan-outlet*', 'gudang/penjualan-outlet*') ? ' active open' : '' }}">
+                        <a href=""><i data-feather="clipboard"></i>
+                            <span>Data Outlet</span><i class="accordion-icon fa fa-angle-left"></i></a>
+                        <ul class="sub-menu" style="display: block;">
+                            @can('inventory_alloutlet_access')
+                                <li class="{{ request()->is('gudang/persediaan-outlet*') ? ' active' : '' }}">
+                                    <a href="{{ route('warehouse.persediaan-outlet.index') }}">Data Persediaan</a>
+                                </li>
+                            @endcan
+                            @can('data_sales_all_outlets')
+                                <li class="{{ request()->is('gudang/penjualan-outlet*') ? ' active' : '' }}">
+                                    <a href="{{ route('warehouse.penjualan-outlet.index') }}">Data Penjualan</a>
+                                </li>
+                            @endcan
+                        </ul>
+
+                    </li>
+                @endcan
                 @can('report_access')
                     <li
                         class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*') ? ' active open' : '' }}">

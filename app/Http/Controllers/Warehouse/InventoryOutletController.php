@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Outlet;
+namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
+use App\Outlet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class DistributionController extends Controller
+class InventoryOutletController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +16,9 @@ class DistributionController extends Controller
      */
     public function index()
     {
-        //
+        $outlets = Outlet::where('warehouse_id', Auth::user()->id)->get();
+
+        return view('warehouse.inventory-outlet.index', compact('outlets'));
     }
 
     /**
@@ -80,5 +84,6 @@ class DistributionController extends Controller
      */
     public function destroy($id)
     {
+        //
     }
 }
