@@ -20,7 +20,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Distibusi
+                            Data Request
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -108,13 +108,13 @@
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
             let table = $('.datatable-Role:not(.ajaxTable)').DataTable({
-                buttons: dtButtons
+                buttons: dtButtons,
+                responsive: false // Menambahkan opsi responsive
             })
-            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
-                $($.fn.dataTable.tables(true)).DataTable()
-                    .columns.adjust();
-            });
 
+            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+            });
         })
     </script>
 @endsection

@@ -20,6 +20,7 @@
             right: 0px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection
 @section('content')
     <div id="main-wrapper">
@@ -32,7 +33,6 @@
                 <h1 class="pd-0 mg-0 tx-20 text-overflow">Distribusi Bahan</h1>
             </div>
 
-            <button class="clear-cart btn btn-danger me-4">Kosongkan Keranjang</button>
         </div>
         <div class="row row-xs clearfix">
             <!--================================-->
@@ -95,6 +95,9 @@
                                         <div class="card">
                                             <div class="card-header">
                                                 {{ $material->material->name }}
+                                                <br>
+                                                Stok: {{ $material->remaining_amount }}
+
                                             </div>
                                             <div class="card-body">
                                                 <input type="number" id="data-price-{{ $material->material->id }}"
@@ -129,7 +132,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Distribusi</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -143,6 +146,8 @@
                             <div>Total Harga: Rp<span class="total-cart"></span></div>
                         </div>
                         <div class="modal-footer">
+                            <button class="clear-cart btn btn-danger me-4" type="button">Kosongkan Keranjang</button>
+
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button class="btn btn-primary" type="submit" id="btn-submit">Distribusikan</button>
                         </div>
@@ -155,6 +160,8 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous">
     </script>
@@ -307,7 +314,7 @@
         addBtns.forEach(btn => {
             btn.addEventListener('click', async function(event) {
                 event.preventDefault();
-                const id = this.getAttribute('data-id');
+                const id = parseInt(this.getAttribute('data-id'));
                 const name = this.getAttribute('data-name');
                 const priceInput = document.querySelector(`#data-price-${id}`);
                 const price = parseFloat(priceInput?.value);
@@ -319,10 +326,21 @@
                     return;
                 }
 
-                await reduceStock(id);
+                // await reduceStock(id);
 
                 distributionCart.addItemToCart(id, name, price, 1);
                 displayCart();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Item ' + name + ' berhasil ditambahkan ke keranjang',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    toast: true,
+                    timerProgressBar: true
+                });
             });
         });
 
@@ -363,12 +381,39 @@
             });
         }
 
+        function increaseStock(id) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: '/gudang/increase-stock',
+                    data: {
+                        material_id: id
+                    },
+                    success: function(data) {
+                        resolve(data);
+                    },
+                    error: function(xhr, status, error) {
+                        reject(error);
+                    }
+                });
+            });
+        }
+
 
         // Clear items
         $('.clear-cart').click(function() {
+            const cart = distributionCart.listCart();
+
+            // cart.forEach(async item => {
+            //     for (let i = 0; i < item.count; i++) {
+            //         await increaseStock(item.id);
+            //     }
+            // });
+
             distributionCart.clearCart();
+
             displayCart();
         });
+
 
 
         function displayCart() {
@@ -378,33 +423,51 @@
                 output += "<tr>" +
                     "<td>" + cartArray[i].name + "</td>" +
                     "<td>(" + cartArray[i].price + ")</td>" +
-                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-id=" +
-                    cartArray[i].id + ">-</button>" +
+                    "<td><div class='input-group'><button type='button' class='minus-item input-group-addon btn btn-primary' data-id=" +
+                    cartArray[i].id + " data-count=" + cartArray[i].count + ">-</button>" +
                     "<input type='number' class='item-count form-control' data-id='" + cartArray[i].id + "' value='" +
                     cartArray[i].count + "'>" +
-                    "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
-                    ">+</button></div></td>" +
-                    "<td><button class='delete-item btn btn-danger' data-id=" + cartArray[i].id + ">X</button></td>" +
+                    "<button type='button' class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
+                    " data-count=" + cartArray[i].count + ">+</button></div></td>" +
+                    "<td><button type='button' class='delete-item btn btn-danger' data-id=" + cartArray[i].id +
+                    " data-count=" +
+                    cartArray[i].count + ">X</button></td>" +
                     " = " +
                     "<td>" + cartArray[i].total + "</td>" +
                     "</tr>";
             }
+
+
             $('.show-cart').html(output);
             $('.total-cart').html(distributionCart.totalCart());
             $('.total-count').html(distributionCart.totalCount());
+            if (cartArray.length == 0) {
+                $('#btn-submit').hide();
+            } else {
+                $('#btn-submit').show();
+            }
         }
 
-        // Delete item button
 
         $('.show-cart').on("click", ".delete-item", function(event) {
-            var id = $(this).data('id');
+            var id = parseInt($(this).data('id'));
+            var count = $(this).data('count'); // Mengambil jumlah (count) dari atribut data pada elemen
+
+            // for (let i = 0; i < count; i++) {
+            //     increaseStock(id);
+            // }
+
             distributionCart.removeItemFromCartAll(id);
             displayCart();
-        })
+        });
+
 
         // -1
         $('.show-cart').on("click", ".minus-item", function(event) {
             var id = $(this).data('id');
+
+            // increaseStock(id);
+
             distributionCart.removeItemFromCart(id);
             displayCart();
         })
@@ -412,6 +475,17 @@
         // +1
         $('.show-cart').on("click", ".plus-item", function(event) {
             var id = $(this).data('id');
+
+            const stock = checkStock(id);
+
+            if (stock <= 0) {
+                alert('Stok tidak mencukupi');
+                return;
+            }
+
+            // reduceStock(id);
+
+
             distributionCart.addItemToCart(id);
             displayCart();
         })
@@ -434,6 +508,7 @@
 
             // Validasi input tanggal dan outlet
             if (!poDate || !outletId) {
+                event.preventDefault();
                 alert('Harap masukkan tanggal dan pilih outlet');
                 return;
             }

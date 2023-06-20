@@ -61,6 +61,20 @@
                                     </div>
                                 @enderror
                             </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Nilai Konversi<span
+                                        class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('value')
+                                            is-invalid
+                                        @enderror"
+                                    type="text" name="value" value="{{ old('value') }}">
+                                @error('value')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                             <!-- row -->
                             <div class="form-layout-footer mt-3">
                                 <button class="btn btn-custom-primary" type="submit">Simpan</button>

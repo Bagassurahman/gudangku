@@ -46,7 +46,10 @@ class TransactionController extends Controller
             'order_number' => 'TRX-' . date('YmdHis'),
             'order_date' => date('Y-m-d H:i:s'),
             'outlet_id' => Auth::user()->id,
+            'total' => $request->total_price,
             'paid_amount' => $request->input('paid_amount'),
+            'payment_method' => $request->tipe_pembayaran,
+            'customer_type' => $request->tipe_harga
         ]);
 
         foreach ($cartItems as $cartItem) {

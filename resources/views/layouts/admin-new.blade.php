@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="eng">
 
 <head>
     <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
@@ -9,8 +9,10 @@
     <meta name="description" content="">
     <meta name="keyword" content="">
     <meta name="author" content="" />
-    <!-- Page Title -->
-    <title>Zam-Zam Time</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>@yield('title', 'Zam Zam Time')</title>
+
     <!-- Main CSS -->
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" />
@@ -19,9 +21,8 @@
         href="{{ asset('assets/plugins/simple-line-icons/css/simple-line-icons.css') }}">
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/ionicons/css/ionicons.css') }}">
 
-    <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/chartist/chartist.css') }}">
-    <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/apex-chart/apexcharts.css') }}">
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
     <link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css" rel="stylesheet" />
@@ -156,6 +157,11 @@
             background-color: #667eea !important;
             /*bg-indigo-500*/
         }
+
+        table.dataTable tfoot th,
+        table.dataTable tfoot td {
+            padding: 8px 10px !important
+        }
     </style>
     @yield('style')
 </head>
@@ -168,7 +174,7 @@
         <!--================================-->
         <!-- Page Sidebar Start -->
         <!--================================-->
-        @include('partials.sidebar')
+        @include('partials.sidebar-v2')
         <!--/ Page Sidebar End -->
         <!--================================-->
         <!-- Page Content Start -->
@@ -221,11 +227,7 @@
 
     <script src="{{ asset('assets/plugins/countup/counterup.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/waypoints/waypoints.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/chartjs/chartjs.js') }}"></script>
-    <script src="{{ asset('assets/plugins/apex-chart/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/apex-chart/irregular-data-series.js') }}"></script>
     <script src="{{ asset('assets/plugins/simpler-sidebar/jquery.simpler-sidebar.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dashboard/sales-dashboard-init.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('assets/js/highlight.min.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>

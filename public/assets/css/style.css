@@ -17,6 +17,7 @@
 
 /**********************************************************************
 ***********************************************************************
+### Costumize CSS
 ### General CSS
 ### Header CSS
 ### Mega Menu CSS
@@ -41,6 +42,51 @@
 *********************************************************************
 *********************************************************************/
 
+/**********************************************************************
+***********************************************************************
+### Costumize CSS
+*********************************************************************
+*********************************************************************/
+
+/* ======== DASHBOARD CUSTOM STYLE ======== */
+
+/* Dashboard POS Outlet */
+#outlet-pos .row.list-product {
+    max-height: 465px;
+    overflow-x: auto;
+}
+
+/* Width and height for the scrollbar track */
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Styles for the scrollbar thumb */
+*::-webkit-scrollbar-thumb {
+    background: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+/* Styles on hover */
+*::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Color of the thumb on hover */
+}
+
+/* Styles for the scrollbar track */
+*::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Color of the track */
+}
+
+/* Styles for the scrollbar corner */
+*::-webkit-scrollbar-corner {
+    background: #f1f1f1;
+    /* Color of the corner */
+}
 
 /**********************************************************************
 ***********************************************************************
@@ -5198,4 +5244,10 @@ pre {
 
 .my-float {
     margin-top: 22px;
+}
+
+@media screen and (max-width: 640px) {
+    div.dt-buttons>* {
+        margin: 10px;
+    }
 }

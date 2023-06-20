@@ -52,7 +52,11 @@ class MaterialDataController extends Controller
      */
     public function show($id)
     {
-        //
+        abort_if(Gate::denies('material_data_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $material = MaterialData::findOrFail($id);
+
+        return view('admin.materials-data.show', compact('material'));
     }
 
     /**

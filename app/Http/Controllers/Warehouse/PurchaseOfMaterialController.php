@@ -8,6 +8,7 @@ use App\MaterialData;
 use App\PurchaseOfMaterials;
 use App\PurchaseOfMaterialsDetail;
 use App\Supplier;
+use App\UnitData;
 use Illuminate\Http\Request;
 use Gate;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class PurchaseOfMaterialController extends Controller
         abort_if(Gate::denies('purchase_of_material_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $suppliers = Supplier::all();
-        $materials = MaterialData::all();
+        $materials = MaterialData::with('unit')->get();
 
         return view('warehouse.purchase-of-material.index', compact('suppliers', 'materials'));
     }
@@ -46,7 +47,6 @@ class PurchaseOfMaterialController extends Controller
     public function store(Request $request)
     {
 
-
         $cartItems = json_decode($request->input('cart_items'), true);
 
         $purchaseOfMaterial = PurchaseOfMaterials::create([
@@ -57,6 +57,14 @@ class PurchaseOfMaterialController extends Controller
         ]);
 
         foreach ($cartItems as $cartItem) {
+            $inventory = Inventory::where('material_data_id', $cartItem['id'])
+                ->where('warehouse_id', Auth::user()->id)
+                ->first();
+
+            $material = MaterialData::where('id', $cartItem['id'])
+                ->first();
+
+
             PurchaseOfMaterialsDetail::create([
                 'purchase_of_materials_id' => $purchaseOfMaterial->id,
                 'material_id' => $cartItem['id'],
@@ -64,12 +72,6 @@ class PurchaseOfMaterialController extends Controller
                 'price' => $cartItem['price'],
                 'total' => $cartItem['total'],
             ]);
-
-            $inventory = Inventory::where('material_data_id', $cartItem['id'])
-                ->where('warehouse_id', Auth::user()->id)
-                ->first();
-
-
 
             if ($inventory) {
                 $inventory->update([

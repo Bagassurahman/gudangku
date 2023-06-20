@@ -59,9 +59,7 @@
                                     <th>
                                         Status
                                     </th>
-                                    <th>
-                                        Aksi
-                                    </th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,12 +101,7 @@
                                     @endphp
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="5" style="text-align: right;">Total:</th>
-                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
-                                </tr>
-                            </tfoot>
+
                         </table>
 
                     </div>
@@ -125,13 +118,13 @@
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
             let table = $('.datatable-Role:not(.ajaxTable)').DataTable({
-                buttons: dtButtons
+                buttons: dtButtons,
+                responsive: false // Menambahkan opsi responsive
             })
-            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
-                $($.fn.dataTable.tables(true)).DataTable()
-                    .columns.adjust();
-            });
 
+            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
+                $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+            });
         })
     </script>
 @endsection

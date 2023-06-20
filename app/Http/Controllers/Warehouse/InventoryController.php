@@ -19,7 +19,8 @@ class InventoryController extends Controller
         $userId = Auth::id();
         $inventories = MaterialData::with(['inventories' => function ($query) use ($userId) {
             $query->where('warehouse_id', $userId);
-        }])->get();
+        }, 'inventories.material.unit'])->get();
+
 
 
 

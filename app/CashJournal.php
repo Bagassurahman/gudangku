@@ -10,11 +10,12 @@ class CashJournal extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'code',
         'date',
     ];
 
-    public function cashJournalDetails()
+    public function detail()
     {
         return $this->hasMany(CashJournalDetail::class);
     }

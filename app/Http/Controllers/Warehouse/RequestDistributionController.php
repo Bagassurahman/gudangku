@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\Debt;
 use App\Distribution;
 use App\DistributionDetail;
 use App\Http\Controllers\Controller;
@@ -110,7 +111,6 @@ class RequestDistributionController extends Controller
 
                 if ($stock >= $qty) {
                     $inventory->remaining_amount = $stock - $qty;
-                    $inventory->exit_amount = $inventory->exit_amount + $qty;
                     $inventory->save();
 
                     // ubah status hanya jika belum diubah sebelumnya
@@ -154,6 +154,9 @@ class RequestDistributionController extends Controller
                 'status' => 'on_progres'
             ]);
 
+
+
+
             foreach ($details->all() as $detail) {
                 $materialData = MaterialData::where(
                     'id',
@@ -168,22 +171,36 @@ class RequestDistributionController extends Controller
                     'total' => $detail->qty * $materialData->selling_price
                 ]);
 
-                $inventoryOutlet = Inventory::where('outlet_id', $requests->outlet_id)->where('material_data_id', $detail->material_id)->first();
+                // $inventoryOutlet = Inventory::where('outlet_id', $requests->outlet_id)->where('material_data_id', $detail->material_id)->first();
 
-                if ($inventoryOutlet) {
-                    $inventoryOutlet->update([
-                        'entry_amount' => $inventoryOutlet->entry_amount + $detail->qty,
-                        'remaining_amount' => $inventoryOutlet->remaining_amount + $detail->qty
-                    ]);
-                } else {
-                    Inventory::create([
-                        'outlet_id' => $requests->outlet_id,
-                        'material_data_id' => $detail->material_id,
-                        'entry_amount' => $detail->qty,
-                        'remaining_amount' => $detail->qty
-                    ]);
-                }
+                // if ($inventoryOutlet) {
+                //     $inventoryOutlet->update([
+                //         'entry_amount' => $inventoryOutlet->entry_amount + $detail->qty,
+                //         'remaining_amount' => $inventoryOutlet->remaining_amount + $detail->qty
+                //     ]);
+                // } else {
+                //     Inventory::create([
+                //         'outlet_id' => $requests->outlet_id,
+                //         'material_data_id' => $detail->material_id,
+                //         'entry_amount' => $detail->qty,
+                //         'remaining_amount' => $detail->qty
+                //     ]);
+                // }
             }
+
+            $total_akhir = 0;
+
+            foreach ($distribution->details as $detail) {
+                $total_akhir += $detail->total;
+            }
+
+            Debt::create([
+                'outlet_id' => $request->outlet_id,
+                'warehouse_id' => Auth::user()->id,
+                'date' => $request->po_date,
+                'amount' => $total_akhir,
+                'status' => 'pending'
+            ]);
 
             SweetAlert::success('Berhasil', 'Distribusi berhasil');
         }

@@ -20,6 +20,9 @@
             right: 0px;
         }
     </style>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 @endsection
 @section('content')
     <div id="main-wrapper">
@@ -32,7 +35,6 @@
                 <h1 class="pd-0 mg-0 tx-20 text-overflow">Pembelian Bahan</h1>
             </div>
 
-            <button class="clear-cart btn btn-danger me-4">Kosongkan Keranjang</button>
         </div>
         <div class="row row-xs clearfix">
             <!--================================-->
@@ -95,6 +97,8 @@
                                         <div class="card">
                                             <div class="card-header">
                                                 {{ $material->name }}
+                                                <br>
+                                                Satuan: {{ $material->unit->warehouse_unit }}
                                             </div>
                                             <div class="card-body">
                                                 <input type="number" id="data-price-{{ $material->id }}"
@@ -128,7 +132,8 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cart</h5>
+
+                        <h5 class="modal-title" id="exampleModalLabel">Keranjang</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -142,6 +147,8 @@
                             <div>Total Harga:<span class="total-cart"></span></div>
                         </div>
                         <div class="modal-footer">
+                            <button class="clear-cart btn btn-danger me-4" type="button">Kosongkan Keranjang</button>
+
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button class="btn btn-primary" type="submit" id="btn-submit">Beli</button>
                         </div>
@@ -154,6 +161,7 @@
     </div>
 @endsection
 @section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous">
     </script>
@@ -313,15 +321,28 @@
                 const priceInput = document.querySelector(`#data-price-${id}`);
                 const price = parseFloat(priceInput.value);
                 if (isNaN(price) || price <= 0) {
-
                     alert('Masukan harga yang valid');
                     return;
                 }
                 this.setAttribute('data-price', price.toFixed(0));
                 purchaseCart.addItemToCart(id, name, price, 1);
                 displayCart();
+
+                // Tampilkan toast SweetAlert dengan nama item
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Item ' + name + ' berhasil ditambahkan ke keranjang',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    toast: true,
+                    timerProgressBar: true
+                });
             });
         });
+
+
 
 
         // Clear items
@@ -352,6 +373,11 @@
             $('.show-cart').html(output);
             $('.total-cart').html(purchaseCart.totalCart());
             $('.total-count').html(purchaseCart.totalCount());
+            if (cartArray.length == 0) {
+                $('#btn-submit').hide();
+            } else {
+                $('#btn-submit').show();
+            }
         }
 
         // Delete item button

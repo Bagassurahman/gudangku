@@ -1,6 +1,6 @@
 <div class="page-sidebar">
     <div class="logo">
-        <a class="logo-img" href="index.html">
+        <a class="logo-img" href="{{ route('dashboard') }}">
             <img class="desktop-logo" src="{{ asset('images/zam-zam.png') }}" alt="">
             <img class="small-logo" src="{{ asset('images/logo-zamzam.jpeg') }}" alt="">
         </a>
@@ -12,14 +12,14 @@
     <div class="page-sidebar-inner">
         <div class="page-sidebar-menu">
             <ul class="accordion-menu">
-                <li class="{{ request()->is('admin') ? ' active' : '' }}">
-                    <a href="{{ route('admin.home') }}"><i data-feather="layout"></i>
+                <li class="{{ request()->is('dashboard') ? ' active' : '' }}">
+                    <a href="{{ route('dashboard') }}"><i data-feather="layout"></i>
                         <span>Dashboard</span></a>
                 </li>
 
                 @can('transaction_access')
                     <li
-                        class="{{ request()->is('gudang/persediaan*', 'gudang/distribusi*', 'outlet/request*', 'gudang/data-request-bahan*') ? ' active open' : '' }}">
+                        class="{{ request()->is('gudang/persediaan*', 'gudang/distribusi*', 'outlet/request*', 'gudang/data-request-bahan*', 'outlet/jurnal-kas*', 'outlet/setoran*', 'gudang/setoran*') ? ' active open' : '' }}">
 
                         <a href=""><i data-feather="clipboard"></i>
                             <span>Transaksi</span><i class="accordion-icon fa fa-angle-left"></i></a>
@@ -50,6 +50,26 @@
                                         href="{{ route('warehouse.data-request-bahan.index') }}">Data Request Bahan</a>
                                 </li>
                             @endcan
+                            @can('cash_journal_outlet_access')
+                                <li class="{{ request()->is('outlet/jurnal-kas*') ? ' active' : '' }}"><a
+                                        href="{{ route('outlet.jurnal-kas.index') }}">Jurnal Kas</a>
+                                </li>
+                            @endcan
+                            @can('deposit_outlet_access')
+                                <li class="{{ request()->is('outlet/setoran*') ? ' active' : '' }}"><a
+                                        href="{{ route('outlet.setoran.index') }}">Setoran</a>
+                                </li>
+                            @endcan
+                            {{-- @can('deposit_warehouse_access')
+                                    <li class="{{ request()->is('gudang/setoran*') ? ' active' : '' }}"><a
+                                            href="{{ route('warehouse.setoran.index') }}">Setoran</a>
+                                    </li>
+                                @endcan --}}
+                            @can('deposit_finance_access')
+                                <li class="{{ request()->is('gudang/setoran*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.setoran.index') }}">Setoran</a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
@@ -75,19 +95,64 @@
                 @endcan
                 @can('report_access')
                     <li
-                        class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*') ? ' active open' : '' }}">
+                        class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*', 'finance/laporan-distribusi*', 'finance/laporan-pembelian*', 'finance/laporan-setoran*', 'finance/laporan-jurnal-kas*', 'finance/deposit/*/detail/*', 'finance/purchase/*/detail/*', 'finance/distribution/*/detail/*', 'finance/cash-journal/*/detail/*', 'finance/laporan-penjualan*') ? ' active open' : '' }}">
 
                         <a href=""><i data-feather="clipboard"></i>
                             <span>Laporan</span><i class="accordion-icon fa fa-angle-left"></i></a>
                         <ul class="sub-menu" style="display: block;">
 
-                            <li class="{{ request()->is('gudang/laporan-pembelian*') ? ' active' : '' }}"><a
-                                    href="{{ route('warehouse.laporan-pembelian.index') }}">Laporan Pembelian</a>
-                            </li>
-                            <li class="{{ request()->is('gudang/laporan-distribusi*') ? ' active' : '' }}"><a
-                                    href="{{ route('warehouse.laporan-distribusi.index') }}">Laporan Distribusi</a>
-                            </li>
-
+                            @can('distribution_warehouse_report_access')
+                                <li class="{{ request()->is('gudang/laporan-distribusi*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.laporan-distribusi.index') }}">Laporan Distribusi</a>
+                                </li>
+                            @endcan
+                            @can('purchase_warehouse_report_access')
+                                <li class="{{ request()->is('gudang/laporan-pembelian*') ? ' active' : '' }}"><a
+                                        href="{{ route('warehouse.laporan-pembelian.index') }}">Laporan Pembelian</a>
+                                </li>
+                            @endcan
+                            @can('distribution_finance_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-distribusi*', 'finance/distribution/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-distribusi.index') }}">Laporan Distribusi</a>
+                                </li>
+                            @endcan
+                            @can('purchase_finance_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-pembelian*', 'finance/purchase/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-pembelian.index') }}">Laporan Pembelian</a>
+                                </li>
+                            @endcan
+                            @can('deposit_finance_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-setoran*', 'finance/deposit/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-setoran.index') }}">Laporan Setoran</a>
+                                </li>
+                            @endcan
+                            @can('cash_journal_finance_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-jurnal-kas*', 'finance/cash-journal/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-jurnal-kas.index') }}">Laporan Jurnal Kas</a>
+                                </li>
+                            @endcan
+                            @can('transaction_finance_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-penjualan*', 'finance/cash-journal/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-penjualan.index') }}">Laporan Penjualan Outlets</a>
+                                </li>
+                            @endcan
+                            @can('transaction_outlet_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-jurnal-kas*', 'finance/cash-journal/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-jurnal-kas.index') }}">Laporan Penjualan</a>
+                                </li>
+                            @endcan
+                            @can('wealth_report_access')
+                                <li
+                                    class="{{ request()->is('finance/laporan-jurnal-kas*', 'finance/cash-journal/*/detail/*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-jurnal-kas.index') }}">Laporan Kekayaan Outlet</a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan

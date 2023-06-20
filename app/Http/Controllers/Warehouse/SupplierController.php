@@ -81,6 +81,14 @@ class SupplierController extends Controller
      */
     public function destroy($id)
     {
-        //
+        abort_if(Gate::denies('supplier_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $supplier = Supplier::findOrFail($id);
+
+        $supplier->delete();
+
+        SweetAlert::toast('Data Supplier berhasil dihapus', 'success')->timerProgressBar();
+
+        return back();
     }
 }

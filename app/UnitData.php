@@ -22,6 +22,7 @@ class UnitData extends Model
     protected $fillable = [
         'warehouse_unit',
         'outlet_unit',
+        'value',
         'created_at',
         'updated_at',
         'deleted_at',

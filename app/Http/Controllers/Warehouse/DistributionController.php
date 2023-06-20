@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\Debt;
 use App\Distribution;
 use App\DistributionDetail;
 use App\Http\Controllers\Controller;
@@ -62,16 +63,16 @@ class DistributionController extends Controller
             'outlet_id' => $request->outlet_id,
             'distribution_date' => $request->po_date,
             'fee' => '0',
-            'status' => 'accepted'
+            'status' => 'on_progres'
         ]);
 
 
         foreach ($cartItems as $cartItem) {
-            $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $cartItem['id'])->first();
-            $inventory->update([
-                'exit_amount' => $inventory->exit_amount + $cartItem['count'],
-                'remaining_amount' => $inventory->remaining_amount - $cartItem['count']
-            ]);
+            // $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $cartItem['id'])->first();
+            // $inventory->update([
+            //     'exit_amount' => $inventory->exit_amount + $cartItem['count'],
+            //     'remaining_amount' => $inventory->remaining_amount - $cartItem['count']
+            // ]);
 
             DistributionDetail::create([
                 'distribution_id' => $distribution->id,
@@ -80,22 +81,37 @@ class DistributionController extends Controller
                 'total' => $cartItem['total']
             ]);
 
-            // update in outlet
-            $inventoryOutlet = Inventory::where('outlet_id', $request->outlet_id)->where('material_data_id', $cartItem['id'])->first();
-            if ($inventoryOutlet) {
-                $inventoryOutlet->update([
-                    'entry_amount' => $inventoryOutlet->entry_amount + $cartItem['count'],
-                    'remaining_amount' => $inventoryOutlet->remaining_amount + $cartItem['count']
-                ]);
-            } else {
-                Inventory::create([
-                    'outlet_id' => $request->outlet_id,
-                    'material_data_id' => $cartItem['id'],
-                    'entry_amount' => $cartItem['count'],
-                    'remaining_amount' => $cartItem['count']
-                ]);
-            }
+            // // update in outlet
+            // $inventoryOutlet = Inventory::where('outlet_id', $request->outlet_id)->where('material_data_id', $cartItem['id'])->first();
+            // if ($inventoryOutlet) {
+            //     $inventoryOutlet->update([
+            //         'entry_amount' => $inventoryOutlet->entry_amount + $cartItem['count'],
+            //         'remaining_amount' => $inventoryOutlet->remaining_amount + $cartItem['count']
+            //     ]);
+            // } else {
+            //     Inventory::create([
+            //         'outlet_id' => $request->outlet_id,
+            //         'material_data_id' => $cartItem['id'],
+            //         'entry_amount' => $cartItem['count'],
+            //         'remaining_amount' => $cartItem['count']
+            //     ]);
+            // }
         }
+
+        $total_akhir = 0;
+
+        foreach ($cartItems as $cartItem) {
+            $total_akhir += $cartItem['total'];
+        }
+
+
+        Debt::create([
+            'outlet_id' => $request->outlet_id,
+            'warehouse_id' => Auth::user()->id,
+            'date' => $request->po_date,
+            'amount' => $total_akhir,
+            'status' => 'pending'
+        ]);
 
         SweetAlert::success('Berhasil', 'Distribusi berhasil');
 
@@ -177,6 +193,20 @@ class DistributionController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Stok berhasil dikurangi'
+        ]);
+    }
+
+    public function increaseStock(Request $request)
+    {
+        $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $request->material_id)->first();
+
+        $inventory->update([
+            'remaining_amount' => $inventory->remaining_amount + 1
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Stok berhasil ditambah'
         ]);
     }
 }

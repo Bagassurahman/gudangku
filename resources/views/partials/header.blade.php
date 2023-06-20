@@ -26,8 +26,6 @@
         <!--================================-->
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-
-
             </ul>
         </div>
         <!--/ Mega Menu End-->
@@ -35,21 +33,30 @@
         <!--================================-->
         <!-- Header Right Start -->
         <!--================================-->
-        <div class="header-right pull-right">
-            <ul class="list-inline justify-content-end">
+        <div class="header-right pull-right align-items-center">
+            <ul class="list-inline justify-content-end ">
+                <div class="list-inline-item">
 
-
+                </div>
                 <li class="list-inline-item dropdown">
                     <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="select-profile">Hai, {{ Auth::user()->name }}</span>
-                        <img src="assets/images/avatar/avatar1.png" class="img-fluid wd-35 ht-35 rounded-circle"
-                            alt="">
+                        <div class="d-flex">
+                            <div class="d-flex flex-column ">
+                                <span class="select-profile">Hai, {{ Auth::user()->name }}</span>
+                                <p>Saldo: Rp {{ number_format(Auth::user()->account->balance->balance, 0, ',', '.') }}
+                                </p>
+                            </div>
+                            <img src="{{ asset('assets/images/avatar/avatar1.png') }}"
+                                class="img-fluid wd-35 ht-35 rounded-circle " alt="">
+                        </div>
+
+
                     </a>
                     <div class="dropdown-menu dropdown-menu-right dropdown-profile shadow-2">
                         <div class="user-profile-area">
                             <div class="user-profile-heading">
                                 <div class="profile-thumbnail">
-                                    <img src="assets/images/avatar/avatar1.png"
+                                    <img src="{{ asset('assets/images/avatar/avatar1.png') }}"
                                         class="img-fluid wd-35 ht-35 rounded-circle" alt="">
                                 </div>
                                 <div class="profile-text">
@@ -60,8 +67,11 @@
 
                             <a href="{{ route('logout') }}" class="dropdown-item"
                                 onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                <i class="icon ion-power"></i> Sign Out
+                                                    document.getElementById('logout-form').submit();">
+                                <i class="icon ion-power"></i> Logout
+                            </a>
+                            <a href="{{ route('logout') }}" class="dropdown-item">
+                                <i class="icon ion-android-settings"></i> Setting Profil
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

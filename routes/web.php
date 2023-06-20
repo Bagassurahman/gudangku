@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\WarehouseManagementController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,13 @@ Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
 
+Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+
+
 Auth::routes(['register' => false]);
 // Admin
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
-    Route::get('/', 'HomeController@index')->name('home');
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', 'PermissionsController');
@@ -51,11 +54,21 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
 Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Warehouse', 'middleware' => ['auth']], function () {
 
+    Route::resource('hutang-piutang', 'DebtController');
+
+    Route::resource('setoran', 'DepositController');
+
+    Route::resource('setting-profil', 'ProfilSetingController');
+
     Route::resource('suppliers', 'SupplierController');
 
     Route::resource('pembelian-bahan', 'PurchaseOfMaterialController');
 
     Route::resource('persediaan', 'InventoryController');
+
+    Route::resource('persediaan-outlet', 'InventoryOutletController');
+
+    Route::resource('penjualan-outlet', 'DataSalesOutletController');
 
     Route::resource('distribusi', 'DistributionController');
 
@@ -63,6 +76,7 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
 
     Route::get('check-stock', 'DistributionController@checkStock')->name('check-stock');
     Route::get('reduce-stock', 'DistributionController@reduceStock')->name('reduce-stock');
+    Route::get('increase-stock', 'DistributionController@increaseStock')->name('increase-stock');
 
     Route::get('distribusi/{outlet_id}', 'DistributionController@show')->name('distribusi.show');
 
@@ -76,6 +90,10 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
 });
 
 Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 'middleware' => ['auth']], function () {
+    Route::resource('laporan-penjualan', 'TransactionReportController');
+    Route::get('/transaction/{id}', 'TransactionReportController@showDetail')->name('transaction.detail');
+
+    Route::resource('setoran', 'DepositController');
 
     Route::resource('request', 'RequestController');
 
@@ -90,7 +108,39 @@ Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 
     Route::get('increase-stok-produk', 'ProductController@increaseProductStockByMaterial')->name('increase-stok-produk');
 
     Route::resource('transaction', 'TransactionController');
+
+    Route::resource('jurnal-kas', 'CashJournalController');
+
+    Route::resource('distribusi', 'DistributionController');
+    Route::get('/distribusi/accept/{id}', 'DistributionController@accept')->name('distribusi.accept');
 });
+Route::group(['prefix' => 'finance', 'as' => 'finance.', 'namespace' => 'Finance', 'middleware' => ['auth']], function () {
+    Route::resource('laporan-distribusi', 'DistributionReportController');
+    Route::get('/distribution/{date}/detail/{warehouseId}', 'DistributionReportController@showDetail')->name('distribution.detail');
+    Route::get('/distribution/{date}/detail-bahan/{outletId}', 'DistributionReportController@showMaterial')->name('distribution.detailBahan');
+
+
+    Route::resource('laporan-pembelian', 'PurchaseOfMaterialReportController');
+    Route::get('/purchase/{date}/detail/{warehouseId}', 'PurchaseOfMaterialReportController@showDetail')->name('purchase.detail');
+
+    Route::resource('laporan-setoran', 'DepositReportController');
+    Route::get('/deposit/{date}/detail/{accountNumber}', 'DepositReportController@showDetail')->name('deposit.detail');
+
+    Route::resource('laporan-jurnal-kas', 'CashJournalReportController');
+    Route::get('/cash-journal/{date}/detail/{outletId}', 'CashJournalReportController@showDetail')->name('cash-journal.detail');
+
+    Route::resource('laporan-penjualan', 'TransactionReportController');
+    Route::get('/transaction/{month}/{outletId}', 'TransactionReportController@show')->name('transaction.show-date');
+    Route::get('/transaction/show/outlet/{month}', 'TransactionReportController@showOutlet')->name('transaction.show-outlet');
+    Route::get('/transaction/{id}', 'TransactionReportController@showDetail')->name('transaction.detail');
+
+    Route::resource('laporan-kekayaan-outlet', 'RichesReportController');
+    Route::get('/laporan-kekayaan-outlet/{date}/{id}', 'RichesReportController@show')->name('finance.laporan-kekayaan-outlet.showDetail');
+
+    Route::resource('setoran', 'DepositController');
+    Route::resource('hutang-piutang', 'DebtController');
+});
+
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
