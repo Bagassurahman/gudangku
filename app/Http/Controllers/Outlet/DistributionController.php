@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Outlet;
 use App\Distribution;
 use App\Http\Controllers\Controller;
 use App\Inventory;
+use App\MaterialData;
+use App\UnitData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -97,6 +99,14 @@ class DistributionController extends Controller
         $distribution = Distribution::with('distributionDetails')->findOrFail($id);
 
         foreach ($distribution->distributionDetails as $distributionDetail) {
+            $materialData = MaterialData::where(
+                'id',
+                $distributionDetail->material_id
+            )->first();
+
+            $unit = UnitData::where('id', $materialData->unit_id)
+                ->first();
+
             $inventory = Inventory::where('warehouse_id', $distribution->warehouse_id)->where('material_data_id', $distributionDetail->material_id)->first();
             $inventory->update([
                 'exit_amount' => $inventory->exit_amount + $distributionDetail->quantity,
@@ -107,15 +117,15 @@ class DistributionController extends Controller
             $inventoryOutlet = Inventory::where('outlet_id', Auth::user()->id)->where('material_data_id', $distributionDetail->material_id)->first();
             if ($inventoryOutlet) {
                 $inventoryOutlet->update([
-                    'entry_amount' => $inventoryOutlet->entry_amount + $distributionDetail->quantity,
-                    'remaining_amount' => $inventoryOutlet->remaining_amount + $distributionDetail->quantity
+                    'entry_amount' => $inventoryOutlet->entry_amount + ($distributionDetail->quantity * $unit->value),
+                    'remaining_amount' => $inventoryOutlet->remaining_amount + ($distributionDetail->quantity * $unit->value)
                 ]);
             } else {
                 Inventory::create([
                     'outlet_id' => Auth::user()->id,
                     'material_data_id' => $distributionDetail->material_id,
-                    'entry_amount' => $distributionDetail->quantity,
-                    'remaining_amount' => $distributionDetail->quantity
+                    'entry_amount' => ($distributionDetail->quantity * $unit->value),
+                    'remaining_amount' => ($distributionDetail->quantity * $unit->value)
                 ]);
             }
         }

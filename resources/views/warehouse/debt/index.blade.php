@@ -48,7 +48,9 @@
                                     <th>
                                         Total Hutang
                                     </th>
-
+                                    <th>
+                                        Status
+                                    </th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -71,6 +73,21 @@
                                             {{ $debt->date }}
                                         </td>
                                         <td>Rp {{ number_format($debt->amount, 0, ',', '.') }}</td>
+                                        <td>
+                                            @if ($debt->status == 'pending')
+                                                <span class="badge badge-danger">Belum Lunas</span>
+                                            @endif
+                                            @if ($debt->status == 'waiting')
+                                                <span class="badge badge-warning">Menunggu Request</span>
+                                            @endif
+                                            @if ($debt->status == 'on_progres')
+                                                <span class="badge badge-warning">Menunggu Aproval</span>
+                                            @endif
+                                            @if ($debt->status == 'success')
+                                                <span class="badge badge-success">Lunas</span>
+                                            @endif
+
+                                        </td>
                                         <td>
                                             @if ($debt->status == 'waiting')
                                                 <form action="{{ route('warehouse.hutang-piutang.update', $debt->id) }}"

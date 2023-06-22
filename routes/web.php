@@ -15,6 +15,24 @@ Route::get('/home', function () {
 });
 
 Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+Route::get('tes', function () {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+    $mobileKeywords = ['Mobile', 'Android', 'iPhone', 'iPad', 'BlackBerry', 'Windows Phone'];
+
+    $isMobile = false; // Initialize with false
+
+    foreach ($mobileKeywords as $keyword) {
+        if (stripos($userAgent, $keyword) !== false) {
+            $isMobile = true;
+            break;
+        }
+    }
+
+    dd($isMobile);
+});
+
+
 
 
 Auth::routes(['register' => false]);
@@ -133,6 +151,12 @@ Route::group(['prefix' => 'finance', 'as' => 'finance.', 'namespace' => 'Finance
     Route::get('/transaction/{month}/{outletId}', 'TransactionReportController@show')->name('transaction.show-date');
     Route::get('/transaction/show/outlet/{month}', 'TransactionReportController@showOutlet')->name('transaction.show-outlet');
     Route::get('/transaction/{id}', 'TransactionReportController@showDetail')->name('transaction.detail');
+
+    // Laporan Penjualan Product
+    Route::resource('laporan-penjualan-product', 'ProductSalesReportController');
+
+    // Laporan Penjualan Product
+    Route::resource('laporan-penjualan-bahan', 'MaterialSalesReportController');
 
     Route::resource('laporan-kekayaan-outlet', 'RichesReportController');
     Route::get('/laporan-kekayaan-outlet/{date}/{id}', 'RichesReportController@show')->name('finance.laporan-kekayaan-outlet.showDetail');

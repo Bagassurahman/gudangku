@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Outlet;
 
 use App\Http\Controllers\Controller;
 use App\Inventory;
+use App\Product;
 use App\Transaction;
 use App\TransactionDetail;
 use Illuminate\Http\Request;
@@ -61,8 +62,7 @@ class TransactionController extends Controller
                 'total' => $cartItem['total'],
             ]);
         }
-
-        // get stock material and update
+        // $productMessage = "Detail Pembelian: \n";
         foreach ($cartItems as $cartItem) {
             $productId = $cartItem['id'];
 
@@ -96,11 +96,41 @@ class TransactionController extends Controller
                         'exit_amount' => $jumlah_keluar + $jumlah_keluar_baru,
                     ]);
             }
+
+            // $product = Product::find($cartItem['id']);
+            // $productMessage .=  "\n";
+            // $productMessage .= "Nama Produk: " . $product->name . "\n";
+            // $productMessage .= "Harga: Rp "  . number_format($cartItem['price'], 0, ',', '.') . "\n";
+            // $productMessage .= "Jumlah: " . $cartItem['count'] . "\n";
+            // $productMessage .= "\n";
         }
 
+        // $curl = curl_init();
+        // $token = "3U5JIicbIcIWHZxugBRU";
+        // $url = "https://api.fonnte.com/send";
 
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_URL => $url,
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => '',
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 0,
+        //     CURLOPT_FOLLOWLOCATION => true,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => 'POST',
+        //     CURLOPT_POSTFIELDS => array(
+        //         'target' => '6282220422308',
+        //         'type' => 'text',
+        //         'message' => 'Tes Struk Belanja Di Zam-zam Time. ' . "\n" . "\n" . $productMessage . 'Total: Rp ' . number_format($request->total_price, 0, ',', '.') . "\n" . 'Jumlah Bayar: Rp ' . number_format($request->input('paid_amount'), 0, ',', '.') . "\n" . 'Kembalian: Rp ' . number_format(($request->input('paid_amount') - $request->total_price), 0, ',', '.')
+        //     ),
+        //     CURLOPT_HTTPHEADER => array(
+        //         'Authorization: ' . $token
+        //     ),
+        //     CURLOPT_SSL_VERIFYHOST => 0,
+        //     CURLOPT_SSL_VERIFYPEER => false,
+        // ));
 
-
+        // $response = curl_exec($curl);
 
         SweetAlert::success(
             'Transaksi Berhasil',

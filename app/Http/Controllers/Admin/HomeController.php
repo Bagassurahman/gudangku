@@ -215,7 +215,19 @@ class HomeController
         } else if ($user === 'Outlet') {
             $products = Product::all();
 
-            return view('home', compact('products'));
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+
+            $mobileKeywords = ['Mobile', 'Android', 'iPhone', 'iPad', 'BlackBerry', 'Windows Phone'];
+
+            $isMobile = false; // Initialize with false
+
+            foreach ($mobileKeywords as $keyword) {
+                if (stripos($userAgent, $keyword) !== false) {
+                    $isMobile = true;
+                    break;
+                }
+            }
+            return view('home', compact('products', 'isMobile'));
         } else if ($user === 'Finance') {
             return view('home', compact('totalOmset', 'totalBiaya', 'totalPembelian', 'margin', 'persentaseMargin', 'transactions'));
         }

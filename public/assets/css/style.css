@@ -52,7 +52,7 @@
 
 /* Dashboard POS Outlet */
 #outlet-pos .row.list-product {
-    max-height: 465px;
+    max-height: 565px;
     overflow-x: auto;
 }
 

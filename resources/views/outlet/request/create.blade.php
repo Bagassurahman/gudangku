@@ -80,7 +80,7 @@
                             html +=
                                 '<input type="text" name="qty[{{ $material->id }}]" id="qty-{{ $material->id }}" class="form-control" placeholder="Masukkan Qty {{ $material->name }}">';
                             html +=
-                                '<div class="form-text">Satuan Takaran: {{ $material->unit->outlet_unit ?? '' }}</div>'
+                                '<div class="form-text">Satuan Takaran: {{ $material->unit->warehouse_unit ?? '' }}</div>'
                             html += '</div>';
 
                         }

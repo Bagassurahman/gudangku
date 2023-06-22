@@ -13,6 +13,7 @@ use Gate;
 use Symfony\Component\HttpFoundation\Response;
 use App\Request as ModelRequest;
 use App\RequestDetail;
+use App\UnitData;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 use SebastianBergmann\Diff\Differ;
@@ -101,7 +102,6 @@ class RequestDistributionController extends Controller
             $material_id = $detail->material_id;
             $qty = $detail->qty;
 
-            // check stock di inventori
             $inventory = Inventory::where('warehouse_id', Auth::user()->id)
                 ->where('material_data_id', $material_id)
                 ->first();
@@ -110,16 +110,11 @@ class RequestDistributionController extends Controller
                 $stock = $inventory->remaining_amount;
 
                 if ($stock >= $qty) {
-                    $inventory->remaining_amount = $stock - $qty;
-                    $inventory->save();
-
-                    // ubah status hanya jika belum diubah sebelumnya
                     if (!$status_updated) {
                         $requests->status = 'approved';
                         $status_updated = true;
                     }
                 } else {
-                    // ubah status hanya jika belum diubah sebelumnya
                     if (!$status_updated) {
                         $requests->status = 'rejected';
                         $status_updated = true;
@@ -156,12 +151,14 @@ class RequestDistributionController extends Controller
 
 
 
-
             foreach ($details->all() as $detail) {
                 $materialData = MaterialData::where(
                     'id',
                     $detail->material_id
                 )->first();
+
+                $unit = UnitData::where('id', $materialData->unit_id)
+                    ->first();
 
 
                 DistributionDetail::create([
@@ -170,34 +167,19 @@ class RequestDistributionController extends Controller
                     'quantity' => $detail->qty,
                     'total' => $detail->qty * $materialData->selling_price
                 ]);
-
-                // $inventoryOutlet = Inventory::where('outlet_id', $requests->outlet_id)->where('material_data_id', $detail->material_id)->first();
-
-                // if ($inventoryOutlet) {
-                //     $inventoryOutlet->update([
-                //         'entry_amount' => $inventoryOutlet->entry_amount + $detail->qty,
-                //         'remaining_amount' => $inventoryOutlet->remaining_amount + $detail->qty
-                //     ]);
-                // } else {
-                //     Inventory::create([
-                //         'outlet_id' => $requests->outlet_id,
-                //         'material_data_id' => $detail->material_id,
-                //         'entry_amount' => $detail->qty,
-                //         'remaining_amount' => $detail->qty
-                //     ]);
-                // }
             }
+
 
             $total_akhir = 0;
 
-            foreach ($distribution->details as $detail) {
+            foreach ($details->all() as $detail) {
                 $total_akhir += $detail->total;
             }
 
             Debt::create([
-                'outlet_id' => $request->outlet_id,
+                'outlet_id' => $requests->outlet_id,
                 'warehouse_id' => Auth::user()->id,
-                'date' => $request->po_date,
+                'date' => date('Y-m-d'),
                 'amount' => $total_akhir,
                 'status' => 'pending'
             ]);

@@ -105,6 +105,7 @@ class DistributionController extends Controller
         }
 
 
+
         Debt::create([
             'outlet_id' => $request->outlet_id,
             'warehouse_id' => Auth::user()->id,

@@ -153,13 +153,25 @@
                             @endcan
                             @can('transaction_finance_report_access')
                                 <li
-                                    class="{{ request()->is('finance/laporan-penjualan*', 'finance/cash-journal/*/detail/*') ? ' active' : '' }}">
+                                    class="{{ request()->is('finance/laporan-penjualan*', 'finance/cash-journal/*/detail/*') && !request()->is('finance/laporan-penjualan-product*') && !request()->is('finance/laporan-penjualan-bahan*') ? ' active' : '' }}">
                                     <a href="{{ route('finance.laporan-penjualan.index') }}">Laporan Penjualan Outlet</a>
                                 </li>
                             @endcan
                             @can('transaction_outlet_report_access')
                                 <li class="{{ request()->is('outlet/laporan-penjualan*') ? ' active' : '' }}">
                                     <a href="{{ route('outlet.laporan-penjualan.index') }}">Laporan Penjualan</a>
+                                </li>
+                            @endcan
+                            @can('product_sales_report_access')
+                                <li class="{{ request()->is('finance/laporan-penjualan-product*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-penjualan-product.index') }}">Laporan Penjualan
+                                        Produk</a>
+                                </li>
+                            @endcan
+                            @can('material_sales_report_access')
+                                <li class="{{ request()->is('finance/laporan-penjualan-bahan*') ? ' active' : '' }}">
+                                    <a href="{{ route('finance.laporan-penjualan-bahan.index') }}">Laporan Penjualan
+                                        Bahan</a>
                                 </li>
                             @endcan
                             @can('wealth_report_access')
