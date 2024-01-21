@@ -19,40 +19,25 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                {{--  <form action="{{ route('finance.laporan-penjualan-product.index') }}" method="GET">
+                <form action="{{ route('finance.laporan-penjualan-bahan.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="tanggal_mulai">Tanggal Mulai:</label>
-                                <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai">
+                                <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai"
+                                    value="{{ $tanggal_mulai }}">
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="tanggal_akhir">Tanggal Akhir:</label>
-                                <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir">
+                                <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir"
+                                    value="{{ $tanggal_akhir }}">
                             </div>
                         </div>
                         <div class="col-md-2">
 
                             <button type="submit" class="btn btn-primary w-100 mt-2">Filter</button>
-                        </div>
-                    </div>
-                </form>  --}}
-                <form action="{{ route('finance.laporan-penjualan-bahan.index') }}" method="GET">
-                    <div class="row align-items-center d-flex mb-4">
-                        <div class="col-md-10 mx-auto mt-2">
-                            <select class="form-control" name="filter">
-                                <option value="all" {{ request('filter') == 'all' ? 'selected' : '' }}>Semua</option>
-                                <option value="daily" {{ request('filter') == 'daily' ? 'selected' : '' }}>Harian</option>
-                                <option value="monthly" {{ request('filter') == 'monthly' ? 'selected' : '' }}>Bulanan
-                                </option>
-                                <option value="yearly" {{ request('filter') == 'yearly' ? 'selected' : '' }}>Tahunan
-                                </option>
-                            </select>
-                        </div>
-                        <div class="col-md-2 mx-auto mt-2">
-                            <button type="submit" class="btn btn-primary w-100">Filter</button>
                         </div>
                     </div>
                 </form>
@@ -138,12 +123,10 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="4" style="text-align: right;">Total:</th>
-                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
-                                </tr>
-                                <tr>
-                                    <th colspan="4" style="text-align: right;">Total Quantity:</th>
+                                    <th colspan="3" class="text-center">Total</th>
                                     <th>{{ $dose }}</th>
+                                    <th></th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
                                 </tr>
                             </tfoot>
                         </table>

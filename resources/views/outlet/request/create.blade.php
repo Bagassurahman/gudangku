@@ -78,9 +78,7 @@
                             html +=
                                 '<label for="qty-{{ $material->id }}">Qty {{ $material->name }} <span class="tx-danger">*</span></label>';
                             html +=
-                                '<input type="text" name="qty[{{ $material->id }}]" id="qty-{{ $material->id }}" class="form-control" placeholder="Masukkan Qty {{ $material->name }}">';
-                            html +=
-                                '<div class="form-text">Satuan Takaran: {{ $material->unit->warehouse_unit ?? '' }}</div>'
+                                '<input type="text" name="qty[{{ $material->id }}]" id="qty-{{ $material->id }}" class="form-control" placeholder="Masukkan Qty {{ $material->name }} /{{ $material->unit->warehouse_unit ?? '' }}">';
                             html += '</div>';
 
                         }

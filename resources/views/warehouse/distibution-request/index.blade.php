@@ -45,6 +45,9 @@
                                             No
                                         </th>
                                         <th>
+                                            Tanggal Request
+                                        </th>
+                                        <th>
                                             Outlet
                                         </th>
                                         <th>
@@ -52,6 +55,9 @@
                                         </th>
                                         <th>
                                             Status
+                                        </th>
+                                        <th>
+                                            Nominal
                                         </th>
                                         <th>
                                             Aksi
@@ -68,6 +74,9 @@
                                                 {{ $loop->iteration }}
                                             </td>
                                             <td>
+                                                {{ $request->created_at }}
+                                            </td>
+                                            <td>
                                                 {{ $request->outlet->outlet_name ?? '' }}
                                             </td>
                                             <td>
@@ -81,6 +90,9 @@
                                             {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
                                                     {{ $request->status ?? '' }}</span>
+                                            </td>
+                                            <td>
+                                                Rp {{ number_format($request->totalHarga, 0, ',', '.') }}
                                             </td>
                                             <td>
                                                 <a href="{{ route('warehouse.data-request-bahan.show', $request->id) }}"

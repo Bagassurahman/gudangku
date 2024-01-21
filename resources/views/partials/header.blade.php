@@ -1,14 +1,5 @@
 <div class="page-header">
-    <div class="search-form">
-        <form action="#" method="GET">
-            <div class="input-group">
-                <input class="form-control search-input" name="search" placeholder="Type something..." type="text" />
-                <span class="input-group-btn">
-                    <span id="close-search"><i class="ion-ios-close-empty"></i></span>
-                </span>
-            </div>
-        </form>
-    </div>
+
     <!--================================-->
     <!-- Page Header  Start -->
     <!--================================-->
@@ -35,18 +26,13 @@
         <!--================================-->
         <div class="header-right pull-right align-items-center">
             <ul class="list-inline justify-content-end ">
-                <div class="list-inline-item">
 
-                </div>
                 <li class="list-inline-item dropdown">
                     <a href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div class="d-flex">
-                            <div class="d-flex flex-column ">
-                                <span class="select-profile">Hai, {{ Auth::user()->name }}</span>
-                                <p>Saldo: Rp {{ number_format(Auth::user()->account->balance->balance, 0, ',', '.') }}
-                                </p>
-                            </div>
-                            <img src="{{ asset('assets/images/avatar/avatar1.png') }}"
+                        <div class="d-flex align-items-center">
+                            <span class="select-profile">Hai, {{ Auth::user()->name }}</span>
+
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
                                 class="img-fluid wd-35 ht-35 rounded-circle " alt="">
                         </div>
 
@@ -55,10 +41,7 @@
                     <div class="dropdown-menu dropdown-menu-right dropdown-profile shadow-2">
                         <div class="user-profile-area">
                             <div class="user-profile-heading">
-                                <div class="profile-thumbnail">
-                                    <img src="{{ asset('assets/images/avatar/avatar1.png') }}"
-                                        class="img-fluid wd-35 ht-35 rounded-circle" alt="">
-                                </div>
+
                                 <div class="profile-text">
                                     <h6>{{ Auth::user()->name }}</h6>
                                     <span> {{ Auth::user()->email }}</span>
@@ -70,9 +53,9 @@
                                                     document.getElementById('logout-form').submit();">
                                 <i class="icon ion-power"></i> Logout
                             </a>
-                            <a href="{{ route('logout') }}" class="dropdown-item">
+                            {{-- <a href="{{ route('logout') }}" class="dropdown-item">
                                 <i class="icon ion-android-settings"></i> Setting Profil
-                            </a>
+                            </a> --}}
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf

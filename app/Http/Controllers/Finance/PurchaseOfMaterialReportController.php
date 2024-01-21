@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\PurchaseOfMaterials;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ class PurchaseOfMaterialReportController extends Controller
         $query = PurchaseOfMaterials::join('purchase_of_materials_details', 'purchase_of_materials.id', '=', 'purchase_of_materials_details.purchase_of_materials_id')
             ->select(DB::raw('purchase_of_materials.po_date, SUM(purchase_of_materials_details.total) as total'))
             ->groupBy('purchase_of_materials.po_date')
-            ->orderBy('purchase_of_materials.po_date');
+            ->orderBy('purchase_of_materials.po_date', 'desc');
 
         $tanggalMulai = $request->input('tanggal_mulai');
         $tanggalAkhir = $request->input('tanggal_akhir');
@@ -39,6 +40,13 @@ class PurchaseOfMaterialReportController extends Controller
             $date = Carbon::parse($purchase->po_date)->format('d F Y');
             $purchase->po_date = $date;
         }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan pembelian',
+            'details' => 'Mengakses menu laporan pembelian'
+
+        ]);
 
         return view('finance.purchase-report.index', compact('purchases'));
     }
@@ -80,6 +88,13 @@ class PurchaseOfMaterialReportController extends Controller
             ->where('purchase_of_materials.po_date', $newDate)
             ->groupBy('users.id', 'users.warehouse_name', 'purchase_of_materials.po_date')
             ->get();
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail laporan pembelian',
+            'details' => 'Mengakses detail laporan pembelian'
+        ]);
 
         return view('finance.purchase-report.show', [
             'purchaseDetails' => $purchaseDetails,
@@ -134,6 +149,13 @@ class PurchaseOfMaterialReportController extends Controller
             ->groupBy('material_data.id')
             ->get();
 
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail laporan pembelian',
+            'details' => 'Mengakses detail laporan pembelian'
+        ]);
 
 
 

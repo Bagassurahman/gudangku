@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Account;
 use App\Balance;
 use App\Deposit;
@@ -31,6 +32,12 @@ class DepositController extends Controller
         }
 
         $deposits = $depositsQuery->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu setoran',
+            'details' => 'Mengakses menu setoran'
+        ]);
 
         return view('warehouse.deposit.index', compact('deposits'));
     }
@@ -101,6 +108,12 @@ class DepositController extends Controller
 
         $deposit->update([
             'status' => 'success'
+        ]);
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah status setoran',
+            'details' => 'Mengubah status setoran'
         ]);
 
         SweetAlert::success('Berhasil', 'Setoran berhasil di konfirmasi');

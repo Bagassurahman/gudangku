@@ -95,8 +95,8 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5" class="text-right">Total</td>
-                                    <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
+                                    <th colspan="5" class="text-right">Total</th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
                                 </tr>
                             </tfoot>
                         </table>

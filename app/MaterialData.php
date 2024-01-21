@@ -23,6 +23,7 @@ class MaterialData extends Model
         'category',
         'unit_id',
         'selling_price',
+        'last_price',
         'created_at',
         'updated_at',
         'deleted_at',

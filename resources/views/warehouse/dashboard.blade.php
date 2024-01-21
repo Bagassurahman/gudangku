@@ -24,11 +24,7 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                @if (isset($totalOmset[0]))
-                                    Rp {{ number_format($totalOmset[0]->total_omset, 0, ',', '.') }}
-                                @else
-                                    Rp 0
-                                @endif
+                                Rp {{ $totalOmset ? number_format($totalOmset, 0, ',', '.') : '0' }}
 
                             </h2>
 
@@ -52,7 +48,8 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp0
+                                Rp {{ $totalBiaya->total_biaya ? number_format($totalBiaya->total_biaya, 0, ',', '.') : '0' }}
+
                             </h2>
 
                         </div>
@@ -75,11 +72,14 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                @if ($totalPembelianPerBulan->isNotEmpty())
-                                    Rp
-                                    {{ number_format($totalPembelianPerBulan[0]->total_pembelian, 0, ',', '.') }}
+                                @if (count($totalPembelian) > 0)
+                                    <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
+                                        Rp {{ number_format($totalPembelian[0]->total_pembelian, 0, ',', '.') }}
+                                    </h2>
                                 @else
-                                    Rp 0
+                                    <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
+                                        Rp 0
+                                    </h2>
                                 @endif
                             </h2>
 
@@ -103,8 +103,15 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp 9,900
+                                
+                                @if (!empty($margin) && isset($margin))
+                                    Rp {{ number_format($margin, 0, ',', '.') }}
+                                @else
+                                    Rp 0
+                                @endif
+
                             </h2>
+                            <span>{{ $persentaseMargin }}%</span>
 
                         </div>
                     </div>
@@ -129,7 +136,7 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse1">
-                <div class="table-repsonsive">
+                <div class="table-responsive">
                     <table class="table stripe hover bordered datatable datatable-Role">
                         <thead>
                             <tr>

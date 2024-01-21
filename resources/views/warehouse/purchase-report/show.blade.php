@@ -7,7 +7,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow"> Detail Laporan Distribusi {{ $date }}</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow"> Detail Laporan Pembelian {{ $date }}</h1>
             </div>
 
         </div>
@@ -45,16 +45,19 @@
                                         No
                                     </th>
                                     <th>
-                                        Nama Bahan
+                                        Kode Pembelian
                                     </th>
                                     <th>
-                                        Harga Beli
+                                        Tanggal
                                     </th>
                                     <th>
-                                        Jumlah
+                                        Total Item
                                     </th>
                                     <th>
-                                        Total
+                                        Total Harga
+                                    </th>
+                                    <th>
+                                        Aksi
                                     </th>
                                 </tr>
                             </thead>
@@ -71,17 +74,24 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $purchase->material_name }}
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($purchase->price, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            {{ $purchase->qty }}
-                                        </td>
+                                            {{ $purchase->po_number }}
 
+                                        </td>
                                         <td>
-                                            Rp {{ number_format($purchase->total, 0, ',', '.') }}
+                                            {{ $purchase->po_date }}
+
+                                        </td>
+                                        <td>
+                                            {{ $purchase->total_qty }}
+                                        </td>
+                                        <td>
+                                            Rp {{ number_format($purchase->total_amount, 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('warehouse.laporan-pembelian.detail', $purchase->id) }}"
+                                                class="btn btn-primary">
+                                                Detail
+                                            </a>
                                         </td>
                                     </tr>
                                     @php

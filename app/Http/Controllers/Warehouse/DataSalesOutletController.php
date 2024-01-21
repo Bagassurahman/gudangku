@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Outlet;
 use Illuminate\Http\Request;
@@ -17,6 +18,12 @@ class DataSalesOutletController extends Controller
     public function index()
     {
         $outlets = Outlet::where('warehouse_id', Auth::user()->id)->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu Data Penjualan Outlet di Gudang',
+            'details' => 'Mengakses menu Data Penjualan Outlet di Gudang'
+        ]);
 
         return view('warehouse.data-sales-all-outlets.index', compact('outlets'));
     }

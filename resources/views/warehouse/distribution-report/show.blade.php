@@ -54,6 +54,12 @@
                                         Harga Beli
                                     </th>
                                     <th>
+                                        Harga Jual
+                                    </th>
+                                    <th>
+                                        Keuntungan
+                                    </th>
+                                    <th>
                                         Total
                                     </th>
                                 </tr>
@@ -77,7 +83,26 @@
                                             {{ $distribution->total_quantity }}
                                         </td>
                                         <td>
+                                            @php
+                                                $inventoryItem = $inventory->where('material_data_id', $distribution->material_id)->first();
+                                            @endphp
+                                            @if ($inventoryItem)
+                                                Rp {{ number_format($inventoryItem->hpp, 0, ',', '.') }}
+                                            @else
+                                                Rp 0
+                                            @endif
+                                        </td>
+                                        <td>
                                             Rp {{ number_format($distribution->selling_price, 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            @if ($inventoryItem)
+                                                Rp
+                                                {{ number_format($distribution->selling_price - $inventoryItem->hpp, 0, ',', '.') }}
+                                            @else
+                                                Rp
+                                                {{ number_format($distribution->selling_price, 0, ',', '.') }}
+                                            @endif
                                         </td>
                                         <td>
                                             Rp {{ number_format($distribution->total_sales, 0, ',', '.') }}

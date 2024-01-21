@@ -35,7 +35,7 @@
             <div class="card-body pd-y-0">
                 <div class="custom-fieldset mb-4">
                     <div class="clearfix">
-                        <label>Total Biaya-Biaya</label>
+                        <label>Total Setoran Hari Ini</label>
                     </div>
                     <div class="d-flex align-items-center text-dark">
                         <div
@@ -44,7 +44,7 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp {{ number_format($totalBiaya->total_biaya, 0, ',', '.') }}
+                                Rp {{ number_format($depo, 0, ',', '.') }}
                             </h2>
 
                         </div>
@@ -58,7 +58,7 @@
             <div class="card-body pd-y-0">
                 <div class="custom-fieldset mb-4">
                     <div class="clearfix">
-                        <label>Total Pembelian</label>
+                        <label>Total Kekayaan Outlet Bulan Ini</label>
                     </div>
                     <div class="d-flex align-items-center text-dark">
                         <div
@@ -67,7 +67,9 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp {{ number_format($totalPembelian[0]->total_pembelian, 0, ',', '.') }}
+                                Rp
+                                {{ number_format($riche, 0, ',', '.') }}
+
 
                             </h2>
 
@@ -82,7 +84,7 @@
             <div class="card-body pd-y-0">
                 <div class="custom-fieldset mb-4">
                     <div class="clearfix">
-                        <label>Total Margin</label>
+                        <label>Total Hutang Bulan Ini</label>
                     </div>
                     <div class="d-flex align-items-center text-dark">
                         <div
@@ -91,10 +93,10 @@
                         </div>
                         <div>
                             <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp {{ number_format($margin, 0, ',', '.') }}
+                                Rp {{ number_format($debt, 0, ',', '.') }}
 
                             </h2>
-                            <span>{{ $persentaseMargin }}%</span>
+
                         </div>
                     </div>
                 </div>
@@ -118,8 +120,8 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse1">
-                <div class="table-repsonsive">
-                    <table class="table stripe hover bordered datatable datatable-Role">
+                <div class="table-responsive">
+                    <table class="table stripe hover bordered ">
                         <thead>
                             <tr>
                                 <th>
@@ -166,5 +168,69 @@
             </div>
         </div>
     </div>
+ <div class="col-md-12 col-lg-12">
+        <div class="card mg-b-20">
+            <div class="card-header">
+                <h4 class="card-header-title">
+                    Data Setoran Sukses Hari Ini
+                </h4>
+                <div class="card-header-btn">
+                    <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
+                        aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
+                    <a href="#" data-toggle="refresh" class="btn card-refresh"><i
+                            class="ion-android-refresh"></i></a>
+                    <a href="#" data-toggle="expand" class="btn card-expand"><i
+                            class="ion-android-expand"></i></a>
+                    <a href="#" data-toggle="remove" class="btn card-remove"><i class="ion-android-close"></i></a>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapse1">
+                <div class="table-responsive">
+                    <table class="table stripe hover bordered ">
+                        <thead>
+                            <tr>
+                                <th>
+                                    No
+                                </th>
+                               <th>Outlet</th>
+                                        <th>Kode Setoran</th>
+                                        <th>Tanggal</th>
+                                        <th>
+                                            Omset
+                                        </th>
+                                        <th>
+                                            SF & GF
+                                        </th>
+                                        <th>
+                                            Shoppe Pay
+                                        </th>
+                                        <th>
+                                            Jurnal Kas
+                                        </th>
+                                        <th>Total Setoran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           @foreach ($deposits as $deposit)
+                                        <tr>
+                                           
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $deposit->account->user->outlet->outlet_name }}</td>
+                                            <td>{{ $deposit->deposit_number }}</td>
+                                            <td>{{ $deposit->deposit_date }}</td>
+                                            <td>Rp {{ number_format($deposit->omset, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($deposit->online, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($deposit->shoppe_pay, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($deposit->cash_journal, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($deposit->amount, 0, ',', '.') }}</td>
+                                         
+                                        </tr>
+                                    @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
+            </div>
+        </div>
+    </div>
 </div>

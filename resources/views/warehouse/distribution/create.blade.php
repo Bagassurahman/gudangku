@@ -56,8 +56,6 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-
-
                         <div class="form-group mg-b-10-force">
                             <label class="form-control-label active">Tanggal Distribusi<span
                                     class="tx-danger">*</span></label>
@@ -90,29 +88,43 @@
                         <div class="form-group mg-b-10-force">
                             <label class="form-control-label active">Pilih Bahan<span class="tx-danger">*</span></label>
                             <div class="row">
+                                <div class="col-12 mb-2">
+                                    <input type="text" id="search-material" class="form-control"
+                                        placeholder="Search by Material Name">
+                                </div>
+                            </div>
+
+                            <!-- Display materials -->
+                            <div class="row" id="material-list">
                                 @foreach ($materials as $material)
-                                    <div class="col col-sm-12 col-md-4 col-lg-3 mt-lg-2">
+                                    <div class="col-12 col-sm-12 col-md-4 col-lg-3 mt-2 material-item">
                                         <div class="card">
                                             <div class="card-header">
-                                                {{ $material->material->name }}
-                                                <br>
-                                                Stok: {{ $material->remaining_amount }}
-
+                                                <div class="d-flex justify-content-between justify-between">
+                                                    {{ $material->material->name }}
+                                                    / Stok: {{ $material->remaining_amount }}
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <input type="number" id="data-price-{{ $material->material->id }}"
-                                                    name="data-price-{{ $material->material->id }}"
-                                                    class="form-control mb-3" placeholder="Masukan Harga"
-                                                    value="{{ $material->material->selling_price }}">
-                                                <a href="#" data-id={{ $material->material->id }}
-                                                    data-name="{{ $material->material->name }}" data-price="1.22"
-                                                    class="add-to-cart btn btn-primary w-100">Distribusikan</a>
+                                            <div class="card-body mx-3 p-0">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        <input type="number" id="data-price-{{ $material->material->id }}"
+                                                            name="data-price-{{ $material->material->id }}"
+                                                            class="form-control mb-3" placeholder="Masukan Harga"
+                                                            value="{{ $material->material->selling_price }}">
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <a href="#" data-id={{ $material->material->id }}
+                                                            data-name="{{ $material->material->name }}" data-price="1.22"
+                                                            class="add-to-cart btn btn-primary w-100">+</a>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 @endforeach
                             </div>
+
                         </div>
                         <!-- row -->
                         <div class="form-layout-footer mt-3">
@@ -419,25 +431,47 @@
         function displayCart() {
             var cartArray = distributionCart.listCart();
             var output = "";
+            // for (var i in cartArray) {
+            //     output += "<tr>" +
+            //         "<td>" + cartArray[i].name + "</td>" +
+            //         "<td></td>" +
+            //         "<td></td>" +
+            //         "<td></td>" +
+            //         "<td>(" + cartArray[i].price + ")</td>" +
+            //         "</tr>";
+
+            //     output += "<tr>" +
+            //         "<td><button type='button' class='minus-item btn btn-primary' data-id=" + cartArray[i].id +
+            //         " data-count=" + cartArray[i].count + ">-</button></td>" +
+            //         "<td><input type='number' class='item-count form-control' data-id='" +
+            //         cartArray[i].id + "' value='" + cartArray[i].count + "'></td>" +
+            //         "<td><button type='button' class='plus-item btn btn-primary' data-id=" + cartArray[i].id +
+            //         " data-count=" + cartArray[i].count + ">+</button></td>" +
+            //         "<td><button type='button' class='delete-item btn btn-danger' data-id=" + cartArray[i].id +
+            //         " data-count=" + cartArray[i].count + ">X</button></td>" +
+            //         "<td>" + cartArray[i].total + "</td>" +
+            //         "</tr>";
+            // }
+
             for (var i in cartArray) {
                 output += "<tr>" +
                     "<td>" + cartArray[i].name + "</td>" +
                     "<td>(" + cartArray[i].price + ")</td>" +
-                    "<td><div class='input-group'><button type='button' class='minus-item input-group-addon btn btn-primary' data-id=" +
-                    cartArray[i].id + " data-count=" + cartArray[i].count + ">-</button>" +
+                    "</tr>";
+
+                output += "<tr>" +
+                    "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-id=" +
+                    cartArray[i].id + ">-</button>" +
                     "<input type='number' class='item-count form-control' data-id='" + cartArray[i].id + "' value='" +
                     cartArray[i].count + "'>" +
-                    "<button type='button' class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
-                    " data-count=" + cartArray[i].count + ">+</button></div></td>" +
-                    "<td><button type='button' class='delete-item btn btn-danger' data-id=" + cartArray[i].id +
-                    " data-count=" +
-                    cartArray[i].count + ">X</button></td>" +
-                    " = " +
+                    "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
+                    ">+</button></div></td>" +
+                    "<td><button class='delete-item btn btn-danger' data-id=" + cartArray[i].id + ">X</button></td>" +
+                    "<td> = </td>" +
                     "<td>" + cartArray[i].total + "</td>" +
                     "</tr>";
+
             }
-
-
             $('.show-cart').html(output);
             $('.total-cart').html(distributionCart.totalCart());
             $('.total-count').html(distributionCart.totalCount());
@@ -534,12 +568,28 @@
             cartForm.appendChild(poDateInput);
             cartForm.appendChild(outletIdInput);
             cartForm.submit();
+
+            distributionCart.clearCart();
         });
 
-
-
-
-
         displayCart();
+    </script>
+
+    <script>
+        // Add event listener for the search input
+        document.getElementById('search-material').addEventListener('input', function() {
+            var searchValue = this.value.toLowerCase();
+
+            // Loop through each material item and show/hide based on the search input
+            var materialItems = document.querySelectorAll('.material-item');
+            materialItems.forEach(function(item) {
+                var materialName = item.querySelector('.card-header').textContent.toLowerCase();
+                if (materialName.includes(searchValue)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
     </script>
 @endsection

@@ -61,6 +61,9 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $total = 0;
+                                @endphp
                                 @foreach ($distributionDetails as $key => $distribution)
                                     <tr data-entry-id="{{ $distribution->id }}">
                                         <td>
@@ -82,9 +85,25 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    @php
+                                        $total += $distribution->total_distribution;
+                                    @endphp
                                 @endforeach
                             </tbody>
 
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">
+                                        Total
+                                    </th>
+                                    <th>
+                                        {{ $total }}
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>

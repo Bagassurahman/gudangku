@@ -19,7 +19,7 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('finance.laporan-distribusi.index') }}" method="GET">
+                <form action="{{ route('finance.laporan-penjualan.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -67,7 +67,7 @@
                                         No
                                     </th>
                                     <th>
-                                        Tanggal
+                                        Bulan
                                     </th>
                                     <th>
                                         Total

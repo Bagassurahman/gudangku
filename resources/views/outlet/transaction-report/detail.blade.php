@@ -35,53 +35,55 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        Tanggal Penjualan
-                                    </th>
-                                    <td>
-                                        {{ $transactionDetails[0]->order_date }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Jenis Pembayaran
-                                    </th>
-                                    <td>
-                                        {{ $transactionDetails[0]->payment_method }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Jenis Pelanggan
-                                    </th>
-                                    <td>
-                                        {{ $transactionDetails[0]->customer_type }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Total
-                                    </th>
-                                    <td>
-                                        Rp {{ number_format($transactionDetails[0]->total, 0, ',', '.') }}
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Tanggal Penjualan
+                                        </th>
+                                        <td>
+                                            {{ $transactionDetails[0]->order_date }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Jenis Pembayaran
+                                        </th>
+                                        <td>
+                                            {{ $transactionDetails[0]->payment_method }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Jenis Pelanggan
+                                        </th>
+                                        <td>
+                                            {{ $transactionDetails[0]->customer_type }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Total
+                                        </th>
+                                        <td>
+                                            Rp {{ number_format($transactionDetails[0]->total, 0, ',', '.') }}
 
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Detail Penjualan
-                                    </td>
-                                    <td>
-                                        @foreach ($transactionDetails as $item)
-                                            <li>{{ $item->name }} ({{ $item->qty }})</li>
-                                        @endforeach
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Detail Penjualan
+                                        </td>
+                                        <td>
+                                            @foreach ($transactionDetails as $item)
+                                                <li>{{ $item->name }} ({{ $item->qty }})</li>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-layout-footer mt-3">
                             <a href="{{ route('outlet.laporan-penjualan.index') }}" class="btn btn-secondary">Kembali</a>
                         </div>

@@ -28,7 +28,8 @@ class StoreProductRequest extends FormRequest
             'general_price' => 'required',
             'member_price' => 'required',
             'online_price' => 'required',
-            'image' => 'required'
+            'image' => 'required',
+            'point' => 'required',
         ];
     }
 }

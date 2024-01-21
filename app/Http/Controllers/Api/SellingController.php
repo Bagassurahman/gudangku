@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Transaction;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SellingController extends Controller
@@ -44,8 +45,10 @@ class SellingController extends Controller
         $transactionDetails = DB::table('transaction_details')
             ->join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
             ->join('products', 'transaction_details.product_id', '=', 'products.id')
+            ->where('outlet_id', $request->outlet_id)
             ->whereMonth('transactions.order_date', $month)
             ->get();
+
 
         return response()->json($transactionDetails);
     }

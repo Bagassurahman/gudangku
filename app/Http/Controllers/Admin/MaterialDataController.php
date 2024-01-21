@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreMaterialDataRequest;
 use App\Http\Requests\UpdateMaterialDataRequest;
@@ -22,6 +23,12 @@ class MaterialDataController extends Controller
 
         $materials = MaterialData::all();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu data bahan',
+            'details' => 'Mengakses menu data bahan'
+        ]);
+
         return view('admin.materials-data.index', compact('materials'));
     }
 
@@ -31,6 +38,12 @@ class MaterialDataController extends Controller
 
         $units = UnitData::all();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu tambah data bahan',
+            'details' => 'Mengakses menu tambah data bahan'
+        ]);
+
         return view('admin.materials-data.create', compact('units'));
     }
 
@@ -38,6 +51,12 @@ class MaterialDataController extends Controller
     public function store(StoreMaterialDataRequest $request)
     {
         $material = MaterialData::create($request->all());
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambahkan data bahan baru',
+            'details' => 'Menambahkan data bahan baru dengan nama ' . $material->name
+        ]);
 
         SweetAlert::toast('Data bahan berhasil ditambahkan', 'success')->timerProgressBar();
 
@@ -56,6 +75,12 @@ class MaterialDataController extends Controller
 
         $material = MaterialData::findOrFail($id);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail data bahan',
+            'details' => 'Mengakses detail data bahan dengan nama ' . $material->name
+        ]);
+
         return view('admin.materials-data.show', compact('material'));
     }
 
@@ -72,6 +97,12 @@ class MaterialDataController extends Controller
         $units = UnitData::all();
         $material = MaterialData::findOrFail($id);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu ubah data bahan',
+            'details' => 'Mengakses menu ubah data bahan dengan nama ' . $material->name
+        ]);
+
         return view('admin.materials-data.edit', compact('units', 'material'));
     }
 
@@ -87,6 +118,12 @@ class MaterialDataController extends Controller
         $material = MaterialData::findOrFail($id);
 
         $material->update($request->all());
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah data bahan',
+            'details' => 'Mengubah data bahan dengan nama ' . $material->name
+        ]);
 
         SweetAlert::toast('Data bahan berhasil diubah', 'success')->timerProgressBar();
 
@@ -106,6 +143,12 @@ class MaterialDataController extends Controller
         $material = MaterialData::findOrFail($id);
 
         $material->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus data bahan',
+            'details' => 'Menghapus data bahan dengan nama ' . $material->name
+        ]);
 
         SweetAlert::toast('Data satuan berhasil dihapus', 'success')->timerProgressBar();
 

@@ -47,6 +47,14 @@
 ### Costumize CSS
 *********************************************************************
 *********************************************************************/
+table.dataTable tbody th,
+table.dataTable tbody td,
+table.dataTable tbody tr,
+table tbody th,
+table tbody td,
+table tbody tr {
+    color: black !important;
+}
 
 /* ======== DASHBOARD CUSTOM STYLE ======== */
 
@@ -5250,4 +5258,40 @@ pre {
     div.dt-buttons>* {
         margin: 10px;
     }
+}
+
+
+.list-product .col-12:nth-child(even) .card-product {
+    background-color: #f2f2f2;
+    /* Light gray for even rows */
+}
+
+.list-product .col-12:nth-child(odd) .card-product {
+    background-color: #ffffff;
+    /* White for odd rows */
+}
+
+.card-event {
+    border-radius: 10px;
+    border: 1px solid #e6e6e6;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.card-event .card-body {
+    padding: 0px;
+}
+
+.card-event .card-body .card-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000000;
+    margin-top: 1rem;
+}
+
+.card-event .card-img-top {
+    border-radius: 10px;
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
 }

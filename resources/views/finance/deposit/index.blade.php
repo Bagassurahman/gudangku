@@ -18,7 +18,7 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('outlet.jurnal-kas.index') }}" method="GET">
+                <form action="{{ route('finance.setoran.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -97,11 +97,16 @@
                                             <td>Rp {{ number_format($deposit->amount, 0, ',', '.') }}</td>
                                             <td>
                                                 <span
-                                                    class="badge {{ $deposit->status == 'pending' ? 'badge-warning' : 'badge-success' }}">{{ $deposit->status }}</span>
+                                                    class="badge
+                                            {{ $deposit->status == 'pending' ? 'badge-warning' : '' }}
+                                            {{ $deposit->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $deposit->status == 'waiting' ? 'badge-danger' : '' }}
+                                            text-white">
+                                                    {{ $deposit->status ?? '' }}</span>
                                             </td>
                                             <td>
                                                 @if ($deposit->status == 'pending')
-                                                    <form action="{{ route('finance.setoran.update', $deposit->id) }}"
+                                                    {{-- <form action="{{ route('finance.setoran.update', $deposit->id) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf
                                                         @method('PUT')
@@ -110,7 +115,11 @@
                                                             value="{{ $deposit->account_number }}">
                                                         <button type="submit" class="btn btn-sm btn-primary"
                                                             onclick="return confirm('Apakah anda yakin ingin konfirmasi?')">Aprove</button>
-                                                    </form>
+                                                    </form> --}}
+                                                    <a href="{{ route('finance.setoran.show', $deposit->id) }}"
+                                                        class="btn btn-primary">
+                                                        Detail
+                                                    </a>
                                                 @endif
                                             </td>
                                         </tr>

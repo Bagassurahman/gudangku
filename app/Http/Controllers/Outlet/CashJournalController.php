@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Outlet;
 
+use App\ActivityLog;
 use App\CashJournal;
 use App\CashJournalDetail;
 use App\Cost;
@@ -35,6 +36,13 @@ class CashJournalController extends Controller
 
         $journals = $query->get();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu jurnal kas',
+            'details' => 'Mengakses menu jurnal kas'
+
+        ]);
+
         return view('outlet.cash-journal.index', compact('journals'));
     }
 
@@ -48,6 +56,13 @@ class CashJournalController extends Controller
     public function create()
     {
         $costs = Cost::all();
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu tambah jurnal kas',
+            'details' => 'Mengakses menu tambah jurnal kas'
+        ]);
 
         return view('outlet.cash-journal.create', compact('costs'));
     }
@@ -91,6 +106,13 @@ class CashJournalController extends Controller
         // Simpan semua detail jurnal kas sekaligus
         $cashJournal->detail()->saveMany($cashJournalDetails);
 
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambah jurnal kas',
+            'details' => 'Menambah jurnal kas dengan id ' . $cashJournal->id
+        ]);
+
         SweetAlert::success('Berhasil', 'Jurnal kas berhasil dibuat');
 
         return redirect()->route('outlet.jurnal-kas.index');
@@ -105,6 +127,14 @@ class CashJournalController extends Controller
     public function show($id)
     {
         $journal = CashJournal::with('detail')->find($id);
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail jurnal kas',
+            'details' => 'Mengakses detail jurnal kas dengan id ' . $id
+        ]);
+
         return view('outlet.cash-journal.show', compact('journal'));
     }
 

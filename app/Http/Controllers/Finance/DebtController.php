@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\Debt;
 use App\Http\Controllers\Controller;
 use App\Riche;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
+use Illuminate\Support\Facades\DB;
 
 class DebtController extends Controller
 {
@@ -16,11 +18,34 @@ class DebtController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $debts = Debt::with(['outlet', 'warehouse'])->get();
+        // $debts = Debt::with(['outlet', 'warehouse'])->orderBy('status', 'desc')->orderBy('date', 'desc')->get();
 
-        return view('finance.debt.index', compact('debts'));
+        $tanggalMulai = $request->input('tanggal_mulai');
+        $tanggalAkhir = $request->input('tanggal_akhir');
+        
+        $query = Debt::with(['outlet', 'warehouse'])
+            ->orderBy('status', 'desc')
+            ->orderBy('date', 'desc');
+        
+        if ($tanggalMulai && $tanggalAkhir) {
+            $query->whereBetween('date', [$tanggalMulai, $tanggalAkhir]);
+        } elseif ($tanggalMulai) {
+            $query->whereDate('date', '>=', $tanggalMulai);
+        }
+        
+        $debts = $query->get();
+
+        $wait = $query->where('status', 'on_progres')->sum('amount');
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu hutang',
+            'details' => 'Mengakses menu hutang'
+        ]);
+
+        return view('finance.debt.index', compact('debts', 'wait'));
     }
 
     /**
@@ -80,7 +105,9 @@ class DebtController extends Controller
             ->where('outlet_id', $debt->outlet_id)
             ->first();
 
-        if ($riche->total < $debt->amount) {
+        if (!$riche) {
+            SweetAlert::error('Gagal', 'Kekayaan Outlet Tidak Cukup');
+        } elseif ($riche->total < $debt->amount) {
             SweetAlert::error('Gagal', 'Kekayaan Outlet Tidak Cukup');
         } else {
             $debt->update([
@@ -96,6 +123,12 @@ class DebtController extends Controller
         }
 
 
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Melunasi hutang',
+            'details' => 'Melunasi hutang'
+        ]);
 
         return redirect()->back();
     }

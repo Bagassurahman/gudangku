@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\Distribution;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -20,7 +21,8 @@ class DistributionReportController extends Controller
         $query = Distribution::join('distribution_details', 'distributions.id', '=', 'distribution_details.distribution_id')
             ->select(DB::raw('distributions.distribution_date, SUM(distribution_details.total) as total'))
             ->groupBy('distributions.distribution_date')
-            ->orderBy('distributions.distribution_date');
+            ->orderBy('distributions.distribution_date', 'desc');
+
 
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
             $tanggalMulai = $request->input('tanggal_mulai');
@@ -40,6 +42,12 @@ class DistributionReportController extends Controller
             $date = Carbon::parse($distribution->distribution_date)->format('d F Y');
             $distribution->distribution_date = $date;
         }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan distribusi',
+            'details' => 'Mengakses menu laporan distribusi'
+        ]);
 
         return view('finance.distribution-report.index', compact('distributions'));
     }
@@ -83,6 +91,12 @@ class DistributionReportController extends Controller
             ->groupBy('users.id', 'users.warehouse_name', 'distributions.distribution_date')
             ->get();
 
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan distribusi',
+            'details' => 'Mengakses menu laporan distribusi'
+        ]);
 
 
         return view('finance.distribution-report.show', [
@@ -138,6 +152,12 @@ class DistributionReportController extends Controller
             ->get();
 
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan distribusi',
+            'details' => 'Mengakses menu laporan distribusi'
+        ]);
+
 
         return view('finance.distribution-report.detail', [
             'distributionDetails' => $distributionDetails,
@@ -163,6 +183,12 @@ class DistributionReportController extends Controller
             ->get();
 
 
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan distribusi',
+            'details' => 'Mengakses menu laporan distribusi'
+        ]);
 
 
 

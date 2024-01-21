@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\MaterialData;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Gate;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class ProductController extends Controller
@@ -27,6 +29,12 @@ class ProductController extends Controller
 
         $products = Product::with('details')->get();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu produk',
+            'details' => 'Mengakses menu produk'
+        ]);
+
         return view('admin.product.index', compact('products'));
     }
 
@@ -41,6 +49,12 @@ class ProductController extends Controller
 
 
         $materials = MaterialData::all();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu tambah produk',
+            'details' => 'Mengakses menu tambah produk'
+        ]);
 
         return view('admin.product.create', compact('materials'));
     }
@@ -58,7 +72,8 @@ class ProductController extends Controller
             'general_price' => $request->general_price,
             'member_price' => $request->member_price,
             'online_price' => $request->online_price,
-            'image' => $request->file('image')->store('assets/product', 'public')
+            'image' => $request->file('image')->store('assets/product', 'public'),
+            'point' => $request->point
         ]);
 
         // Simpan produk baru ke database
@@ -77,6 +92,12 @@ class ProductController extends Controller
             $detail->save();
         }
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambahkan produk baru',
+            'details' => 'Menambahkan produk baru dengan nama ' . $product->name
+        ]);
+
         SweetAlert::toast('Produk berhasil ditambahkan', 'success')->timerProgressBar();
 
         return redirect()->route('admin.produk.index');
@@ -94,6 +115,11 @@ class ProductController extends Controller
 
         $product = Product::with('details')->find($id);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail produk',
+            'details' => 'Mengakses detail produk ' . $product->name
+        ]);
 
         return view('admin.product.show', compact('product'));
     }
@@ -108,11 +134,22 @@ class ProductController extends Controller
     {
         abort_if(Gate::denies('product_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $product = Product::with('details')->find($id);
+        $product = Product::find($id);
 
         $materials = MaterialData::all();
 
-        return view('admin.product.edit', compact('product', 'materials'));
+        $productDetails = $product->details()->with('material')->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu edit produk',
+            'details' => 'Mengakses menu edit produk ' . $product->name
+        ]);
+
+
+
+
+        return view('admin.product.edit', compact('product', 'productDetails', 'materials'));
     }
 
     /**
@@ -124,6 +161,51 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $product = Product::findOrFail($id);
+        $product->name = $request->name;
+        $product->general_price = $request->general_price;
+        $product->member_price = $request->member_price;
+        $product->online_price = $request->online_price;
+        $product->point = $request->point;
+
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            Storage::disk('public')->delete($product->image);
+
+            // Simpan gambar baru
+            $product->image = $request->file('image')->store('assets/product', 'public');
+        }
+
+        // Simpan perubahan pada produk
+        $product->save();
+
+        // Simpan detail produk ke database
+        // Hapus semua detail produk terkait produk ini
+        ProductDetail::where('product_id', $product->id)->delete();
+
+        // Looping untuk menyimpan data detail produk
+        if ($request->has('materials') && $request->has('takaran')) {
+            for ($i = 0; $i < count($request->materials); $i++) {
+                $detail = new ProductDetail([
+                    'product_id' => $product->id,
+                    'material_id' => $request->materials[$i],
+                    'dose' => $request->takaran[$request->materials[$i]]
+                ]);
+
+                // Simpan detail produk ke database
+                $detail->save();
+            }
+        }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah produk',
+            'details' => 'Mengubah produk ' . $product->name
+        ]);
+
+        SweetAlert::toast('Produk berhasil diperbarui', 'success')->timerProgressBar();
+
+        return redirect()->route('admin.produk.index');
     }
 
     /**
@@ -139,6 +221,12 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         $product->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus produk',
+            'details' => 'Menghapus produk ' . $product->name
+        ]);
 
         SweetAlert::toast('Produk berhasil dihapus', 'success')->timerProgressBar();
 

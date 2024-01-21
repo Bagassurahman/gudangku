@@ -91,24 +91,49 @@
                         </div>
                         <div class="form-group mg-b-10-force">
                             <label class="form-control-label active">Pilih Bahan<span class="tx-danger">*</span></label>
+                            <!-- Add a search input -->
                             <div class="row">
+                                <div class="col-12 mb-2">
+                                    <input type="text" id="search-material" class="form-control"
+                                        placeholder="Search by Material Name">
+                                </div>
+                            </div>
+
+                            <!-- Display materials -->
+                            <div class="row" id="material-list">
                                 @foreach ($materials as $material)
-                                    <div class="col col-sm-12 col-md-4 col-lg-3 mt-lg-2">
+                                    <div class="col-12 col-sm-12 col-md-4 col-lg-3 mt-lg-2 mt-2 material-item">
                                         <div class="card">
                                             <div class="card-header">
-                                                {{ $material->name }}
-                                                <br>
-                                                Satuan: {{ $material->unit->warehouse_unit }}
+                                                <div class="d-flex justify-content-between">
+                                                    {{ $material->name }}
+                                                    <br>
+                                                    Satuan: {{ $material->unit->warehouse_unit }}
+                                                    <br>
+                                                    @php
+                                                        $inventoryItem = $inventory->where('material_data_id', $material->id)->first();
+                                                    @endphp
+                                                    Sisa Stok: {{ $inventoryItem->remaining_amount ?? 0 }}
+                                                </div>
                                             </div>
-                                            <div class="card-body">
-                                                <input type="number" id="data-price-{{ $material->id }}"
-                                                    name="data-price-{{ $material->id }}" class="form-control mb-3"
-                                                    placeholder="Masukan Harga">
-                                                <a href="#" data-id="{{ $material->id }}"
-                                                    data-name="{{ $material->name }}" data-price="1.22"
-                                                    class="add-to-cart btn btn-primary w-100">Tambahkan Ke Keranjang</a>
+                                            <div class="card-body mx-3 p-0">
+                                                <div class="row">
+                                                    <div class="col-9">
+                                                        @php
+                                                            $inventoryItem = $inventory->where('material_data_id', $material->id)->first();
+                                                        @endphp
+                                                        <input type="number" id="data-price-{{ $material->id }}"
+                                                            name="data-price-{{ $material->id }}" class="form-control mb-3"
+                                                            placeholder="Harga Beli"
+                                                            value="{{ $inventoryItem ? $inventoryItem->hpp : '' }}">
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <a href="#" data-id="{{ $material->id }}"
+                                                            data-name="{{ $material->name }}" data-price="1.22"
+                                                            class="add-to-cart btn btn-primary w-100">+</a>
+                                                    </div>
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 @endforeach
@@ -161,6 +186,22 @@
     </div>
 @endsection
 @section('scripts')
+    <script>
+        document.getElementById('search-material').addEventListener('input', function() {
+            var searchValue = this.value.toLowerCase();
+
+            // Loop through each material item and show/hide based on the search input
+            var materialItems = document.querySelectorAll('.material-item');
+            materialItems.forEach(function(item) {
+                var materialName = item.querySelector('.card-header').textContent.toLowerCase();
+                if (materialName.includes(searchValue)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
         integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous">
@@ -359,6 +400,9 @@
                 output += "<tr>" +
                     "<td>" + cartArray[i].name + "</td>" +
                     "<td>(" + cartArray[i].price + ")</td>" +
+                    "</tr>";
+
+                output += "<tr>" +
                     "<td><div class='input-group'><button class='minus-item input-group-addon btn btn-primary' data-id=" +
                     cartArray[i].id + ">-</button>" +
                     "<input type='number' class='item-count form-control' data-id='" + cartArray[i].id + "' value='" +
@@ -366,9 +410,10 @@
                     "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
                     ">+</button></div></td>" +
                     "<td><button class='delete-item btn btn-danger' data-id=" + cartArray[i].id + ">X</button></td>" +
-                    " = " +
+                    "<td> = </td>" +
                     "<td>" + cartArray[i].total + "</td>" +
                     "</tr>";
+
             }
             $('.show-cart').html(output);
             $('.total-cart').html(purchaseCart.totalCart());

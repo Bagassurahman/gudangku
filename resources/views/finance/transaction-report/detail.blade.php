@@ -35,52 +35,56 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-                                <tr>
-                                    <th>Tanggal Penjualan</th>
-                                    <td>{{ $transactions->order_date }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jenis Pembayaran</th>
-                                    <td>{{ $transactions->payment_method }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Jenis Pelanggan</th>
-                                    <td>{{ $transactions->customer_type }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Total</th>
-                                    <td>{{ $transactions->total }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Detail Produk Dan Bahan Yang Dijual</td>
-                                    <td>
-                                        <ul>
-                                            @foreach ($transactionDetails as $item)
-                                                <li>
-                                                    {{ $item->name }} ({{ $item->qty }})
-                                                    <br>
-                                                    Bahan:
-                                                    <ul>
-                                                        @foreach ($item->product_details as $productDetail)
-                                                            <li>{{ $productDetail->material_name }}
-                                                                ({{ $productDetail->dose }}
-                                                                {{ $productDetail->outlet_unit }})
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </li>
-                                            @endforeach
-
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>Tanggal Penjualan</th>
+                                        <td>{{ $transactions->order_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jenis Pembayaran</th>
+                                        <td>{{ $transactions->payment_method ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Jenis Pelanggan</th>
+                                        <td>{{ $transactions->customer_type ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total</th>
+                                        <td>{{ $transactions->total ?? '' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Detail Produk Dan Bahan Yang Dijual</td>
+                                        <td>
+                                            <ul>
+                                                @foreach ($transactionDetails as $item)
+                                                    <li>
+                                                        {{ $item->name ?? '' }} ({{ $item->qty ?? '' }})
+                                                        <br>
+                                                        @can('show_resep')
+                                                            Bahan:
+                                                            <ul>
+                                                                @foreach ($item->product_details as $productDetail)
+                                                                    <li>{{ $productDetail->material_name ?? '' }}
+                                                                        ({{ $productDetail->dose ?? '' }}
+                                                                        {{ $productDetail->outlet_unit ?? '' }})
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        @endcan
+                                                    </li>
+                                                @endforeach
+    
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+    
+                            </table>
+                        </div>
                         <div class="form-layout-footer mt-3">
-                            <a href="{{ route('outlet.laporan-penjualan.index') }}" class="btn btn-secondary">Kembali</a>
+                            <a href="{{ route('finance.laporan-penjualan.index') }}" class="btn btn-secondary">Kembali</a>
                         </div>
                     </div>
                 </div>

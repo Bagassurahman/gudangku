@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ActivityLog;
 use App\Cost;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCostRequest;
@@ -20,6 +21,12 @@ class CostController extends Controller
 
         $costs = Cost::all();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu biaya',
+            'details' => 'Mengakses menu biaya'
+        ]);
+
         return view('admin.costs.index', compact('costs'));
     }
 
@@ -27,6 +34,12 @@ class CostController extends Controller
     public function create()
     {
         abort_if(Gate::denies('cost_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu tambah biaya',
+            'details' => 'Mengakses menu tambah biaya'
+        ]);
 
         return view('admin.costs.create');
     }
@@ -40,6 +53,12 @@ class CostController extends Controller
     public function store(StoreCostRequest $request)
     {
         $cost = Cost::create($request->all());
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambahkan biaya baru',
+            'details' => 'Menambahkan biaya baru dengan nama ' . $cost->name
+        ]);
 
         SweetAlert::toast('Data biaya berhasil ditambahkan', 'success');
 
@@ -58,6 +77,12 @@ class CostController extends Controller
 
         $cost = Cost::findOrFail($id);
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu ubah biaya',
+            'details' => 'Mengakses menu ubah biaya dengan nama ' . $cost->name
+        ]);
+
         return view('admin.costs.edit', compact('cost'));
     }
 
@@ -75,6 +100,12 @@ class CostController extends Controller
 
         $cost->update($request->all());
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah biaya',
+            'details' => 'Mengubah biaya dengan nama ' . $cost->name
+        ]);
+
         SweetAlert::toast('Data biaya berhasil diubah', 'success');
 
         return redirect()->route('admin.biaya.index');
@@ -91,6 +122,12 @@ class CostController extends Controller
         $cost = Cost::findOrFail($id);
 
         $cost->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus biaya',
+            'details' => 'Menghapus biaya dengan nama ' . $cost->name
+        ]);
 
         SweetAlert::toast('Data biaya berhasil dihapus', 'success');
 

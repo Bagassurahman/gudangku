@@ -59,6 +59,12 @@
                                             Jumlah Sisa
                                         </th>
                                         <th>
+                                            Sedang Dalam Proses Distribusi
+                                        </th>
+                                        <th>
+                                            Jumlah Seharusnya
+                                        </th>
+                                        <th>
                                             HPP
                                         </th>
                                         <th>
@@ -68,47 +74,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($inventories as $key => $inventory)
-                                        <tr data-entry-id="{{ $inventory->id }}">
-                                            <td>
-
+                                    @foreach ($combinedData as $cb)
+                                        <tr>
+                                            <td></td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $cb['inventory']->name ?? '' }}</td>
+                                            <td>{{ $cb['inventory']->inventories->first()->entry_amount ?? '' }}
+                                                {{ $cb['inventory']->inventories->first()->material->unit->warehouse_unit ?? '' }}
+                                            </td>
+                                            <td>{{ $cb['inventory']->inventories->first()->exit_amount ?? '' }}
+                                                {{ $cb['inventory']->inventories->first()->material->unit->warehouse_unit ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $loop->iteration }}
+                                                @if ($cb['inventory']->inventories->first())
+                                                    {{ $cb['inventory']->inventories->first()->remaining_amount ?? '' }}
+                                                    {{ $cb['inventory']->inventories->first()->material->unit->warehouse_unit ?? '' }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
+                                            <td>{{ $cb['totalQuantity'] ?? '' }}
+                                                {{ $cb['inventory']->inventories->first()->material->unit->warehouse_unit ?? '' }}
                                             </td>
                                             <td>
-                                                {{ $inventory->name ?? '' }}
+                                                @if ($cb['inventory']->inventories->first() && $cb['totalQuantity'])
+                                                    {{ ($cb['inventory']->inventories->first()->remaining_amount ?? 0) - ($cb['totalQuantity'] ?? 0) }}
+                                                    {{ $cb['inventory']->inventories->first()->material->unit->warehouse_unit ?? '' }}
+                                                @else
+                                                    N/A
+                                                @endif
                                             </td>
-                                            <td>
-                                                @foreach ($inventory->inventories as $inv)
-                                                    {{ $inv->entry_amount ?? '0' }}
-                                                    {{ $inv->material->unit->warehouse_unit ?? '' }}
-                                                @endforeach
-
-                                            </td>
-                                            <td>
-                                                @foreach ($inventory->inventories as $inv)
-                                                    {{ $inv->exit_amount ?? '0' }}
-                                                    {{ $inv->material->unit->warehouse_unit ?? '' }}
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @foreach ($inventory->inventories as $inv)
-                                                    {{ $inv->remaining_amount ?? '0' }}
-                                                    {{ $inv->material->unit->warehouse_unit ?? '' }}
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @foreach ($inventory->inventories as $inv)
-                                                    {{ $inv->hpp ?? '0' }}
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                {{ $inventory->price ?? '0' }}
-                                            </td>
-
+                                            <td>{{ $cb['inventory']->inventories->first()->hpp ?? '' }}</td>
+                                            <td>{{ $cb['inventory']->selling_price ?? '' }}</td>
                                         </tr>
                                     @endforeach
+
+
                                 </tbody>
                             </table>
                         </div>

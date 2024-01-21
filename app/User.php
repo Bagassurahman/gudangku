@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Account::class, 'user_id', 'id');
     }
+
+    public function points()
+    {
+        return $this->hasMany(Point::class, 'user_id', 'id');
+    }
 }

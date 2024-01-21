@@ -59,7 +59,9 @@
                                     <th>
                                         Status
                                     </th>
-
+                                    <th>
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,10 +83,11 @@
                                             Rp {{ number_format($distribution->fee, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($distribution->total, 0, ',', '.') }}
+                                            Rp {{ number_format($distribution->total_summary, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($distribution->total + $distribution->fee, 0, ',', '.') }}
+                                            Rp
+                                            {{ number_format($distribution->total_summary + $distribution->fee, 0, ',', '.') }}
                                         </td>
                                         <td>
                                             @if ($distribution->status == 'accepted')
@@ -94,7 +97,28 @@
                                                 <span class="badge badge-warning">Dalam Proses</span>
                                             @endif
                                         </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                @if ($distribution->status == 'on_progres')
+                                                    <form
+                                                        action="{{ route('warehouse.distribusi.destroy', $distribution->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus?')">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                <a href="{{ route('warehouse.distribusi.detail', $distribution->id) }}">
+                                                    <button type="button" class="btn btn-primary ml-2">
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>
+                                                </a>
 
+                                            </div>
+                                        </td>
                                     </tr>
                                     @php
                                         $total += $distribution->total + $distribution->fee;

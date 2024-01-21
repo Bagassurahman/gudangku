@@ -16,6 +16,20 @@
                     <a href="{{ route('dashboard') }}"><i data-feather="layout"></i>
                         <span>Dashboard</span></a>
                 </li>
+                @can('dashboard_customer_access')
+                    <li class="{{ request()->is('customer/event') ? ' active' : '' }}">
+                        <a href="{{ route('customer.event.index') }}"><i data-feather="layout"></i>
+                            <span>Event</span></a>
+                    </li>
+                    <li class="{{ request()->is('customer/transaksi-saya') ? ' active' : '' }}">
+                        <a href="{{ route('customer.transaction.index') }}"><i data-feather="dollar-sign"></i>
+                            <span>Transaksi Saya</span></a>
+                    </li>
+                    <li class="{{ request()->is('customer/tukar-poin') ? ' active' : '' }}">
+                        <a href="{{ route('customer.reward.index') }}"><i data-feather="shopping-bag"></i>
+                            <span>Tukar Poin</span></a>
+                    </li>
+                @endcan
                 @can('transaction_access')
                     <li
                         class="{{ request()->is('gudang/persediaan*', 'gudang/distribusi*', 'outlet/request*', 'gudang/data-request-bahan*', 'outlet/jurnal-kas*', 'outlet/setoran*', 'gudang/setoran*', 'outlet/distribusi*', 'outlet/persediaan*', 'finance/setoran*', 'finance/hutang-piutang*', 'gudang/hutang-piutang*') ? ' active open' : '' }}">
@@ -110,7 +124,7 @@
                 @endcan
                 @can('report_access')
                     <li
-                        class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*', 'finance/laporan-distribusi*', 'finance/laporan-pembelian*', 'finance/laporan-setoran*', 'finance/laporan-jurnal-kas*', 'finance/deposit/*/detail/*', 'finance/purchase/*/detail/*', 'finance/distribution/*/detail/*', 'finance/cash-journal/*/detail/*', 'finance/laporan-penjualan*', 'finance/laporan-kekayaan-outlet*') ? ' active open' : '' }}">
+                        class="{{ request()->is('gudang/laporan-pembelian*', 'gudang/laporan-distribusi*', 'finance/laporan-distribusi*', 'finance/laporan-pembelian*', 'finance/laporan-setoran*', 'finance/laporan-jurnal-kas*', 'finance/deposit/*/detail/*', 'finance/purchase/*/detail/*', 'finance/distribution/*/detail/*', 'finance/cash-journal/*/detail/*', 'finance/laporan-penjualan*', 'finance/laporan-kekayaan-outlet*', 'outlet/laporan-penjualan/*', 'outlet/transaction/*', 'outlet/laporan-penjualan*') ? ' active open' : '' }}">
 
                         <a href=""><i data-feather="clipboard"></i>
                             <span>Laporan</span><i class="accordion-icon fa fa-angle-left"></i></a>
@@ -158,7 +172,8 @@
                                 </li>
                             @endcan
                             @can('transaction_outlet_report_access')
-                                <li class="{{ request()->is('outlet/laporan-penjualan*') ? ' active' : '' }}">
+                                <li
+                                    class="{{ request()->is('outlet/laporan-penjualan*', 'outlet/transaction/*') ? ' active' : '' }}">
                                     <a href="{{ route('outlet.laporan-penjualan.index') }}">Laporan Penjualan</a>
                                 </li>
                             @endcan
@@ -179,12 +194,17 @@
                                     <a href="{{ route('finance.laporan-kekayaan-outlet.index') }}">Laporan Kekayaan Outlet</a>
                                 </li>
                             @endcan
+                            @can('log_access')
+                                <li class="{{ request()->is('admin/laporan-aktivitas*') ? ' active' : '' }}">
+                                    <a href="{{ route('admin.log.index') }}">Laporan Aktivitas</a>
+                                </li>
+                            @endcan
                         </ul>
                     </li>
                 @endcan
                 @can('master_data_access')
                     <li
-                        class="{{ request()->is('admin/data-satuan*', 'admin/data-bahan*', 'admin/produk*', 'admin/biaya*', 'admin/suppliers*') ? ' active open' : '' }}">
+                        class="{{ request()->is('admin/data-satuan*', 'admin/data-bahan*', 'admin/produk*', 'admin/biaya*', 'admin/suppliers*', 'admin/persediaan-outlet*', 'admin/event*', 'admin/reward*') ? ' active open' : '' }}">
 
                         <a href=""><i data-feather="settings"></i>
                             <span>Master Data</span><i class="accordion-icon fa fa-angle-left"></i></a>
@@ -212,6 +232,21 @@
                             @can('supplier_access')
                                 <li class="{{ request()->is('admin/suppliers*') ? ' active' : '' }}"><a
                                         href="{{ route('warehouse.suppliers.index') }}">Supplier</a>
+                                </li>
+                            @endcan
+                            @if (Auth::user()->roles[0]->title === 'Admin')
+                                <li class="{{ request()->is('admin/persediaan-outlet*') ? ' active' : '' }}"><a
+                                        href="{{ route('admin.persediaan-outlet.index') }}">Data Persediaan Outlet</a>
+                                </li>
+                            @endif
+                            @can('event_access')
+                                <li class="{{ request()->is('admin/event*') ? ' active' : '' }}"><a
+                                        href="{{ route('admin.event.index') }}">Data Event</a>
+                                </li>
+                            @endcan
+                            @can('reward_access')
+                                <li class="{{ request()->is('admin/reward*') ? ' active' : '' }}">
+                                    <a href="{{ route('admin.reward.index') }}">Data Reward/Hadiah</a>
                                 </li>
                             @endcan
                         </ul>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Debt;
 use App\Distribution;
 use App\DistributionDetail;
@@ -29,7 +30,29 @@ class RequestDistributionController extends Controller
     {
         abort_if(Gate::denies('request_distribution_acces'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $requests = ModelRequest::where('warehouse_id', Auth::user()->id)->get();
+        $requests = ModelRequest::where('warehouse_id', Auth::user()->id)
+            ->latest()
+            ->get();
+
+        $totalHarga = 0;
+
+        foreach ($requests as $request) {
+            $totalHarga = 0;
+
+            foreach ($request->details as $detail) {
+                $material = $detail->material;
+                $totalHarga += $material->selling_price * $detail->qty;
+            }
+
+            $request->totalHarga = $totalHarga;
+        }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu Permintaan Distribusi',
+            'details' => 'Mengakses menu Permintaan Distribusi'
+        ]);
+
 
         return view('warehouse.distibution-request.index', compact('requests'));
     }
@@ -62,10 +85,24 @@ class RequestDistributionController extends Controller
      */
     public function show($id)
     {
-        $request = ModelRequest::findOrFail($id);
+        $request = ModelRequest::with('details.material')->where('id', $id)->get();
+
+        $totalHarga = 0;
+
+        foreach ($request[0]->details as $detail) {
+            $material = $detail->material;
+            $totalHarga += $material->selling_price * $detail->qty;
+        }
 
 
-        return view('warehouse.distibution-request.show', compact('request'));
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail Permintaan Distribusi',
+            'details' => 'Mengakses detail Permintaan Distribusi'
+        ]);
+
+
+        return view('warehouse.distibution-request.show', compact('request', 'totalHarga'));
     }
 
     /**
@@ -88,58 +125,65 @@ class RequestDistributionController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $requests = ModelRequest::find($id);
 
         $details = $requests->details;
 
-
-        // tambahkan variabel flag untuk menandakan apakah status sudah diubah
         $status_updated = false;
 
-        foreach ($details->all() as $detail) {
+        foreach ($details->all() as $index => $detail) {
             $id = $detail->id;
             $material_id = $detail->material_id;
             $qty = $detail->qty;
+            $updated_qty = $request->input('updated_qty')[$index];
 
             $inventory = Inventory::where('warehouse_id', Auth::user()->id)
                 ->where('material_data_id', $material_id)
                 ->first();
 
+            $status_updated = false;
+
             if ($inventory) {
                 $stock = $inventory->remaining_amount;
 
-                if ($stock >= $qty) {
+                if ($stock >= $updated_qty) {
+                    $qty = $updated_qty;
+
                     if (!$status_updated) {
                         $requests->status = 'approved';
                         $status_updated = true;
                     }
                 } else {
-                    if (!$status_updated) {
-                        $requests->status = 'rejected';
-                        $status_updated = true;
+                    $requests->status = 'pending';
+                    $status_updated = true;
 
-                        SweetAlert::error('Gagal', 'Stok tidak mencukupi');
+                    $material = MaterialData::find($material_id);
+
+                    if ($material) {
+                        $material_name = $material->name;
+                        SweetAlert::error('Gagal', 'Stok ' . $material_name . ' kurang');
                     }
                 }
             } else {
-                // ubah status hanya jika belum diubah sebelumnya
-                if (!$status_updated) {
-                    $requests->status = 'rejected';
-                    $status_updated = true;
+                $requests->status = 'pending';
+                $status_updated = true;
 
-                    SweetAlert::error('Gagal', 'Stok tidak mencukupi');
+                $material = MaterialData::find($material_id);
+
+                if ($material) {
+                    $material_name = $material->name;
+                    SweetAlert::error('Gagal', 'Stok ' . $material_name . ' kurang');
                 }
             }
+
+            $detail->qty = $updated_qty;
+            $detail->save();
         }
 
-        // simpan status
+
         $requests->save();
 
-        // buat data distribution jika request disetujui
         if ($requests->status == 'approved') {
-
-
             $distribution = Distribution::create([
                 'warehouse_id' => Auth::user()->id,
                 'distribution_number' => 'DIS' . date('Ymd') . sprintf('%06d', mt_rand(1, 999999)),
@@ -149,17 +193,9 @@ class RequestDistributionController extends Controller
                 'status' => 'on_progres'
             ]);
 
-
-
             foreach ($details->all() as $detail) {
-                $materialData = MaterialData::where(
-                    'id',
-                    $detail->material_id
-                )->first();
-
-                $unit = UnitData::where('id', $materialData->unit_id)
-                    ->first();
-
+                $materialData = MaterialData::where('id', $detail->material_id)->first();
+                $unit = UnitData::where('id', $materialData->unit_id)->first();
 
                 DistributionDetail::create([
                     'distribution_id' => $distribution->id,
@@ -169,11 +205,11 @@ class RequestDistributionController extends Controller
                 ]);
             }
 
-
             $total_akhir = 0;
 
             foreach ($details->all() as $detail) {
-                $total_akhir += $detail->total;
+                $materialData = MaterialData::where('id', $detail->material_id)->first();
+                $total_akhir += $detail->qty * $materialData->selling_price;
             }
 
             Debt::create([
@@ -187,6 +223,12 @@ class RequestDistributionController extends Controller
             SweetAlert::success('Berhasil', 'Distribusi berhasil');
         }
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah status Permintaan Distribusi',
+            'details' => 'Mengubah status Permintaan Distribusi'
+        ]);
+
         return redirect()->route('warehouse.data-request-bahan.index');
     }
 
@@ -199,5 +241,24 @@ class RequestDistributionController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reject(Request $request)
+    {
+        $requests = ModelRequest::where('id', $request->id)->first();
+
+        $requests->status = 'rejected';
+        $requests->save();
+
+        SweetAlert::success('Berhasil', 'Permintaan ditolak');
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menolak Permintaan Distribusi',
+            'details' => 'Menolak Permintaan Distribusi'
+        ]);
+
+        return redirect()->route('warehouse.data-request-bahan.index');
     }
 }

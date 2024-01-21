@@ -87,10 +87,11 @@
                                     @endphp
                                 @endforeach
                             </tbody>
+
                             <tfoot>
                                 <tr>
-                                    <th colspan="5" style="text-align: right;">Total:</th>
-                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                    <th colspan="3" style="text-align:right">Total:</th>
+                                    <th colspan="2">Rp {{ number_format($total, 0, ',', '.') }}</th>
                                 </tr>
                             </tfoot>
                         </table>

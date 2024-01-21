@@ -63,10 +63,15 @@
                             <i class="icon-handbag tx-primary tx-20"></i>
                         </div>
                         <div>
-                            <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
-                                Rp {{ number_format($totalPembelian[0]->total_pembelian, 0, ',', '.') }}
-
-                            </h2>
+                            @if (count($totalPembelian) > 0)
+                                <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
+                                    Rp {{ number_format($totalPembelian[0]->total_pembelian, 0, ',', '.') }}
+                                </h2>
+                            @else
+                                <h2 class="tx-20 tx-sm-18 tx-md-24 mb-0 mt-2 mt-sm-0 tx-normal tx-rubik tx-dark">
+                                    Rp 0
+                                </h2>
+                            @endif
 
                         </div>
                     </div>
@@ -114,8 +119,10 @@
                     <a href="#" data-toggle="remove" class="btn card-remove"><i class="ion-android-close"></i></a>
                 </div>
             </div>
-            <div class="card-body collapse show" id="collapse8">
-                <div id="chart-product"></div>
+            <div class="card-body collapse show p-0" id="collapse8">
+                <div class="chart">
+                    <div id="chart-product"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -136,7 +143,9 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse8">
-                <div id="chart-outlet"></div>
+                <div class="chart">
+                    <div id="chart-outlet"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -158,7 +167,9 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse8">
-                <div id="chart-penjualan"></div>
+                <div class="chart">
+                    <div id="chart-penjualan"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -180,7 +191,106 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse8">
-                <div id="chart-kekayaan"></div>
+                <div class="chart">
+                    <div id="chart-kekayaan"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-12">
+
+
+
+        <div class="card mg-b-20">
+            <div class="card-header">
+                <h4 class="card-header-title">
+                    Data Laporan Penjualan Produk
+                </h4>
+
+                <div class="card-header-btn">
+                    <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
+                        aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
+                    <a href="#" data-toggle="refresh" class="btn card-refresh"><i
+                            class="ion-android-refresh"></i></a>
+                    <a href="#" data-toggle="expand" class="btn card-expand"><i
+                            class="ion-android-expand"></i></a>
+                    <a href="#" data-toggle="remove" class="btn card-remove"><i
+                            class="ion-android-close"></i></a>
+                </div>
+            </div>
+            <div class="card-body collapse show" id="collapse1">
+                <table class="table stripe hover bordered datatable datatable-ProductSales">
+                    <thead>
+                        <tr>
+                            <th width="10">
+
+                            </th>
+                            <th>
+                                No
+                            </th>
+                            <th>
+                                Nama Produk
+                            </th>
+                            {{--  <th>
+                                        UMUM
+                                    </th>  --}}
+                            <th>
+                                Total Quantity
+                            </th>
+                            <th>
+                                Total Penjualan
+                            </th>
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $total = 0;
+                            $qty = 0;
+                        @endphp
+                        @foreach ($productSales as $key => $product)
+                            <tr data-entry-id="{{ $product->id }}">
+                                <td>
+
+                                </td>
+                                <td>
+                                    {{ $loop->iteration }}
+                                </td>
+                                <td>
+                                    {{ $product->name }}
+                                </td>
+                                {{--  <td>
+                                            @php
+                                                $umum = \App\Product::where('transactions.customer_type', 'umum')->get();
+                                            @endphp
+                                            {{ $product->name }}
+                                        </td>  --}}
+                                <td>
+                                    {{ $product->total_qty ?? '0' }}
+                                </td>
+                                <td>
+                                    Rp {{ number_format($product->total_amount, 0, ',', '.') }}
+                                </td>
+
+                            </tr>
+                            @php
+                                $total += $product->total_amount;
+                                $qty += $product->total_qty;
+                            @endphp
+                        @endforeach
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <th colspan="3">Total</th>
+                            <th>{{ $qty }}</th>
+                            <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
             </div>
         </div>
     </div>
@@ -188,7 +298,7 @@
         <div class="card mg-b-20">
             <div class="card-header">
                 <h4 class="card-header-title">
-                    Data Penjualan
+                    Data Kekayaan
                 </h4>
                 <div class="card-header-btn">
                     <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -202,8 +312,8 @@
                 </div>
             </div>
             <div class="card-body collapse show" id="collapse1">
-                <div class="table-repsonsive">
-                    <table class="table stripe hover bordered datatable datatable-Role">
+                <div class="table-responsive">
+                    <table class="table stripe hover bordered ">
                         <thead>
                             <tr>
                                 <th width="10">
@@ -216,22 +326,25 @@
                                     Outlet
                                 </th>
                                 <th>
-                                    Kode Order
+                                    Total Kekayaan
                                 </th>
                                 <th>
-                                    Metode Pembayaran
+                                    Jumlah Keluar
                                 </th>
                                 <th>
-                                    Tipe Kostumer
+                                    Sisa Kekayaan
                                 </th>
-                                <th>
-                                    Total
-                                </th>
+
 
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($transactions as $transaction)
+                            @php
+                                $total_riche = 0;
+                                $debit_riche = 0;
+                                $sub_total_riche = 0;
+                            @endphp
+                            @foreach ($riches as $riche)
                                 <tr>
                                     <td>
 
@@ -240,24 +353,37 @@
                                         {{ $loop->iteration }}
                                     </td>
                                     <td>
-                                        {{ $transaction->outlet->outlet_name }}
+                                        {{ $riche->outlet->outlet_name ?? '' }}
 
                                     </td>
                                     <td>
-                                        {{ $transaction->order_number }}
+                                        Rp {{ number_format($riche->total, 0, ',', '.') }}
+
                                     </td>
                                     <td>
-                                        {{ $transaction->payment_method }}
+                                        Rp {{ number_format($riche->debit, 0, ',', '.') }}
                                     </td>
                                     <td>
-                                        {{ $transaction->customer_type }}
-                                    </td>
-                                    <td>
-                                        Rp {{ number_format($transaction->total, 0, ',', '.') }}
+                                        Rp {{ number_format($riche->sub_total, 0, ',', '.') }}
+
                                     </td>
                                 </tr>
+                                @php
+                                    $total_riche += $riche->total;
+                                    $debit_riche += $riche->debit;
+                                    $sub_total_riche += $riche->sub_total;
+                                @endphp
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="font-weight-bold">Total</th>
+                                <th class="font-weight-bold">Rp {{ number_format($total_riche, 0, ',', '.') }}</th>
+                                <th class="font-weight-bold">Rp {{ number_format($debit_riche, 0, ',', '.') }}</th>
+                                <th class="font-weight-bold">Rp {{ number_format($sub_total_riche, 0, ',', '.') }}
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 

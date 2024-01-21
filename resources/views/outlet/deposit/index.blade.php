@@ -6,31 +6,28 @@
 @section('content')
     <div id="main-wrapper">
 
-
         <div class="row row-xs clearfix">
 
-            @can('deposit_create')
-                <div class="my-4">
-                    <form action="{{ route('outlet.setoran.store') }}" method="POST">
-                        @csrf
-                        <button class="btn btn-primary" type="submit">Setor Hari Ini</button>
-                    </form>
+
+            <div class="pageheader pd-t-25 pd-b-35">
+                <div class="pd-t-a5 pd-b-5">
+                    <h1 class="pd-0 mg-0 tx-20 text-overflow">Data Setoran</h1>
                 </div>
-            @endcan
+            </div>
 
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('outlet.jurnal-kas.index') }}" method="GET">
+                <form action="{{ route('outlet.setoran.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                             <div class="form-group">
                                 <label for="tanggal_mulai">Tanggal Mulai:</label>
                                 <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai">
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-5 col-12">
                             <div class="form-group">
                                 <label for="tanggal_akhir">Tanggal Akhir:</label>
                                 <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir">
@@ -45,7 +42,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Jurnal
+                            Data Setoran
                         </h4>
 
                         <div class="card-header-btn">
@@ -61,6 +58,7 @@
                     </div>
                     <div class="card-body collapse show" id="collapse1">
                         <table class="table stripe hover bordered datatable datatable-Role">
+
                             <thead>
                                 <tr>
                                     <th width="10"></th>
@@ -81,6 +79,7 @@
                                     </th>
                                     <th>Total Setoran</th>
                                     <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,9 +97,20 @@
                                         <td>Rp {{ number_format($deposit->amount, 0, ',', '.') }}</td>
                                         <td>
                                             <span
-                                                class="badge {{ $deposit->status == 'pending' ? 'badge-warning' : 'badge-success' }}">{{ $deposit->status }}</span>
+                                                class="badge
+                                            {{ $deposit->status == 'pending' ? 'badge-warning' : '' }}
+                                            {{ $deposit->status == 'success' ? 'badge-success' : '' }}
+                                            {{ $deposit->status == 'waiting' ? 'badge-danger' : '' }}
+                                            text-white">
+                                                {{ $deposit->status ?? '' }}</span>
                                         </td>
+                                        <td>
+                                            <a href="{{ route('outlet.setoran.show', $deposit->id) }}"
+                                                class="btn btn-primary">
+                                                Detail
+                                            </a>
 
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -28,26 +28,28 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body" id="transaction-card">
-                        <table id="outlet-inventory-table" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Bulan</th>
-                                    <th>Jumlah Transaksi</th>
-                                    <th>Total Penghasilan</th>
-                                    <th>Aksi</th>
-                                    <!-- Add more columns as needed -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Table data will be fetched by AJAX request -->
-                                <tr>
-                                    <td colspan="4">Pilih outlet untuk melihat data penjualan</td>
-                                </tr>
+                        <div class="table-responsive">
+                            <table id="outlet-inventory-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Bulan</th>
+                                        <th>Jumlah Transaksi</th>
+                                        <th>Total Penghasilan</th>
+                                        <th>Aksi</th>
+                                        <!-- Add more columns as needed -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Table data will be fetched by AJAX request -->
+                                    <tr>
+                                        <td colspan="4">Pilih outlet untuk melihat data penjualan</td>
+                                    </tr>
 
 
-                            </tbody>
-                            <tfoot class="bg-primary text-white"></tfoot>
-                        </table>
+                                </tbody>
+                                <tfoot class="bg-primary text-white"></tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -87,6 +87,11 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $total = 0;
+                                    $debit = 0;
+                                    $sub_total = 0;
+                                @endphp
                                 @foreach ($riches as $riche)
                                     <tr>
                                         <th>
@@ -115,9 +120,22 @@
                                                 class="btn btn-primary">Detail</a>
                                         </th>
                                     </tr>
+                                    @php
+                                        $total += $riche->total;
+                                        $debit += $riche->debit;
+                                        $sub_total += $riche->sub_total;
+                                    @endphp
                                 @endforeach
                             </tbody>
-
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4" class="text-center">Total</th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($debit, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($sub_total, 0, ',', '.') }}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>

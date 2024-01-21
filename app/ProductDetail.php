@@ -17,11 +17,11 @@ class ProductDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     public function material()
     {
-        return $this->belongsTo(MaterialData::class);
+        return $this->belongsTo(MaterialData::class, 'material_id');
     }
 }

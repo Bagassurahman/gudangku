@@ -7,25 +7,23 @@
 @section('content')
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
-            <div class="pd-t-a5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Laporan Penjualan</h1>
+            <div class="pd-t-5 pd-b-5">
+                <h1 class="pd-0 mg-0 tx-20 text-overflow"> Detail Laporan Penjualan </h1>
             </div>
 
         </div>
-
         <div class="row row-xs clearfix">
+
 
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Laporan Penjualan
+                            Detail Laporan Penjualan
                         </h4>
-
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
                                 aria-expanded="true"><i class="ion-ios-arrow-down"></i></a>
@@ -48,10 +46,10 @@
                                         No
                                     </th>
                                     <th>
-                                        Outlet
+                                        Kode
                                     </th>
                                     <th>
-                                        Gudang
+                                        Outlet
                                     </th>
                                     <th>
                                         Total
@@ -59,16 +57,14 @@
                                     <th>
                                         Aksi
                                     </th>
-
-
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $total = 0;
                                 @endphp
-                                @foreach ($transactions as $transaction)
-                                    <tr>
+                                @foreach ($transactions as $key => $transaction)
+                                    <tr data-entry-id="{{ $transaction->id }}">
                                         <td>
 
                                         </td>
@@ -76,28 +72,41 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
+                                            {{ $transaction->order_number }}
+                                        </td>
+                                        <td>
                                             {{ $transaction->outlet_name }}
                                         </td>
                                         <td>
-                                            {{ $transaction->warehouse_name }}
+                                            Rp {{ number_format($transaction->total, 0, ',', '.') }}
                                         </td>
-                                        <td>
-                                            Rp {{ number_format($transaction->total_transaction, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            <a href="{{ route('finance.transaction.show-date', ['month' => $transaction->month, 'outletId' => $transaction->outlet_id]) }}"
-                                                class="btn btn-sm btn-primary">Detail</a>
-
+                                        <td class="d-flex">
+                                            <a href="{{ route('finance.transaction.detail', $transaction->id) }}"
+                                                class="btn btn-primary mr-2">
+                                                Detail
+                                            </a>
+                                            @can('delete_transaction')
+                                                <form
+                                                    action="{{ route('finance.laporan-penjualan.destroy', $transaction->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                     @php
-                                        $total += $transaction->total_transaction;
+                                        $total += $transaction->total;
                                     @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="3" style="text-align: right;">Total:</th>
+                                    <th colspan="5" style="text-align: right;">Total:</th>
                                     <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
                                 </tr>
                             </tfoot>

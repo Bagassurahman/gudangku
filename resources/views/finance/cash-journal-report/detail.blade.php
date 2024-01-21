@@ -61,7 +61,9 @@
                                     <th>
                                         Total
                                     </th>
-
+                                    <th>
+                                        Aksi
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,7 +90,20 @@
                                         <td>
                                             Rp {{ number_format($cashJournal->debit, 0, ',', '.') }}
                                         </td>
+                                        <td>
+                                            {{-- delete --}}
+                                            <form
+                                                action="{{ route('finance.laporan-jurnal-kas.destroy', $cashJournal->id) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('DELETE')
 
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Apakah anda yakin ingin menghapus data ini?')">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     @php
                                         $total += $cashJournal->debit;

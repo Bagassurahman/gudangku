@@ -42,7 +42,7 @@
                                         Nama Produk
                                     </th>
                                     <td>
-                                        {{ $product->name }}
+                                        {{ $product->name ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -50,7 +50,7 @@
                                         Harga Umum
                                     </th>
                                     <td>
-                                        {{ $product->general_price }}
+                                        {{ $product->general_price ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -58,7 +58,7 @@
                                         Harga Member
                                     </th>
                                     <td>
-                                        {{ $product->member_price }}
+                                        {{ $product->member_price ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -66,7 +66,7 @@
                                         Harga Online
                                     </th>
                                     <td>
-                                        {{ $product->online_price }}
+                                        {{ $product->online_price ?? '' }}
                                     </td>
                                 </tr>
 
@@ -84,7 +84,7 @@
                                     <td>
                                         <ul>
                                             @foreach ($product->details as $detail)
-                                                <li>{{ $detail->material->name }} ({{ $detail->dose }})</li>
+                                                <li>{{ $detail->material->name ?? '' }} ({{ $detail->dose ?? '' }})</li>
                                             @endforeach
                                         </ul>
                                     </td>

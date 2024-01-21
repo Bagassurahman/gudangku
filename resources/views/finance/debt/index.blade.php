@@ -18,6 +18,27 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
+                
+                <form action="{{ route('finance.hutang-piutang.index') }}" method="GET">
+                    <div class="row align-items-center d-flex">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="tanggal_mulai">Tanggal Mulai:</label>
+                                <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="tanggal_akhir">Tanggal Akhir:</label>
+                                <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+
+                            <button type="submit" class="btn btn-primary w-100 mt-2">Filter</button>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="card mg-b-20">
                     <div class="card-header">
@@ -103,9 +124,15 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-
+                             <tfoot>
+                                <tr>
+                                    <th colspan="1">Total Menunggu Aproval:</th>
+                                   
+                                    <th>Rp {{ number_format($wait, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
                         </table>
-
+                
 
                     </div>
                 </div>

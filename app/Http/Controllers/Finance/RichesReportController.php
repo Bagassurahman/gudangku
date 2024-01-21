@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\Deposit;
 use App\Http\Controllers\Controller;
 use App\Outlet;
@@ -19,7 +20,14 @@ class RichesReportController extends Controller
     public function index()
     {
 
-        $riches = Riche::with('outlet')->get();
+        $riches = Riche::with('outlet')->latest()->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan kekayaan',
+            'details' => 'Mengakses menu laporan kekayaan'
+
+        ]);
 
         return view('finance.wealth-report.index', compact('riches'));
     }
@@ -58,9 +66,18 @@ class RichesReportController extends Controller
 
         $riches = Deposit::whereRaw('DATE_FORMAT(deposit_date, "%Y-%m") = ?', $parsedDate->format('Y-m'))
             ->where('outlet_id', $id)
+            ->orderBy('deposit_date', 'desc')
             ->get();
 
+
         $outlet = Outlet::where('user_id', $id)->first();
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan kekayaan',
+            'details' => 'Mengakses menu laporan kekayaan'
+        ]);
 
         return view('finance.wealth-report.show', compact('riches', 'outlet', 'date'));
     }

@@ -3,7 +3,7 @@
     <div class="auth-card">
         <img src="{{ asset('images/logo-zamzam.jpeg') }}" alt="" class="max-w-none mx-auto mb-3" width="100">
         <div class="title">
-            {{ trans('panel.site_title') }}
+            Login Zamzam Time
         </div>
 
         @if (session('message'))
@@ -52,6 +52,9 @@
                     {{ trans('global.login') }}
                 </button>
             </div>
+
+            <a class="link mt-3 text-center" href="{{ route('register') }}">Belum Punya Akun? Daftar</a>
+
         </form>
     </div>
 @endsection

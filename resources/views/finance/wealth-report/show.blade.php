@@ -65,7 +65,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-
+                                @php
+                                    $total_omset = 0;
+                                    $total_online = 0;
+                                    $total_shoppe_pay = 0;
+                                    $total_cash_journal = 0;
+                                    $total_amount = 0;
+                                @endphp
                                 @foreach ($riches as $riche)
                                     <tr>
 
@@ -87,8 +93,25 @@
 
                                     </tr>
                                 @endforeach
+                                @php
+                                    $total_omset += $riche->omset;
+                                    $total_online += $riche->online;
+                                    $total_shoppe_pay += $riche->shoppe_pay;
+                                    $total_cash_journal += $riche->cash_journal;
+                                    $total_amount += $riche->amount;
+                                @endphp
                             </tbody>
-
+                            <tfoot>
+                                <tr>
+                                    <th colspan="4">Total</th>
+                                    <th>Rp {{ number_format($total_omset, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($total_online, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($total_shoppe_pay, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($total_cash_journal, 0, ',', '.') }}</th>
+                                    <th>Rp {{ number_format($total_amount, 0, ',', '.') }}</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
 
                     </div>

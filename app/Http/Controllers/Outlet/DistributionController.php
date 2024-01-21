@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Outlet;
 
+use App\ActivityLog;
 use App\Distribution;
 use App\Http\Controllers\Controller;
 use App\Inventory;
@@ -22,7 +23,14 @@ class DistributionController extends Controller
 
         $distributions = Distribution::with('distributionDetails')
             ->where('outlet_id', Auth::user()->id)
+            ->latest()
             ->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu distribusi',
+            'details' => 'Mengakses menu distribusi'
+        ]);
 
 
         return view('outlet.distribution.index', compact('distributions'));
@@ -58,6 +66,12 @@ class DistributionController extends Controller
     public function show($id)
     {
         $distribution = Distribution::with('distributionDetails.material')->findOrFail($id);
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses detail distribusi',
+            'details' => 'Mengakses detail distribusi'
+        ]);
 
         return view('outlet.distribution.show', compact('distribution'));
     }
@@ -129,6 +143,13 @@ class DistributionController extends Controller
                 ]);
             }
         }
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menerima distribusi',
+            'details' => 'Menerima distribusi'
+        ]);
 
 
         $distribution->update([

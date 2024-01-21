@@ -25,9 +25,4 @@ class Outlet extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
-
-    public function getTargetAttribute()
-    {
-        return 'Rp. ' . number_format($this->attributes['target'], 0, ',', '.');
-    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\Deposit;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class DepositReportController extends Controller
     {
         $query = Deposit::selectRaw('deposits.deposit_date, SUM(deposits.amount) as total')
             ->groupBy('deposits.deposit_date')
-            ->orderBy('deposits.deposit_date');
+            ->orderBy('deposits.deposit_date', 'desc');
 
         if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
             $tanggalMulai = $request->input('tanggal_mulai');
@@ -39,6 +40,12 @@ class DepositReportController extends Controller
             $date = Carbon::parse($deposit->deposit_date)->format('d F Y');
             $deposit->deposit_date = $date;
         }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan setor kas',
+            'details' => 'Mengakses menu laporan setor kas'
+        ]);
 
         return view('finance.deposit-report.index', compact('deposits'));
     }
@@ -80,6 +87,13 @@ class DepositReportController extends Controller
             ->whereDate('deposits.deposit_date', $newDate)
             ->groupBy('accounts.account_number')
             ->get();
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan setor kas',
+            'details' => 'Mengakses menu laporan setor kas'
+        ]);
 
 
         return view('finance.deposit-report.show', [
@@ -133,6 +147,13 @@ class DepositReportController extends Controller
             ->where('accounts.account_number', $accountNumber)
             ->groupBy('deposits.id', 'accounts.account_number')
             ->get();
+
+        // log
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan setor kas',
+            'details' => 'Mengakses menu laporan setor kas'
+        ]);
 
 
         return view('finance.deposit-report.detail', [

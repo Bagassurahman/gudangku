@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Debt;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
+use Illuminate\Support\Facades\DB;
 
 class DebtController extends Controller
 {
@@ -19,9 +21,22 @@ class DebtController extends Controller
     {
         $debts = Debt::with(['outlet', 'warehouse'])
             ->where('warehouse_id', Auth::user()->id)
+
+            ->orderBy('status', 'desc')
+            ->orderBy('date', 'desc')
             ->get();
 
-        return view('warehouse.debt.index', compact('debts'));
+        $wait = DB::table('debts')
+            ->where('status', 'on_progres')
+            ->sum('amount');
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu Hutang Piutang',
+            'details' => 'Mengakses menu Hutang Piutang'
+        ]);
+
+        return view('warehouse.debt.index', compact('debts', 'wait'));
     }
 
     /**
@@ -89,6 +104,12 @@ class DebtController extends Controller
         if ($request->status == 'success') {
             SweetAlert::success('Berhasil', 'Pelunasan berhasil');
         }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah data Status Hutang Piutang',
+            'details' => 'Mengubah data Status Hutang Piutang'
+        ]);
 
         return redirect()->route('warehouse.hutang-piutang.index');
     }

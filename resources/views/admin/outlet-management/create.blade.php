@@ -76,7 +76,11 @@
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label active">Gudang Suplai<span
                                         class="tx-danger">*</span></label>
-                                <select class="form-control select" name="warehouse_id">
+                                <select
+                                    class="form-control select @error('warehouse_id')
+                                        is-invalid
+                                @enderror"
+                                    name="warehouse_id">
                                     <option label="Pilih Gudang"></option>
                                     @foreach ($warehouse as $item)
                                         <option value="{{ $item->id }}">{{ $item->warehouse_name }}</option>

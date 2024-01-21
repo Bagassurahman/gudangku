@@ -44,7 +44,7 @@
                                         No
                                     </th>
                                     <th>
-                                        Tanggal
+                                        Bulan
                                     </th>
                                     <th>
                                         Total
@@ -75,8 +75,9 @@
                                             Rp {{ number_format($distribution->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('warehouse.laporan-distribusi.show', $distribution->distribution_date) }}"
+                                            <a href="{{ route('warehouse.laporan-distribusi.show-date', ['month' => $distribution->month]) }}"
                                                 class="btn btn-primary">Detail</a>
+
                                         </td>
                                     </tr>
                                     @php
@@ -84,10 +85,12 @@
                                     @endphp
                                 @endforeach
                             </tbody>
+
                             <tfoot>
                                 <tr>
-                                    <th colspan="4" style="text-align: right;">Total:</th>
+                                    <th colspan="3" style="text-align:right">Total:</th>
                                     <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>

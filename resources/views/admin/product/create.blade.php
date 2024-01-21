@@ -36,11 +36,24 @@
                             <div class="form-group mg-b-10-force">
                                 <label class="form-control-label active">Nama Produk<span class="tx-danger">*</span></label>
                                 <input
-                                    class="form-control @error('name')
+                                    class="form-control @error('point')
                                             is-invalid
                                         @enderror"
                                     type="text" name="name" value="{{ old('name') }}">
                                 @error('name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="form-group mg-b-10-force">
+                                <label class="form-control-label active">Point Produk<span class="tx-danger">*</span></label>
+                                <input
+                                    class="form-control @error('point')
+                                            is-invalid
+                                        @enderror"
+                                    type="number" name="point" value="{{ old('point') }}">
+                                @error('point')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -130,26 +143,49 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
+            var selectedMaterials = $('#materials').val();
+            var takaranValues = {}; // Objek untuk menyimpan nilai isian takaran
+
+            // Mendapatkan dan menyimpan nilai isian takaran
+            $('#takaran-form').on('input', 'input[type="text"]', function() {
+                var materialId = $(this).data('material-id');
+                var takaran = $(this).val();
+                takaranValues[materialId] = takaran;
+            });
+
+            showTakaranFields(selectedMaterials);
+
             $('#materials').on('change', function() {
                 var selectedMaterials = $(this).val();
-                var html = '';
+                showTakaranFields(selectedMaterials);
+            });
+
+            function showTakaranFields(selectedMaterials) {
+                var container = $('#takaran-form');
+                container.empty(); // Menghapus konten sebelumnya
+
                 if (selectedMaterials) {
                     @foreach ($materials as $material)
                         if ($.inArray("{{ $material->id }}", selectedMaterials) !== -1) {
-                            html += '<div class="form-group">';
+                            var html = '<div class="form-group">';
                             html +=
                                 '<label for="takaran-{{ $material->id }}">Takaran {{ $material->name }} <span class="tx-danger">*</span></label>';
                             html +=
-                                '<input type="text" name="takaran[{{ $material->id }}]" id="takaran-{{ $material->id }}" class="form-control" placeholder="Masukkan Takaran {{ $material->name }}">';
+                                '<input type="text" name="takaran[{{ $material->id }}]" id="takaran-{{ $material->id }}" class="form-control" placeholder="Masukkan Takaran {{ $material->name }}"';
                             html +=
-                                '<div class="form-text">Satuan Takaran: {{ $material->unit->outlet_unit ?? '' }}</div>'
+                            ' data-material-id="{{ $material->id }}"'; // Menambahkan atribut data dengan nilai material ID
+                            html += ' value="' + (takaranValues[{{ $material->id }}] || '') +
+                            '"'; // Memasukkan nilai isian sebelumnya jika ada
+                            html += '>';
+                            html +=
+                                '<div class="form-text "><em>*Satuan Takaran: {{ $material->unit->outlet_unit ?? '' }}</em></div>';
                             html += '</div>';
 
+                            container.append(html); // Menambahkan konten baru
                         }
                     @endforeach
                 }
-                $('#takaran-form').html(html);
-            });
+            }
         });
     </script>
 @endsection

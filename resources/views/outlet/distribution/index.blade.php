@@ -90,12 +90,10 @@
                                                 {{ $distribution->status ?? '' }}</span>
                                         </td>
                                         <td>
-                                            @if ($distribution->status == 'on_progres')
-                                                <a href="{{ route('outlet.distribusi.show', $distribution->id) }}"
-                                                    class="btn btn-primary">
-                                                    Detail
-                                                </a>
-                                            @endif
+                                            <a href="{{ route('outlet.distribusi.show', $distribution->id) }}"
+                                                class="btn btn-primary">
+                                                Detail
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach

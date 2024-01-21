@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\PurchaseOfMaterials;
 use Carbon\Carbon;
@@ -22,13 +23,14 @@ class PurchaseReportController extends Controller
             ->select(DB::raw('purchase_of_materials.po_date, SUM(purchase_of_materials_details.total) as total'))
             ->where('purchase_of_materials.warehouse_id', Auth::user()->id)
             ->groupBy('purchase_of_materials.po_date')
-            ->orderBy('purchase_of_materials.po_date')
+            ->orderBy('purchase_of_materials.po_date', 'desc')
             ->get();
 
         foreach ($purchases as $purchase) {
             $date = Carbon::parse($purchase->po_date)->format('d F Y');
             $purchase->po_date = $date;
         }
+
 
         return view('warehouse.purchase-report.index', [
             'purchases' => $purchases
@@ -69,9 +71,17 @@ class PurchaseReportController extends Controller
 
         $purchaseDetails = PurchaseOfMaterials::join('purchase_of_materials_details', 'purchase_of_materials.id', '=', 'purchase_of_materials_details.purchase_of_materials_id')
             ->join('material_data', 'purchase_of_materials_details.material_id', '=', 'material_data.id')
-            ->select('purchase_of_materials.po_date', 'material_data.name as material_name', 'purchase_of_materials_details.qty', 'purchase_of_materials_details.price', 'purchase_of_materials_details.total')
+            ->select(
+                'purchase_of_materials.id',
+                'purchase_of_materials.po_number',
+                'purchase_of_materials.po_date',
+                DB::raw('SUM(purchase_of_materials_details.qty) as total_qty'),
+                DB::raw('SUM(purchase_of_materials_details.total) as total_amount')
+            )
             ->where('purchase_of_materials.po_date', $newDate)
+            ->groupBy('purchase_of_materials.id', 'purchase_of_materials.po_number', 'purchase_of_materials.po_date')
             ->get();
+
 
         return view('warehouse.purchase-report.show', [
             'purchaseDetails' => $purchaseDetails,
@@ -111,5 +121,16 @@ class PurchaseReportController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function detail($id)
+    {
+        $purchase = PurchaseOfMaterials::with(['purchaseOfMaterialsDetails', 'supplier', 'purchaseOfMaterialsDetails.material'])->findOrFail($id);
+
+
+
+        return view('warehouse.purchase-report.detail', [
+            'purchase' => $purchase
+        ]);
     }
 }

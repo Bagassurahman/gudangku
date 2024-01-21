@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Outlet;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\MaterialData;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ class InventoryController extends Controller
         $inventories = MaterialData::with(['inventories' => function ($query) use ($userId) {
             $query->where('outlet_id', $userId);
         }])->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu persediaan outlet',
+            'details' => 'Mengakses menu persediaan outlet'
+        ]);
 
         return view('outlet.inventory.index', compact('inventories'));
     }

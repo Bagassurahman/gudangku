@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
 use App\TransactionDetail;
 use App\Product;
 use App\Http\Controllers\Controller;
@@ -22,62 +23,46 @@ class ProductSalesReportController extends Controller
     {
         abort_if(Gate::denies('product_sales_report_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $filter = $request->input('filter', 'all');
+        $tanggal_mulai = $request->input('tanggal_mulai');
+        $tanggal_akhir = $request->input('tanggal_akhir');
 
-        $query = Product::leftJoin('transaction_details', function ($join) {
-            $join->on('products.id', '=', 'transaction_details.product_id')
-                ->where(function ($query) {
-                    $query->where('transaction_details.qty', '!=', 0)
-                        ->orWhereNull('transaction_details.qty');
-                });
+        $query = Product::leftJoin('transaction_details', function ($join) use ($tanggal_mulai, $tanggal_akhir, $request) {
+            $join->on('products.id', '=', 'transaction_details.product_id');
+            if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
+                $tanggalMulai = $request->input('tanggal_mulai');
+                $tanggalAkhir = $request->input('tanggal_akhir');
+
+                $join->whereDate('transaction_details.created_at', '>=', $tanggalMulai)
+                    ->whereDate('transaction_details.created_at', '<=', $tanggalAkhir);
+            } elseif ($request->filled('tanggal_mulai')) {
+                $tanggalMulai = $request->input('tanggal_mulai');
+
+                $join->whereDate('transaction_details.created_at', '>=', $tanggalMulai);
+            }
         })
-            ->selectRaw('products.name, SUM(transaction_details.qty) as total_qty, SUM(transaction_details.total) as total_amount')
-            ->groupBy('products.name')
-            ->orderByDesc('total_qty');
+            ->selectRaw('products.name,
+                SUM(CASE WHEN transaction_details.qty IS NULL OR transaction_details.qty = 0 THEN 0 ELSE transaction_details.qty END) as total_qty,
+                SUM(CASE WHEN transaction_details.qty IS NULL OR transaction_details.qty = 0 THEN 0 ELSE transaction_details.total END) as total_amount')
+            ->groupBy('products.name');
 
-        // $query = Product::leftJoin('transaction_details', function ($join) {
-        //     $join->on('products.id', '=', 'transaction_details.product_id')
-        //         ->where(function ($query) {
-        //             $query->where('transaction_details.qty', '!=', 0)
-        //                 ->orWhereNull('transaction_details.qty');
-        //         });
-        // })
-        //     ->leftJoin('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
-        //     ->selectRaw('products.name, transactions.customer_type, SUM(transaction_details.qty) as total_qty, SUM(transaction_details.total) as total_amount')
-        //     ->groupBy('products.name', 'transactions.customer_type')
-        //     ->orderByDesc('total_qty')
-        //     ->where('transactions.customer_type', $customerType);
+        // Conditional orderBy clauses
+        $productSales = $query->orderByDesc('total_qty')
+            ->orderBy('products.name', 'asc')
+            ->get();
 
 
-
-
-        if ($filter == 'daily') {
-            $query->where(function ($query) {
-                $query->whereDate('transaction_details.created_at', '=', Carbon::today()->toDateString())
-                    ->orWhereNull('transaction_details.created_at');
-            });
-        } elseif ($filter == 'monthly') {
-            $query->where(function ($query) {
-                $query->whereYear('transaction_details.created_at', '=', Carbon::today()->year)
-                    ->whereMonth('transaction_details.created_at', '=', Carbon::today()->month)
-                    ->orWhereNull('transaction_details.created_at');
-            });
-        } elseif ($filter == 'yearly') {
-            $query->where(function ($query) {
-                $query->whereYear('transaction_details.created_at', '=', Carbon::today()->year)
-                    ->orWhereNull('transaction_details.created_at');
-            });
-        }
-
-
-
-        $productSales = $query->get();
         // foreach ($productSales as $productSales) {
         //     $tot = $productSales->total_qty;
         // }
         // dd($tot);
 
-        return view('finance.product-sales-report.index', compact('productSales'));
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan penjualan produk',
+            'details' => 'Mengakses menu laporan penjualan produk'
+        ]);
+
+        return view('finance.product-sales-report.index', compact('productSales', 'tanggal_mulai', 'tanggal_akhir'));
     }
 
     /**

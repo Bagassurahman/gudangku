@@ -115,6 +115,13 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="1">Total Menunggu Aproval:</th>
+                                   
+                                    <th>Rp {{ number_format($wait, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
 
                         </table>
 

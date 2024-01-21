@@ -55,6 +55,15 @@
 
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th>
+                                        Nilai Konversi
+
+                                    </th>
+                                    <td>
+                                        {{ $unit->value ?? '' }}
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="form-layout-footer mt-3">

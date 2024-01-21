@@ -19,26 +19,7 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('finance.laporan-distribusi.index') }}" method="GET">
-                    <div class="row align-items-center d-flex">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label for="tanggal_mulai">Tanggal Mulai:</label>
-                                <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai">
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label for="tanggal_akhir">Tanggal Akhir:</label>
-                                <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
 
-                            <button type="submit" class="btn btn-primary w-100 mt-2">Filter</button>
-                        </div>
-                    </div>
-                </form>
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
@@ -92,13 +73,13 @@
                                             {{ $loop->iteration }}
                                         </td>
                                         <td>
-                                            {{ $transaction->order_date }}
+                                            {{ $transaction->month_name }}
                                         </td>
                                         <td>
                                             Rp {{ number_format($transaction->total_transaction, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('outlet.laporan-penjualan.show', $transaction->order_date) }}"
+                                            <a href="{{ route('outlet.transaction.show.date', $transaction->month_name) }}"
                                                 class="btn btn-sm btn-primary">Detail</a>
                                         </td>
                                     </tr>

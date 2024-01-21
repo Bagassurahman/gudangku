@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyUserRequest;
 use App\Http\Requests\StoreUserRequest;
@@ -20,6 +21,12 @@ class UsersController extends Controller
 
         $users = User::all();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu user',
+            'details' => 'Mengakses menu user'
+        ]);
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -29,6 +36,12 @@ class UsersController extends Controller
 
         $roles = Role::all()->pluck('title', 'id');
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu tambah user',
+            'details' => 'Mengakses menu tambah user'
+        ]);
+
         return view('admin.users.create', compact('roles'));
     }
 
@@ -36,6 +49,12 @@ class UsersController extends Controller
     {
         $user = User::create($request->all());
         $user->roles()->sync($request->input('roles', []));
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambahkan user baru',
+            'details' => 'Menambahkan user baru dengan nama ' . $user->name
+        ]);
 
         return redirect()->route('admin.users.index');
     }
@@ -48,6 +67,12 @@ class UsersController extends Controller
 
         $user->load('roles');
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu edit user',
+            'details' => 'Mengakses menu edit user'
+        ]);
+
         return view('admin.users.edit', compact('roles', 'user'));
     }
 
@@ -55,6 +80,12 @@ class UsersController extends Controller
     {
         $user->update($request->all());
         $user->roles()->sync($request->input('roles', []));
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengubah data user',
+            'details' => 'Mengubah data user dengan nama ' . $user->name
+        ]);
 
         return redirect()->route('admin.users.index');
     }
@@ -65,6 +96,12 @@ class UsersController extends Controller
 
         $user->load('roles');
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu detail user',
+            'details' => 'Mengakses menu detail user'
+        ]);
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -74,12 +111,24 @@ class UsersController extends Controller
 
         $user->delete();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus user',
+            'details' => 'Menghapus user dengan nama ' . $user->name
+        ]);
+
         return back();
     }
 
     public function massDestroy(MassDestroyUserRequest $request)
     {
         User::whereIn('id', request('ids'))->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus beberapa user',
+            'details' => 'Menghapus beberapa user'
+        ]);
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

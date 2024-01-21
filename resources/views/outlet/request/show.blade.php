@@ -35,60 +35,66 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        Tanggal Request
-                                    </th>
-                                    <td>
-                                        {{ $request->created_at }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Kode Request
-                                    </th>
-                                    <td>
-                                        {{ $request->code }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Outlet
-                                    </th>
-                                    <td>
-                                        {{ $request->outlet->outlet_name }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <td>
-                                        <span
-                                            class="badge
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Tanggal Request
+                                        </th>
+                                        <td>
+                                            {{ $request->created_at }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Kode Request
+                                        </th>
+                                        <td>
+                                            {{ $request->code }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Outlet
+                                        </th>
+                                        <td>
+                                            {{ $request->outlet->outlet_name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <td>
+                                            <span
+                                                class="badge
                                             {{ $request->status == 'pending' ? 'badge-warning' : '' }}
                                             {{ $request->status == 'approved' ? 'badge-success' : '' }}
                                             {{ $request->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
-                                            {{ $request->status ?? '' }}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Bahan Yang Di Request
-                                    </th>
-                                    <th>
-                                        <ul>
-                                            @foreach ($request->details as $detail)
-                                                <li>{{ $detail->material->name }} ({{ $detail->qty }})</li>
-                                            @endforeach
-                                        </ul>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
+                                                {{ $request->status ?? '' }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th  colspan="2">
+                                            Bahan Yang Di Request
+                                        </th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <th  colspan="2">
+                                               <ul>
+                                                @foreach ($request->details as $detail)
+                                                    <li>{{ $detail->material->name }} ({{ $detail->qty }})</li>
+                                                @endforeach
+                                            </ul>
+                                        </th>
+                                       
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-layout-footer mt-3">
                             <a href="{{ route('outlet.request.index') }}" class="btn btn-secondary">Kembali</a>
                         </div>

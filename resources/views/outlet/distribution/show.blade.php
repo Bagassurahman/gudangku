@@ -35,57 +35,61 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-                                <tr>
-                                    <th>
-                                        Kode Distribusi
-                                    </th>
-                                    <td>
-                                        {{ $distribution->distribution_number }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <td>
-                                        <span
-                                            class="badge
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            Kode Distribusi
+                                        </th>
+                                        <td>
+                                            {{ $distribution->distribution_number }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <td>
+                                            <span
+                                                class="badge
                                             {{ $distribution->status == 'on_progres' ? 'badge-warning' : '' }}
                                             {{ $distribution->status == 'accepted' ? 'badge-success' : '' }}
                                             {{ $distribution->status == 'rejected' ? 'badge-danger' : '' }}
                                             text-white">
-                                            {{ $distribution->status ?? '' }}</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Bahan Yang Di Distribusi
-                                    </th>
-                                    <th>
-                                        <ul>
-                                            @foreach ($distribution->distributionDetails as $detail)
-                                                <li>{{ $detail->material->name }} ({{ $detail->quantity }})</li>
-                                            @endforeach
-                                        </ul>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        Total
-                                    </th>
-                                    <th>
-                                        Rp
-                                        {{ number_format($distribution->distributionDetails->sum('total'), 0, ',', '.') }}
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
+                                                {{ $distribution->status ?? '' }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Bahan Yang Di Distribusi
+                                        </th>
+                                        <th>
+                                            <ul>
+                                                @foreach ($distribution->distributionDetails as $detail)
+                                                    <li>{{ $detail->material->name }} ({{ $detail->quantity }})</li>
+                                                @endforeach
+                                            </ul>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            Total
+                                        </th>
+                                        <th>
+                                            Rp
+                                            {{ number_format($distribution->distributionDetails->sum('total'), 0, ',', '.') }}
+                                        </th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="form-layout-footer mt-3 d-flex">
-                            <button type="button" class="btn btn-primary" onclick="accept()">
-                                Bahan Sudah Diterima</button>
-                            <a href="{{ route('outlet.distribusi.index') }}" class="btn btn-secondary ml-2">Kembali</a>
+                            @if ($distribution->status == 'on_progres')
+                                <button type="button" class="btn btn-primary" onclick="accept()">
+                                    Bahan Sudah Diterima</button>
+                                <a href="{{ route('outlet.distribusi.index') }}" class="btn btn-secondary ml-2">Kembali</a>
+                            @endif
                         </div>
                     </div>
                 </div>

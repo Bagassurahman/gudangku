@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\ActivityLog;
+use App\CashJournal;
+use App\CashJournalDetail;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert as SweetAlert;
 
 class CashJournalReportController extends Controller
 {
@@ -21,7 +25,7 @@ class CashJournalReportController extends Controller
             ->join('cash_journal_details', 'cash_journals.id', '=', 'cash_journal_details.cash_journal_id')
             ->select('cash_journals.date', DB::raw('SUM(cash_journal_details.debit) as total_debit'))
             ->groupBy('cash_journals.date')
-            ->orderBy('cash_journals.date');
+            ->orderBy('cash_journals.date', 'desc');
 
 
 
@@ -45,6 +49,13 @@ class CashJournalReportController extends Controller
             $date = Carbon::parse($cashJournal->date)->format('d F Y');
             $cashJournal->date = $date;
         }
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu laporan jurnal kas',
+            'details' => 'Mengakses menu laporan jurnal kas'
+        ]);
+
         return view('finance.cash-journal-report.index', compact('cashJournals'));
     }
 
@@ -89,6 +100,12 @@ class CashJournalReportController extends Controller
 
         $cashJournals = $query->get();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu detail laporan jurnal kas',
+            'details' => 'Mengakses menu detail laporan jurnal kas'
+        ]);
+
 
         return view('finance.cash-journal-report.show', [
             'cashJournals' => $cashJournals,
@@ -128,7 +145,13 @@ class CashJournalReportController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jurnal = CashJournalDetail::findOrFail($id);
+
+        $jurnal->delete();
+
+        SweetAlert::success('Berhasil', 'Jurnal kas berhasil dihapus');
+
+        return redirect()->back();
     }
 
     public function showDetail($date, $outletId)
@@ -156,6 +179,12 @@ class CashJournalReportController extends Controller
 
 
         $cashJournals = $query->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu detail laporan jurnal kas',
+            'details' => 'Mengakses menu detail laporan jurnal kas'
+        ]);
 
 
         return view('finance.cash-journal-report.detail', [

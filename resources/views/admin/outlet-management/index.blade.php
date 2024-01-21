@@ -87,25 +87,26 @@
                                                 {{ $user->phone }}
                                             </td>
                                             <td>
-                                                {{ $user->outlet->target }}
+                                                {{ $user->outlet->target ?? '' }}
                                             </td>
                                             <td>
                                                 @can('user_show')
                                                     <a class="btn btn-warning"
-                                                        href="{{ route('admin.users.show', $user->id) }}">
+                                                        href="{{ route('admin.manajemen-outlet.show', $user->id) }}">
                                                         {{ trans('global.view') }}
                                                     </a>
                                                 @endcan
 
                                                 @can('user_edit')
                                                     <a class="btn btn-primary"
-                                                        href="{{ route('admin.users.edit', $user->id) }}">
+                                                        href="{{ route('admin.manajemen-outlet.edit', $user->id) }}">
                                                         {{ trans('global.edit') }}
                                                     </a>
                                                 @endcan
 
                                                 @can('user_delete')
-                                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                                    <form action="{{ route('admin.manajemen-outlet.destroy', $user->id) }}"
+                                                        method="POST"
                                                         onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                                         style="display: inline-block;">
                                                         <input type="hidden" name="_method" value="DELETE">

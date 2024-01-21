@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Debt;
 use App\Distribution;
 use App\DistributionDetail;
@@ -31,6 +32,12 @@ class DistributionController extends Controller
             ->orderBy('distributions.outlet_id')
             ->get();
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu distribusi di Gudang',
+            'details' => 'Mengakses menu distribusi di Gudang'
+        ]);
+
 
         return view('warehouse.distribution.index', compact('distributions'));
     }
@@ -41,8 +48,13 @@ class DistributionController extends Controller
         abort_if(Gate::denies('distribution_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $outlets = Outlet::where('warehouse_id', Auth::user()->id)->get();
-        $materials = Inventory::where('warehouse_id', Auth::user()->id)->get();
+        $materials = Inventory::where('warehouse_id', Auth::user()->id)->get()->sortBy('material_data.material_name');
 
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu Tambah Distribusi di Gudang',
+            'details' => 'Mengakses menu Tambah Distribusi di Gudang'
+        ]);
 
         return view('warehouse.distribution.create', compact('outlets', 'materials'));
     }
@@ -68,34 +80,12 @@ class DistributionController extends Controller
 
 
         foreach ($cartItems as $cartItem) {
-            // $inventory = Inventory::where('warehouse_id', Auth::user()->id)->where('material_data_id', $cartItem['id'])->first();
-            // $inventory->update([
-            //     'exit_amount' => $inventory->exit_amount + $cartItem['count'],
-            //     'remaining_amount' => $inventory->remaining_amount - $cartItem['count']
-            // ]);
-
             DistributionDetail::create([
                 'distribution_id' => $distribution->id,
                 'material_id' => $cartItem['id'],
                 'quantity' => $cartItem['count'],
                 'total' => $cartItem['total']
             ]);
-
-            // // update in outlet
-            // $inventoryOutlet = Inventory::where('outlet_id', $request->outlet_id)->where('material_data_id', $cartItem['id'])->first();
-            // if ($inventoryOutlet) {
-            //     $inventoryOutlet->update([
-            //         'entry_amount' => $inventoryOutlet->entry_amount + $cartItem['count'],
-            //         'remaining_amount' => $inventoryOutlet->remaining_amount + $cartItem['count']
-            //     ]);
-            // } else {
-            //     Inventory::create([
-            //         'outlet_id' => $request->outlet_id,
-            //         'material_data_id' => $cartItem['id'],
-            //         'entry_amount' => $cartItem['count'],
-            //         'remaining_amount' => $cartItem['count']
-            //     ]);
-            // }
         }
 
         $total_akhir = 0;
@@ -104,14 +94,18 @@ class DistributionController extends Controller
             $total_akhir += $cartItem['total'];
         }
 
-
-
         Debt::create([
             'outlet_id' => $request->outlet_id,
             'warehouse_id' => Auth::user()->id,
             'date' => $request->po_date,
             'amount' => $total_akhir,
             'status' => 'pending'
+        ]);
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambah data Distribusi dan tambah data Hutang Piutang',
+            'details' => 'Menambah data Distribusi dan tambah data Hutang Piutang'
         ]);
 
         SweetAlert::success('Berhasil', 'Distribusi berhasil');
@@ -129,11 +123,25 @@ class DistributionController extends Controller
     public function show($outlet_id)
     {
         $distributionDetails = Distribution::join('distribution_details', 'distributions.id', '=', 'distribution_details.distribution_id')
-            ->select('distributions.distribution_date', 'distributions.fee', 'distribution_details.total', 'distributions.status')
-            ->where('distributions.outlet_id', $outlet_id)
+            ->join('outlets', 'distributions.outlet_id', '=', 'outlets.user_id')
+            ->select('distributions.id', 'distributions.distribution_date', 'distributions.fee', DB::raw('SUM(distribution_details.total) AS total_summary'), 'distributions.status')
+            ->where('outlets.user_id', $outlet_id)
+            ->orderBy('distributions.distribution_date', 'desc')
+            ->orderBy('distributions.id', 'desc')
+            ->groupBy('distributions.id')
             ->get();
 
+
+
+
         $outlet = Outlet::find($outlet_id);
+
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu detail Distribusi by outlet',
+            'details' => 'Mengakses menu detail Distribusi by outlet'
+        ]);
 
         return view('warehouse.distribution.show', compact('distributionDetails', 'outlet'));
     }
@@ -169,7 +177,41 @@ class DistributionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $distribution = Distribution::findOrFail($id);
+        $detail = DistributionDetail::where('distribution_id', $id)->first();
+
+        $distribution->delete();
+        $detail->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menghapus data Distribusi',
+            'details' => 'Menghapus data Distribusi'
+        ]);
+
+        SweetAlert::success('Berhasil', 'Distribusi berhasil dihapus');
+
+        return redirect()->route('warehouse.distribusi.index');
+    }
+
+
+    public function detail($id)
+    {
+        $distribution = Distribution::findOrFail($id);
+        $details = DistributionDetail::with('material')->where('distribution_id', $id)->get();
+
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Mengakses menu Detail distribusi by id',
+            'details' => 'Mengakses menu Detail distribusi by id'
+        ]);
+
+        //     $distributionDetails = Distribution::join('distribution_details', 'distributions.id', '=', 'distribution_details.distribution_id')
+        // ->select('distributions.id', 'distributions.distribution_date', 'distributions.fee', 'distribution_details.total', 'distributions.status')
+        // ->where('distribution_details.distribution_id', $id)
+        // ->get();
+
+        return view('warehouse.distribution.detail', compact('distribution', 'details'));
     }
 
     public function checkStock(Request $request)

@@ -44,6 +44,7 @@
                                     </th>
                                     <th>No</th>
                                     <th>Nama Produk</th>
+                                    <th>Point Produk</th>
                                     <th>Harga Umum</th>
                                     <th>Harga Member</th>
                                     <th>Harga Online</th>
@@ -61,14 +62,18 @@
                                             {{ $product->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $product->general_price ?? '' }}
+                                            {{ $product->point ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $product->member_price ?? '' }}
+                                            {{ 'Rp ' . number_format($product->general_price, 0, ',', '.') ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $product->online_price ?? '' }}
+                                            {{ 'Rp ' . number_format($product->member_price, 0, ',', '.') ?? '' }}
                                         </td>
+                                        <td>
+                                            {{ 'Rp ' . number_format($product->online_price, 0, ',', '.') ?? '' }}
+                                        </td>
+
                                         <td>
                                             <a href="{{ route('admin.produk.show', $product->id) }}"
                                                 class="btn btn-primary">Lihat</a>

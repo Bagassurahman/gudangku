@@ -293,7 +293,7 @@ _:future,
 
 .page-inner {
     position: relative;
-    padding: 0 25px 0;
+    padding: 0px 25px 10px;
     background: #f7f7fe;
     width: 100%
 }

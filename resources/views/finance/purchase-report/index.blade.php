@@ -19,7 +19,7 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('finance.laporan-distribusi.index') }}" method="GET">
+                <form action="{{ route('finance.laporan-pembelian.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -42,7 +42,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Laporan Distirbusi
+                            Data Laporan Pembelian
                         </h4>
 
                         <div class="card-header-btn">
@@ -109,8 +109,8 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th colspan="3" style="text-align: right;">Total:</th>
-                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                    <th colspan="3" class="text-right">Total</th>
+                                    <th colspan="2">Rp {{ number_format($total, 0, ',', '.') }}</th>
                                 </tr>
                             </tfoot>
                         </table>

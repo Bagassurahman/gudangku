@@ -15,19 +15,20 @@
         }
 
 
-        @media (max-width: 768px) {
-            .btn-cart-mobile {
-                position: fixed;
-                bottom: 20px;
-                z-index: 999;
-                width: 90% !important;
-                height: 50px;
-                background-color: #5d78ff;
-                border: none;
-                color: white;
-                border-radius: 20px;
-            }
+        .btn-cart-mobile {
+            position: fixed;
+            bottom: 20px;
+            z-index: 999;
+            width: 90% !important;
+            height: 50px;
+            background-color: #5d78ff;
+            border: none;
+            color: white;
+            border-radius: 20px;
+            left: 50%;
+            transform: translateX(-50%);
         }
+
 
         .btn .badge {
             position: relative;
@@ -49,7 +50,6 @@
         <style>
             .card-product .card-img-top {
                 object-fit: cover;
-                border-radius: 13px;
             }
 
             .card-product .card-body {
@@ -88,12 +88,102 @@
             .collapse.show {
                 height: fit-content
             }
-
-            /* #outlet-pos-mobile .input-group{
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        flex-wrap: nowrap
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    } */
         </style>
+        @if ($isMobile === true)
+            <style>
+                .card-product .card-body {
+                    padding: 0px;
+                    margin-top: -5px;
+                }
+
+                .card-product .card-img-top {
+                    object-fit: cover;
+                    width: 50px !important;
+                    max-height: 50px
+                }
+
+                .add-to-cart {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    background-color: #5d78ff;
+                    border: none;
+                    color: white;
+                    transition: background-color 0.3s, border 0.3s;
+                }
+
+                .add-to-cart:active {
+                    border: 2px solid #3d55a6;
+                    background-color: #314382;
+                }
+
+
+                .minus-item,
+                .plus-item {
+                    width: 35px;
+                    height: 35px;
+                    border-radius: 50%;
+                    background-color: #5d78ff;
+                    border: none;
+                    color: white;
+                    transition: background-color 0.3s, border 0.3s;
+                }
+
+                .minus-item:active,
+                .plus-item:active {
+                    border: 2px solid #3d55a6;
+                    background-color: #314382;
+                }
+
+
+
+                .item-count {
+                    width: 35px !important;
+                    height: 35px;
+                    border-radius: 50%;
+                    background-color: white;
+                    border: none;
+                    text-align: center;
+                }
+
+                body.modal-open .row {
+                    -webkit-filter: blur(4px);
+                    -moz-filter: blur(4px);
+                    -o-filter: blur(4px);
+                    -ms-filter: blur(4px);
+                    filter: blur(4px);
+                    filter: url("https://gist.githubusercontent.com/amitabhaghosh197/b7865b409e835b5a43b5/raw/1a255b551091924971e7dee8935fd38a7fdf7311/blur" .svg#blur);
+                    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius='4');
+                }
+
+                .modal-content {
+                    border: none;
+                    border-radius: 16px;
+                }
+
+                .modal-content .modal-header {
+                    background-color: #f6f8fd;
+                    border-radius: 16px 16px 0 0;
+                }
+
+                .modal-content .modal-footer {
+                    background-color: #f6f8fd;
+                    border-radius: 16px 16px 0 0;
+                }
+            </style>
+        @endif
     @endcan
+    <style>
+        .chart {
+            max-width: 600px;
+            margin: 35px auto;
+            opacity: 0.9;
+        }
+
+        body {
+            overflow-x: hidden !important
+        }
+    </style>
 @endsection
 @section('content')
     <div id="main-wrapper">
@@ -109,12 +199,20 @@
         @can('dashboard_finance_access')
             @include('finance.dashboard')
         @endcan
+        @can('dashboard_customer_access')
+            @include('customer.dashboard')
+        @endcan
     </div>
 @endsection
 @section('scripts')
     @parent
     @can('dashboard_outlet_access')
         @if ($isMobile === true)
+            <script>
+                var outletId = {{ Auth::user()->id }};
+            </script>
+
+            </script>
             <script src="{{ asset('assets/js/post-script-mobile.js') }}"></script>
         @else
             <script src="{{ asset('assets/js/pos-script.js') }}"></script>
@@ -124,12 +222,13 @@
 
 
     @can('dashboard_admin_access')
+        <script></script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
             var options = {
                 chart: {
                     type: 'donut',
-                    width: 500, // Atur lebar chart (dalam piksel)
+                    width: 450, // Atur lebar chart (dalam piksel)
                     height: 300, // Atur tinggi chart (dalam piksel)
                 },
                 series: @json($dataPt),
@@ -140,7 +239,20 @@
                             return value + ' Penjualan';
                         }
                     }
-                }
+                },
+                responsive: [{
+                    breakpoint: 600,
+                    options: {
+                        plotOptions: {
+                            bar: {
+                                horizontal: false
+                            }
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }]
             };
 
             var chart = new ApexCharts(document.querySelector("#chart-product"), options);
@@ -151,7 +263,7 @@
             var options = {
                 chart: {
                     type: 'donut',
-                    width: 500, // Atur lebar chart (dalam piksel)
+                    width: 450, // Atur lebar chart (dalam piksel)
                     height: 300, // Atur tinggi chart (dalam piksel)
                 },
                 series: @json($dataOt),
@@ -162,7 +274,20 @@
                             return value + ' Penjualan';
                         }
                     }
-                }
+                },
+                responsive: [{
+                    breakpoint: 600,
+                    options: {
+                        plotOptions: {
+                            bar: {
+                                horizontal: false
+                            }
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }]
             };
 
             var chart = new ApexCharts(document.querySelector("#chart-outlet"), options);
@@ -209,7 +334,20 @@
                             '{{ date('M', mktime(0, 0, 0, $penjualan->month, 1)) }}',
                         @endforeach
                     ],
-                }
+                },
+                responsive: [{
+                    breakpoint: 600,
+                    options: {
+                        plotOptions: {
+                            bar: {
+                                horizontal: false
+                            }
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }]
             };
 
             var chart = new ApexCharts(document.querySelector("#chart-penjualan"), options);
@@ -258,7 +396,20 @@
                         }
 
                     }
-                }
+                },
+                responsive: [{
+                    breakpoint: 600,
+                    options: {
+                        plotOptions: {
+                            bar: {
+                                horizontal: false
+                            }
+                        },
+                        legend: {
+                            position: "bottom"
+                        }
+                    }
+                }]
             };
 
             var chart = new ApexCharts(document.querySelector("#chart-kekayaan"), options);

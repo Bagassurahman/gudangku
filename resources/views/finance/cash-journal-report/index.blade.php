@@ -19,7 +19,7 @@
             <!-- Basic dataTable Start -->
             <!--================================-->
             <div class="col-md-12 col-lg-12">
-                <form action="{{ route('finance.laporan-distribusi.index') }}" method="GET">
+                <form action="{{ route('finance.laporan-jurnal-kas.index') }}" method="GET">
                     <div class="row align-items-center d-flex">
                         <div class="col-md-5">
                             <div class="form-group">
@@ -107,12 +107,15 @@
                                     @endphp
                                 @endforeach
                             </tbody>
+
                             <tfoot>
-                                <tr>
-                                    <th colspan="4" style="text-align: right;">Total:</th>
-                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
-                                </tr>
+                                <th></th>
+                                <th colspan=2 style="text-
+                                align:right">Total</th>
+                                <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                <th></th>
                             </tfoot>
+
                         </table>
 
                     </div>

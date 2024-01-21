@@ -59,9 +59,7 @@
                                     <th>
                                         HPP
                                     </th>
-                                    <th>
-                                        Harga Jual
-                                    </th>
+
 
                                 </tr>
                             </thead>
@@ -92,11 +90,7 @@
                                                 {{ $inv->remaining_amount ?? '0' }}
                                             @endforeach
                                         </td>
-                                        <td>
-                                            @foreach ($inventory->inventories as $inv)
-                                                {{ $inv->hpp ?? '0' }}
-                                            @endforeach
-                                        </td>
+
                                         <td>
                                             {{ $inventory->price ?? '0' }}
                                         </td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Outlet;
 use Illuminate\Http\Request;

@@ -20,7 +20,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Izin
+                            Data User
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -49,15 +49,15 @@
                                     <th>
                                         {{ trans('cruds.user.fields.email') }}
                                     </th>
-                                    <th>
+                                    {{-- <th>
                                         {{ trans('cruds.user.fields.email_verified_at') }}
-                                    </th>
+                                    </th> --}}
                                     <th>
                                         {{ trans('cruds.user.fields.roles') }}
                                     </th>
-                                    <th>
+                                    {{-- <th>
                                         &nbsp;
-                                    </th>
+                                    </th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,15 +75,15 @@
                                         <td>
                                             {{ $user->email ?? '' }}
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             {{ $user->email_verified_at ?? '' }}
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             @foreach ($user->roles as $key => $item)
                                                 <span class="badge blue">{{ $item->title }}</span>
                                             @endforeach
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             @can('user_show')
                                                 <a class="btn btn-warning text-white"
                                                     href="{{ route('admin.users.show', $user->id) }}">
@@ -108,7 +108,7 @@
                                                 </form>
                                             @endcan
 
-                                        </td>
+                                        </td> --}}
 
                                     </tr>
                                 @endforeach

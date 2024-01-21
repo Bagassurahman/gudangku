@@ -10,11 +10,8 @@
             <div class="pd-t-5 pd-b-5">
                 <h1 class="pd-0 mg-0 tx-20 text-overflow"> Detail Laporan Penjualan </h1>
             </div>
-
         </div>
         <div class="row row-xs clearfix">
-
-
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -36,7 +33,7 @@
                         </div>
                     </div>
                     <div class="card-body collapse show" id="collapse1">
-                        <table class="table stripe hover bordered datatable datatable-Role">
+                        <table class="table stripe hover bordered datatable datatable-Transaction">
                             <thead>
                                 <tr>
                                     <th width="10">
@@ -49,7 +46,7 @@
                                         Tanggal
                                     </th>
                                     <th>
-                                        Kode
+                                        Outlet Name
                                     </th>
                                     <th>
                                         Total Penghasilan
@@ -64,31 +61,28 @@
                                     $total = 0;
                                 @endphp
                                 @foreach ($transactions as $key => $transaction)
-                                    <tr data-entry-id="{{ $transaction->id }}">
+                                    <tr>
                                         <td>
 
                                         </td>
                                         <td>
-                                            {{ $loop->iteration }}
+                                            {{ $key + 1 }}
                                         </td>
                                         <td>
                                             {{ $transaction->order_date }}
                                         </td>
                                         <td>
-                                            {{ $transaction->order_number }}
+                                            {{ $transaction->outlet_name }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($transaction->total, 0, ',', '.') }}
+                                            Rp {{ number_format($transaction->total_sum, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <a href="{{ route('finance.transaction.detail', $transaction->id) }}"
-                                                class="btn btn-primary">
-                                                Detail
-                                            </a>
+
                                         </td>
                                     </tr>
                                     @php
-                                        $total += $transaction->total;
+                                        $total += $transaction->total_sum;
                                     @endphp
                                 @endforeach
                             </tbody>
@@ -100,11 +94,9 @@
                                 </tr>
                             </tfoot>
                         </table>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -114,7 +106,7 @@
         $(function() {
             let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 
-            let table = $('.datatable-Role:not(.ajaxTable)').DataTable({
+            let table = $('.datatable-Transaction:not(.ajaxTable)').DataTable({
                 buttons: dtButtons,
                 responsive: false // Menambahkan opsi responsive
             })

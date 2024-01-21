@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Services\WhatsappService;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -52,6 +53,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone'   => ['required', 'string', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -64,10 +66,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $whatsapp = new WhatsappService();
+        $response = $whatsapp->sendMessage($data['phone'], "Ini hanya pesan validasi nomor whatsapp");
+
+        if ($response->getStatusCode() == 200) {
+            $user =  User::create([
+                'name'     => $data['name'],
+                'phone'   => $data['phone'],
+                'email'    => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+
+            $user->roles()->attach(5);
+
+            return $user;
+        } else {
+            return redirect()->back()->with('error', 'Nomor Whatsapp tidak valid');
+        }
     }
 }

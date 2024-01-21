@@ -24,6 +24,6 @@ class PurchaseOfMaterialsDetail extends Model
 
     public function material()
     {
-        return $this->belongsTo(Material::class, 'material_id');
+        return $this->belongsTo(MaterialData::class, 'material_id');
     }
 }

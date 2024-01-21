@@ -27,23 +27,38 @@ $(document).ready(function () {
     // Simpan elemen DOM dalam variabel lokal
     var $hargaProduk = $('.harga-produk');
     var $addToCart = $('.add-to-cart');
+    var $tipeHargaSelect = $('.tipe-harga-select');
+    var $tipePembayaranSelect = $('.tipe-pembayaran-select');
 
-    $('.tipe-harga-select').on('change', function () {
+    $tipeHargaSelect.on('change', function () {
         var tipeHarga = $(this).val();
 
-        // Loop melalui elemen harga produk dan ubah konten
         $hargaProduk.each(function () {
             var harga = $(this).data('harga-' + tipeHarga);
-            $(this).html(harga);
+            $(this).html('Rp ' + harga.toLocaleString('id-ID', { minimumFractionDigits: 0 }));
         });
 
-        // Loop melalui elemen tambah ke keranjang dan ubah atribut data-price
         $addToCart.each(function () {
             var harga = $(this).data('harga-' + tipeHarga);
             $(this).attr('data-price', harga);
         });
+
+        if (tipeHarga === 'online') {
+            $tipePembayaranSelect.val('qris');
+        }
+
+        if (tipeHarga === 'online') {
+            $tipePembayaranSelect.find('option[value="cash"]').remove();
+        }
     });
+
+    // Trigger the change event initially
+    $tipeHargaSelect.trigger('change');
 });
+
+
+
+
 
 
 var shoppingCart = (function () {
@@ -73,6 +88,7 @@ var shoppingCart = (function () {
     if (sessionStorage.getItem("shoppingCart") != null) {
         loadCart();
     }
+
 
 
     // =============================
@@ -123,17 +139,6 @@ var shoppingCart = (function () {
         cart.forEach(function (item, index) {
             if (item.id === id) {
                 removedItemIndex = index;
-
-                $.get('outlet/detail-produk', {
-                    id: id
-                }, function (materials) {
-                    materials.forEach(function (material) {
-                        var materialId = material.material_id;
-                        var dose = material.dose * item.count;
-
-                        increaseProductStockByMaterial(materialId, dose);
-                    });
-                });
             }
         });
 
@@ -158,6 +163,21 @@ var shoppingCart = (function () {
         }
         return totalCount;
     }
+
+
+    obj.getItemCount = function (itemId) {
+        var count = 0;
+
+        // Menghitung jumlah item dengan ID produk yang diberikan dalam keranjang
+        for (var item in cart) {
+            if (cart[item].id === itemId) {
+                count += cart[item].count;
+            }
+        }
+
+        return count;
+    };
+
 
     // Total cart
     obj.totalCart = function () {
@@ -184,148 +204,117 @@ var shoppingCart = (function () {
         return cartCopy;
     }
 
+
+
     return obj;
 })();
 
-$('.add-to-cart').click(function (event) {
+$(document).on("click", ".add-to-cart", function (event) {
     event.preventDefault();
 
-    var addButton = $(this); // Store reference to 'this'
-
+    var addButton = $(this);
     var id = addButton.data('id');
     var name = addButton.data('name');
     var price = Number(addButton.data('price'));
 
-    $.get('outlet/detail-produk', {
-        id: id
-    }).then(async function (materials) {
-        var allMaterialsAvailable = true;
-        for (var i = 0; i < materials.length; i++) {
-            var material = materials[i];
-            var availableStock = await getProductStockByMaterial(material.material_id);
+    shoppingCart.addItemToCart(id, name, price, 1);
 
-            // Memeriksa ketersediaan stok material
-            if (availableStock < material.dose) {
-                alert('Persediaan ' + material.material_name + ' tidak cukup!');
-                allMaterialsAvailable = false;
-                break;
-            }
-        }
+    displayCart();
 
-        if (allMaterialsAvailable) {
-            shoppingCart.addItemToCart(id, name, price, 1);
-            for (var i = 0; i < materials.length; i++) {
-                var material = materials[i];
-                reduceProductStockByMaterial(material.material_id, material.dose);
-            }
-
-            displayCart();
-
-            addButton.replaceWith(
-                "<div class='input-group'>" +
-                "    <button class='minus-item input-group-addon btn btn-primary mr-2' data-id='" + id + "' type='button'>-</button>" +
-                "    <input type='number' class='item-count form-control mx-2' data-id='" + name + "' value='1'>" +
-                "    <button class='plus-item btn btn-primary ml-2' data-id='" + id + "' type='button'>+</button>" +
-                "</div>"
-            );
-
-
-        }
-    });
+    addButton.replaceWith(
+        "<div class='d-flex'>" +
+        "    <button class='minus-item input-group-addon mr-2' data-id='" + id + "' type='button'>-</button>" +
+        "    <input type='number' class='item-count mx-2' data-id='" + id + "' value='1'>" +
+        "    <button class='plus-item ml-2' data-id='" + id + "' type='button'>+</button>" +
+        "</div>"
+    );
 });
+
+
+
+var originalButtons = [];
+
+// Simpan tombol asli untuk setiap item
+$(document).on("click", ".add-to-cart", function () {
+    var addButton = $(this);
+    var id = addButton.data('id');
+
+    if (!originalButtons[id - 1]) {
+        originalButtons[id - 1] = addButton.clone();
+    }
+});
+
+function minusItem(id, count, newButton) {
+
+    shoppingCart.removeItemFromCart(id);
+
+    displayCart();
+
+    var shoppingCartItemCount = shoppingCart.getItemCount(id);
+    if (shoppingCartItemCount > 0) {
+        $('.item-count[data-id="' + id + '"]').val(shoppingCartItemCount);
+    } else {
+        if (newButton) {
+            $('.minus-item[data-id="' + id + '"]').parent().replaceWith(newButton);
+        }
+    }
+
+    return promises;
+}
+$(document).on("keyup", ".item-count", function (event) {
+    var id = $(this).data('id');
+    var count = Number($(this).val());
+    shoppingCart.setCountForItem(id, count);
+    displayCart();
+});
+
 
 $(document).on("click", ".minus-item", function (event) {
     var id = $(this).data('id');
+    var clickedButton = $(this);
 
-    // membuat array promise untuk setiap bahan pada produk
-    var promises = [];
 
-    $.get('outlet/detail-produk', {
-        id: id
-    }, function (materials) {
-        for (var i = 0; i < materials.length; i++) {
-            var material = materials[i];
-            var materialId = material.material_id;
-            var dose = material.dose;
 
-            // menambahkan promise untuk setiap bahan pada produk
-            promises.push(increaseProductStockByMaterial(materialId, dose));
-        }
-    });
+    shoppingCart.removeItemFromCart(id);
+    displayCart();
 
-    // menunggu semua promise selesai
-    Promise.all(promises).then(function () {
-        shoppingCart.removeItemFromCart(id);
-        displayCart();
-
-        $(this).replaceWith(
-            "<div class='input-group'>" +
-            "<button class='add-to-cart btn btn-primary w-100' data-id='" + id + "' data-name='" + name + "' data-price='" + price + "' data-tipe-harga='" + tipeHarga + "'>" +
-            "Tambah" +
-            "</button>" +
+    var shoppingCartItemCount = shoppingCart.getItemCount(id);
+    if (shoppingCartItemCount > 0) {
+        clickedButton.parent().replaceWith(
+            "<div class='d-flex'>" +
+            "<button class='minus-item input-group-addon mr-2' data-id='" + id + "' type='button'>-</button>" +
+            "<input type='number' class='item-count mx-2' data-id='" + id + "' value='" + shoppingCartItemCount + "'>" +
+            "<button class='plus-item input-group-addon ml-2' data-id='" + id + "' type='button'>+</button>" +
             "</div>"
         );
-    }).catch(function (error) {
-        console.log(error);
-    });
+    } else {
+        if (originalButtons[id - 1]) { // Periksa apakah tombol asli tersedia
+            clickedButton.parent().replaceWith(originalButtons[id - 1].clone());
+        }
+    }
+
 });
 
 
 $(document).on("click", ".plus-item", function (event) {
     var id = $(this).data('id');
+    var clickedButton = $(this);
 
-    $.get('outlet/detail-produk', {
-        id: id
-    })
-        .then(function (materials) {
-            var allMaterialsAvailable = true;
 
-            // memeriksa apakah persediaan cukup untuk setiap bahan pada produk
-            var promises = materials.map(function (material) {
-                var materialId = material.material_id;
-                var dose = material.dose;
+    shoppingCart.addItemToCart(id);
 
-                return getProductStockByMaterial(materialId)
-                    .then(function (availableStock) {
-                        if (availableStock < dose) {
-                            allMaterialsAvailable = false;
-                            alert('Persediaan bahan ' + material.material_name +
-                                ' tidak cukup!');
-                            throw new Error('Material ' + material.material_name +
-                                ' tidak cukup');
-                        }
-                    });
-            });
+    displayCart();
 
-            // jika persediaan cukup, tambahkan produk ke dalam keranjang
-            Promise.all(promises).then(function () {
-                if (allMaterialsAvailable) {
-                    shoppingCart.addItemToCart(id);
+    var shoppingCartItemCount = shoppingCart.getItemCount(id);
+    clickedButton.parent().replaceWith(
+        "<div class='d-flex'>" +
+        "<button class='minus-item input-group-addon mr-2' data-id='" + id + "' type='button'>-</button>" +
+        "<input type='number' class='item-count mx-2' data-id='" + id + "' value='" + shoppingCartItemCount + "'>" +
+        "<button class='plus-item input-group-addon ml-2' data-id='" + id + "' type='button'>+</button>" +
+        "</div>"
+    );
 
-                    materials.forEach(function (material) {
-                        var materialId = material.material_id;
-                        var dose = material.dose;
-
-                        reduceProductStockByMaterial(materialId, dose);
-                    });
-
-                    displayCart();
-
-                    $(this).replaceWith(
-                        "<div class='input-group'>" +
-                        "<button class='minus-item input-group-addon btn btn-primary' data-id='" + id + "' type='button'>-</button>" +
-                        "<input type='number' class='item-count form-control' data-id='" + name + "' value='1'>" +
-                        "<button class='plus-item btn btn-primary input-group-addon' data-id='" + id + "' type='button'>+</button>" +
-                        "</div>"
-                    );
-                }
-            }).catch(function (error) {
-                console.error(error);
-            });
-        });
 });
-
-
 
 function getProductStockByMaterial(materialId) {
     return new Promise(function (resolve, reject) {
@@ -344,65 +333,59 @@ function getProductStockByMaterial(materialId) {
     });
 }
 
-function reduceProductStockByMaterial(materialId, dose) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: 'outlet/decrease-stok-produk',
-            data: {
-                material_id: materialId,
-                dose: dose
-            },
-            success: function (data) {
-                resolve(data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                reject(errorThrown);
-            }
-        });
+
+function updateProductStock(productId, warehouseId, outletId) {
+    $.ajax({
+        url: 'outlet/get-stok?product_id=' + productId + '&outlet_id=' + outletId,
+        method: 'GET',
+        success: function (response) {
+            var stock = response.stockByMaterial;
+            $('#product-stock-' + productId).text(stock);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
     });
 }
 
-function increaseProductStockByMaterial(materialId, dose) {
-    return new Promise(function (resolve, reject) {
+$(document).ready(function () {
+    // Mendapatkan stok produk dan memperbarui tampilan
+    function updateProductStock(productId, warehouseId, outletId) {
         $.ajax({
-            url: 'outlet/increase-stok-produk',
-            async: false,
-            data: {
-                material_id: materialId,
-                dose: dose
+            url: 'outlet/get-stok?product_id=' + productId + '&outlet_id=' + outletId,
+            method: 'GET',
+            success: function (response) {
+                var stock = response.stockByMaterial;
+                $('#product-stock-' + productId).text(stock);
             },
-            success: function (data) {
-                resolve(data);
-            },
-            error: function (error) {
-                reject(error);
+            error: function (xhr, status, error) {
+                console.error(error);
             }
         });
+    }
+
+    // Mendapatkan stok saat halaman pertama kali dimuat
+    $('.add-to-cart').each(function () {
+        var productId = $(this).data('id');
+        updateProductStock(productId, outletId);
     });
-}
+});
+
 
 function displayCart() {
     var cartArray = shoppingCart.listCart();
     var output = "";
     for (var i in cartArray) {
-        output += "<div class='card mt-3'>" +
-            "<div class='card-body'>" +
+        output += "<div class='mt-3 border-bottom pb-2'>" +
+            "<div class='d-flex justify-content-between align-items-center'>" +
             "<div>" +
-            "<p>" + cartArray[i].name + "</p>" +
-            "<p>Total: " + cartArray[i].total + "</p>" +
+            "<h6>" + cartArray[i].name + "</h6>" +
+            "<h6>" + "Total Item: " + cartArray[i].count + "</h6>" +
             "</div>" +
-            "<div class='d-flex'>" +
-            "<div class='input-group'>" +
-            "<button class='minus-item input-group-addon btn btn-primary' data-id=" +
-            cartArray[i].id + " type='button'>-</button>" +
-            "<input type='number' class='item-count form-control' data-id='" + cartArray[i].name +
-            "' value='" + cartArray[i].count + "'>" +
-            "<button class='plus-item btn btn-primary input-group-addon' data-id=" + cartArray[i].id +
-            " type='button'>+</button>" +
+            "<div>" +
+            "<h6>Total: Rp " + cartArray[i].total.toLocaleString() + "</h6>" +
             "</div>" +
-            "<button class='delete-item btn btn-danger' data-id=" + cartArray[i].id +
-            " >X</button>" +
-            "</div>" +
+            "<button class='delete-item btn btn-danger' data-id='" + cartArray[i].id + "' data-count='" + cartArray[i].count + "' data-name='" + cartArray[i].name + "' data-price='" + cartArray[i].price + "'>X</button>" +
             "</div>" +
             "</div>";
     }
@@ -418,7 +401,12 @@ function displayCart() {
     $('#paid_amount').attr('value', shoppingCart.totalCart());
     $('#total-price').val(shoppingCart.totalCart());
     $('#total-price').attr('value', shoppingCart.totalCart());
-    $('.total-count').html(shoppingCart.totalCount());
+    $('.total-count').html(shoppingCart.totalCount() + " Item");
+
+    $('.total-count-price').html(shoppingCart.totalCart().toLocaleString('id-ID', {
+        style: 'currency',
+        currency: 'IDR'
+    }));
 
     // Show/hide payment type and submit button based on cart items count
     if (cartArray.length === 0) {
@@ -428,93 +416,123 @@ function displayCart() {
         $('#tipe_pembayaran').show();
         $('#btn-submit').show();
     }
+
+    // <input type="text" class="form-control member-number" name="member_number"
+    //     placeholder="Nomor Member" id="member_number" value="">
+
+    // Route:: get('/get-member/{phoneNumber}', [MemberController:: class, 'getMemberByPhoneNumber']);\
+
+    $('.member-number').on('keyup', function () {
+        var memberNumber = $(this).val();
+
+        $.ajax({
+            url: '/api/get-member/' + memberNumber,
+            method: 'GET',
+            success: function (response) {
+                // <div id="result-member" class="mt-3"></div>
+                $('#result-member').html(
+                    "<p>Nama Member: " + response.data.name + "</p>"
+                );
+
+                $('.member-number').addClass('is-valid');
+
+                $('.member-id').attr('value', response.data.id);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                $('.member-number').removeClass('is-valid');
+                $('#result-member').html(
+                    "<p class='text-danger'>Member tidak ditemukan</p>"
+                );
+            }
+        });
+    });
 }
 
-$('.show-cart').on("click", ".delete-item", function (event) {
+$('.show-cart').on("click", ".delete-item", async function (event) {
     event.preventDefault();
     var id = $(this).data('id');
+    var count = $(this).data('count');
 
     shoppingCart.removeItemFromCartAll(id);
 
-    displayCart();
 
-})
+    try {
+
+        displayCart();
+
+        // Mengganti tombol pada daftar produk dengan tombol aslinya
+        var newButton = "<button class='add-to-cart default-add-to-cart' data-id='" + id + "' data-name='" + $(this).data('name') + "' data-harga-umum='" + $(this).data('harga-umum') + "' data-harga-member='" + $(this).data('harga-member') + "' data-harga-online='" + $(this).data('harga-online') + "' data-price='" + $(this).data('price') + "' data-tipe-harga='umum'>+</button>";
+
+        $(this).closest('.card-body').find('.d-flex').replaceWith(newButton);
+        var shoppingCartItemCount = shoppingCart.getItemCount(id);
+        if (shoppingCartItemCount > 0) {
+            $('.item-count[data-id="' + id + '"]').val(shoppingCartItemCount);
+        } else {
+            if (newButton) {
+                $('.minus-item[data-id="' + id + '"]').parent().replaceWith(newButton);
+            }
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 
 $('.show-cart').on("click", ".minus-item", function (event) {
     var id = $(this).data('id');
 
-    // membuat array promise untuk setiap bahan pada produk
-    var promises = [];
 
-    $.get('outlet/detail-produk', {
-        id: id
-    }, function (materials) {
-        for (var i = 0; i < materials.length; i++) {
-            var material = materials[i];
-            var materialId = material.material_id;
-            var dose = material.dose;
+    shoppingCart.removeItemFromCart(id);
+    displayCart();
 
-            // menambahkan promise untuk setiap bahan pada produk
-            promises.push(increaseProductStockByMaterial(materialId, dose));
-        }
-    });
-
-    // menunggu semua promise selesai
-    Promise.all(promises).then(function () {
-        shoppingCart.removeItemFromCart(id);
-        displayCart();
-    }).catch(function (error) {
-        console.log(error);
-    });
 });
 
 
 $('.show-cart').on("click", ".plus-item", function (event) {
     var id = $(this).data('id');
 
-    $.get('outlet/detail-produk', {
-        id: id
-    })
-        .then(function (materials) {
-            var allMaterialsAvailable = true;
+    shoppingCart.addItemToCart(id);
 
-            // memeriksa apakah persediaan cukup untuk setiap bahan pada produk
-            var promises = materials.map(function (material) {
-                var materialId = material.material_id;
-                var dose = material.dose;
-
-                return getProductStockByMaterial(materialId)
-                    .then(function (availableStock) {
-                        if (availableStock < dose) {
-                            allMaterialsAvailable = false;
-                            alert('Persediaan bahan ' + material.material_name +
-                                ' tidak cukup!');
-                            throw new Error('Material ' + material.material_name +
-                                ' tidak cukup');
-                        }
-                    });
-            });
-
-            // jika persediaan cukup, tambahkan produk ke dalam keranjang
-            Promise.all(promises).then(function () {
-                if (allMaterialsAvailable) {
-                    shoppingCart.addItemToCart(id);
-
-                    materials.forEach(function (material) {
-                        var materialId = material.material_id;
-                        var dose = material.dose;
-
-                        reduceProductStockByMaterial(materialId, dose);
-                    });
-
-                    displayCart();
-                }
-            }).catch(function (error) {
-                console.error(error);
-            });
-        });
+    displayCart();
 });
 
+const cartForm = document.querySelector('#cart-form');
+const beliBtn = document.querySelector('#btn-submit');
+
+beliBtn.addEventListener('click', function () {
+
+    const cartItems = shoppingCart.listCart();
+    const cartInput = document.createElement('input');
+    cartInput.type = 'hidden';
+    cartInput.name = 'cart_items';
+    cartInput.value = JSON.stringify(cartItems);
+
+    const selectMemberElement = document.getElementById('tipe_harga');
+    const selectedMemberValue = selectMemberElement.value;
+    const selectTipeMember = document.createElement('input');
+    selectTipeMember.type = 'hidden';
+    selectTipeMember.name = 'tipe_harga';
+    selectTipeMember.value = selectedMemberValue;
+
+    const selectPaymentElement = document.getElementById('tipe_pembayaran');
+    const selectedPaymentValue = selectPaymentElement.value;
+    const selectTipePembayaran = document.createElement('input');
+
+    selectTipePembayaran.type = 'hidden';
+    selectTipePembayaran.name = 'tipe_pembayaran';
+    selectTipePembayaran.value = selectedPaymentValue;
+
+
+    cartForm.appendChild(selectTipePembayaran);
+    cartForm.appendChild(selectTipeMember);
+    cartForm.appendChild(cartInput);
+    cartForm.submit();
+
+
+    shoppingCart.clearCart();
+});
 
 
 

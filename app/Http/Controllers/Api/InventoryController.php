@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Inventory;
 use App\Outlet;

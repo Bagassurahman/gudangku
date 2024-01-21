@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Outlet;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,7 @@ class ProductController extends Controller
             ->where('product_details.product_id', '=', $productId)
             ->select('product_details.material_id', 'material_data.name as material_name', 'product_details.dose')
             ->get();
+
 
         return response()->json($details);
     }
@@ -45,9 +47,9 @@ class ProductController extends Controller
     {
         // melakukan query ke tabel inventory untuk mengurangi persediaan bahan
         $inventory = DB::table('inventories')
-            ->where('material_data_id', '=', $request->input('material_id'))
-            ->where('outlet_id', '=', Auth::user()->id)
-            ->decrement('remaining_amount', $request->input('dose'));
+            ->where('material_data_id', $request->input('material_id'))
+            ->where('outlet_id', Auth::user()->id)
+            ->update(['remaining_amount' => DB::raw('remaining_amount - ' . $request->input('dose'))]);
 
         return response()->json($inventory);
     }
@@ -55,10 +57,50 @@ class ProductController extends Controller
     public function increaseProductStockByMaterial(Request $request)
     {
         $inventory = DB::table('inventories')
-            ->where('material_data_id', '=', $request->input('material_id'))
-            ->where('outlet_id', '=', Auth::user()->id)
-            ->increment('remaining_amount', $request->input('dose'));
+            ->where('material_data_id', $request->input('material_id'))
+            ->where('outlet_id', Auth::user()->id)
+            ->update(['remaining_amount' => DB::raw('remaining_amount + ' . $request->input('dose'))]);
+
 
         return response()->json($inventory);
+    }
+
+    public function getStockByInventory(Request $request)
+    {
+        $productDetails = DB::table('product_details')
+            ->select('material_id', 'dose')
+            ->where('product_id', $request->product_id)
+            ->get();
+
+        $materialIds = $productDetails->pluck('material_id')->toArray();
+
+        $inventory = DB::table('inventories')
+            ->whereIn('material_data_id', $materialIds)
+            ->where('outlet_id', Auth::user()->id)
+            ->get();
+
+        $remainingStock = PHP_INT_MAX;
+
+        foreach ($productDetails as $productDetail) {
+            $materialId = $productDetail->material_id;
+            $dose = $productDetail->dose;
+
+            $inventoryItem = $inventory->firstWhere('material_data_id', $materialId);
+
+            if ($inventoryItem) {
+                $remainingAmount = $inventoryItem->remaining_amount;
+                $requiredAmount = $productDetail->dose;
+
+                $stockBahan = floor($remainingAmount / $requiredAmount);
+                $remainingStock = min($remainingStock, $stockBahan);
+            } else {
+                $remainingStock = 0;
+                break;
+            }
+        }
+
+
+
+        return response()->json(['stockByMaterial' => $remainingStock]);
     }
 }

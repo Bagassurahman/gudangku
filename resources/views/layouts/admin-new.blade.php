@@ -22,7 +22,7 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/ionicons/css/ionicons.css') }}">
 
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}" />
-    <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/style.css?v=1.0.2') }}" />
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/css/style.min.css') }}" />
     <link href="https://cdn.datatables.net/buttons/1.2.4/css/buttons.dataTables.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css" rel="stylesheet" />
@@ -199,7 +199,7 @@
             <!--================================-->
             <!-- Page Footer Start -->
             <!--================================-->
-            <footer class="page-footer">
+            <footer class="page-footer mt-5">
                 <div class="pd-t-4 pd-b-0 pd-x-20">
                     <div class="tx-10 tx-uppercase">
                         <p class="pd-y-10 mb-0">Copyright&copy; 2022 | All rights reserved. | Created By <a
@@ -230,8 +230,8 @@
     <script src="{{ asset('assets/plugins/simpler-sidebar/jquery.simpler-sidebar.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
     <script src="{{ asset('assets/js/highlight.min.js') }}"></script>
-    <script src="{{ asset('assets/js/app.js') }}"></script>
-    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    <script src="{{ asset('assets/js/app.js?v=1.0.1') }}"></script>
+    <script src="{{ asset('assets/js/custom.js?v=1.0.1') }}"></script>
     <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script src="//cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>

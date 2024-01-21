@@ -15,10 +15,16 @@ class Product extends Model
         'general_price',
         'member_price',
         'online_price',
+        'point',
     ];
 
     public function details()
     {
-        return $this->hasMany(ProductDetail::class);
+        return $this->hasMany(ProductDetail::class, 'product_id');
+    }
+
+    public function transactionHistories()
+    {
+        return $this->hasMany(TransactionHistory::class, 'product_id');
     }
 }

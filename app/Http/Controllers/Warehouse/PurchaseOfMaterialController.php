@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Warehouse;
 
+use App\ActivityLog;
 use App\Http\Controllers\Controller;
 use App\Inventory;
 use App\MaterialData;
@@ -23,9 +24,10 @@ class PurchaseOfMaterialController extends Controller
         abort_if(Gate::denies('purchase_of_material_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $suppliers = Supplier::all();
-        $materials = MaterialData::with('unit')->get();
+        $materials = MaterialData::with('unit')->get()->sortBy('material_name');
+        $inventory = Inventory::whereIn('material_data_id', $materials->pluck('id'))->get();
 
-        return view('warehouse.purchase-of-material.index', compact('suppliers', 'materials'));
+        return view('warehouse.purchase-of-material.index', compact('suppliers', 'materials', 'inventory'));
     }
 
     /**
@@ -46,7 +48,6 @@ class PurchaseOfMaterialController extends Controller
      */
     public function store(Request $request)
     {
-
         $cartItems = json_decode($request->input('cart_items'), true);
 
         $purchaseOfMaterial = PurchaseOfMaterials::create([
@@ -64,7 +65,6 @@ class PurchaseOfMaterialController extends Controller
             $material = MaterialData::where('id', $cartItem['id'])
                 ->first();
 
-
             PurchaseOfMaterialsDetail::create([
                 'purchase_of_materials_id' => $purchaseOfMaterial->id,
                 'material_id' => $cartItem['id'],
@@ -78,7 +78,6 @@ class PurchaseOfMaterialController extends Controller
                     'entry_amount' => $inventory->entry_amount + $cartItem['count'],
                     'remaining_amount' => $inventory->remaining_amount + $cartItem['count'],
                     'hpp' => (intval($inventory->hpp) * intval($inventory->entry_amount) + intval($cartItem['total'])) / ($inventory->entry_amount + $cartItem['count']),
-
                 ]);
             } else {
                 Inventory::create([
@@ -87,18 +86,16 @@ class PurchaseOfMaterialController extends Controller
                     'entry_amount' => $cartItem['count'],
                     'remaining_amount' => $cartItem['count'],
                     'hpp' => $cartItem['price'],
-
                 ]);
             }
+
+            // Update the last_price in the materialdata table
+            $material->update([
+                'last_price' => $cartItem['price'],
+            ]);
         }
 
-
         SweetAlert::success('Berhasil', 'Pembelian bahan berhasil ditambahkan');
-
-
-
-
-
         return redirect()->route('warehouse.pembelian-bahan.index');
     }
 
