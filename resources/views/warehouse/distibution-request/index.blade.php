@@ -35,7 +35,7 @@
                     </div>
                     <div class="card-body collapse show" id="collapse1">
                         <div class="table-repsonsive">
-                            <table class="table stripe hover bordered datatable datatable-Role">
+                            <table class="table stripe hover bordered datatable">
                                 <thead>
                                     <tr>
                                         <th width="10">
@@ -104,6 +104,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            {{ $requests->links() }}
                         </div>
 
                     </div>

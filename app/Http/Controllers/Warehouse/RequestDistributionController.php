@@ -30,32 +30,21 @@ class RequestDistributionController extends Controller
     {
         abort_if(Gate::denies('request_distribution_acces'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $requests = ModelRequest::where('warehouse_id', Auth::user()->id)
+        $requests = ModelRequest::with('details.material')
+            ->where('warehouse_id', Auth::user()->id)
             ->latest()
-            ->get();
+            ->paginate(10); // Ubah jumlah item per halaman sesuai kebutuhan Anda
 
-        $totalHarga = 0;
-
-        foreach ($requests as $request) {
-            $totalHarga = 0;
-
-            foreach ($request->details as $detail) {
-                $material = $detail->material;
-                $totalHarga += $material->selling_price * $detail->qty;
-            }
-
-            $request->totalHarga = $totalHarga;
-        }
-
-        ActivityLog::create([
-            'user_id' => auth()->user()->id,
-            'action' => 'Mengakses menu Permintaan Distribusi',
-            'details' => 'Mengakses menu Permintaan Distribusi'
-        ]);
-
+        // Menghitung total harga langsung dalam kueri database
+        $requests->each(function ($request) {
+            $request->totalHarga = $request->details->sum(function ($detail) {
+                return $detail->material->selling_price * $detail->qty;
+            });
+        });
 
         return view('warehouse.distibution-request.index', compact('requests'));
     }
+
 
     /**
      * Show the form for creating a new resource.
