@@ -52,8 +52,13 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name'     => ['required', 'string', 'max:255'],
+<<<<<<< HEAD
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'phone'   => ['required', 'string', 'max:255', 'unique:users'],
+=======
+            'email'    => ['required', 'string', 'emaiphp l', 'max:255', 'unique:users'],
+            'phone'   => ['required', 'string', 'max:255'],
+>>>>>>> 183e60f (update from cpanel)
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
     }
@@ -66,6 +71,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+<<<<<<< HEAD
         $whatsapp = new WhatsappService();
         $response = $whatsapp->sendMessage($data['phone'], "Ini hanya pesan validasi nomor whatsapp");
 
@@ -83,5 +89,17 @@ class RegisterController extends Controller
         } else {
             return redirect()->back()->with('error', 'Nomor Whatsapp tidak valid');
         }
+=======
+        $user =  User::create([
+            'name'     => $data['name'],
+            'phone'   => $data['phone'],
+            'email'    => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $user->roles()->attach(5);
+
+        return $user;
+>>>>>>> 183e60f (update from cpanel)
     }
 }

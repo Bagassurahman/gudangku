@@ -7,6 +7,7 @@
 </div>
 
 <div class="row row-xs clearfix">
+<<<<<<< HEAD
     <div class="col-12 col-sm-6 col-md-6 col-lg-3">
         <div class="card">
             <div class="card-body">
@@ -18,6 +19,9 @@
         </div>
     </div>
     <div class="col-12 mt-5">
+=======
+    <div class="col-12">
+>>>>>>> 183e60f (update from cpanel)
         <h4 class="text-dark">Event Kami</h4>
         <div class="row mt-2">
             @foreach ($events as $event)

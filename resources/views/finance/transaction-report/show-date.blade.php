@@ -93,7 +93,11 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger"
                                                         onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+<<<<<<< HEAD
                                                         <i class="fa fa-trash"></i>
+=======
+                                                        Hapus Transaksi
+>>>>>>> 183e60f (update from cpanel)
                                                     </button>
                                                 </form>
                                             @endcan

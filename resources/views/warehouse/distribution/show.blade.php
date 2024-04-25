@@ -86,8 +86,12 @@
                                             Rp {{ number_format($distribution->total_summary, 0, ',', '.') }}
                                         </td>
                                         <td>
+<<<<<<< HEAD
                                             Rp
                                             {{ number_format($distribution->total_summary + $distribution->fee, 0, ',', '.') }}
+=======
+                                            Rp {{ number_format($distribution->total_summary + $distribution->fee, 0, ',', '.') }}
+>>>>>>> 183e60f (update from cpanel)
                                         </td>
                                         <td>
                                             @if ($distribution->status == 'accepted')
@@ -107,14 +111,22 @@
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger"
                                                             onclick="return confirm('Apakah Anda yakin ingin menghapus?')">
+<<<<<<< HEAD
                                                             <i class="fa fa-trash"></i>
+=======
+                                                            Hapus
+>>>>>>> 183e60f (update from cpanel)
                                                         </button>
                                                     </form>
                                                 @endif
                                                 <a href="{{ route('warehouse.distribusi.detail', $distribution->id) }}">
+<<<<<<< HEAD
                                                     <button type="button" class="btn btn-primary ml-2">
                                                         <i class="fa fa-eye"></i>
                                                     </button>
+=======
+                                                    <button type="button" class="btn btn-primary ml-2">Detail</button>
+>>>>>>> 183e60f (update from cpanel)
                                                 </a>
 
                                             </div>

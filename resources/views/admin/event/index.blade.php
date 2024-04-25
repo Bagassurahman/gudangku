@@ -76,10 +76,15 @@
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 @csrf
                                                 @method('DELETE')
+<<<<<<< HEAD
                                                 <i class="fa fa-trash"></i>
                                             </form>
 
 
+=======
+                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            </form>
+>>>>>>> 183e60f (update from cpanel)
                                         </td>
                                     </tr>
                                 @endforeach

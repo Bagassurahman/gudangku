@@ -41,6 +41,7 @@
                                 <option value="cash">Cash</option>
                                 <option value="qris">Qris</option>
                             </select>
+<<<<<<< HEAD
                             <label class="form-label mt-3">Masukan Nomor Member</label>
                             <input type="text" class="form-control member-number" name="member_number"
                                 placeholder="Nomor Member" id="member_number" value="">
@@ -49,6 +50,11 @@
                                 value="" hidden>
                             <button class="btn btn-success mt-3 w-100 btn-submit" type="submit"
                                 id="btn-submit">Beli</button>
+=======
+                            <button class="btn btn-success mt-3 w-100 btn-submit" type="submit"
+                                id="btn-submit">Beli</button>
+
+>>>>>>> 183e60f (update from cpanel)
                         </form>
                     </div>
 

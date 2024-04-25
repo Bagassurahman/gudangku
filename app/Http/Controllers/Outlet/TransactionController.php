@@ -137,6 +137,7 @@ class TransactionController extends Controller
             }
         }
 
+<<<<<<< HEAD
         if ($request->member_id != null) {
             $user = User::find($request->member_id);
             $productMessage = "Terima kasih telah berbelanja di Zam-zam Time. Berikut adalah detail belanja Anda: \n\n";
@@ -155,6 +156,8 @@ class TransactionController extends Controller
 
             SendWhatsAppNotification::dispatch($user->phone, $productMessage);
         }
+=======
+>>>>>>> 183e60f (update from cpanel)
 
         foreach ($cartItems as $cartItem) {
             $productId = $cartItem['id'];
@@ -191,7 +194,15 @@ class TransactionController extends Controller
             }
         }
 
+<<<<<<< HEAD
 
+=======
+        ActivityLog::create([
+            'user_id' => auth()->user()->id,
+            'action' => 'Menambah data Transaksi penjualan',
+            'details' => 'Menambah data Transaksi penjualan dengan kode ' . $transaction->order_number . ' dan total harga Rp. ' . number_format($transaction->total, 0, ',', '.')
+        ]);
+>>>>>>> 183e60f (update from cpanel)
 
         SweetAlert::success(
             'Transaksi Berhasil',
