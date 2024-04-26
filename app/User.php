@@ -37,6 +37,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'email_verified_at',
+        'point',
         'password',
         'remember_token',
         'created_at',
@@ -94,5 +95,15 @@ class User extends Authenticatable
     public function points()
     {
         return $this->hasMany(Point::class, 'user_id', 'id');
+    }
+
+    public function transactions_history()
+    {
+        return $this->hasMany(TransactionHistory::class, 'user_id', 'id');
+    }
+
+    public function totalTransaction()
+    {
+        return $this->transactions_history()->sum('total_price');
     }
 }

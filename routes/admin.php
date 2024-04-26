@@ -22,6 +22,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Outlet
     Route::resource('manajemen-outlet', 'OutletManagementController');
 
+    // Customer
+    Route::resource('manajemen-customer', 'CustomerManagementController');
+
     // Data Satuan
     Route::resource('data-satuan', 'UnitDataController');
 

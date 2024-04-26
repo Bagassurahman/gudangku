@@ -21,13 +21,10 @@ class Product extends Model
     public function details()
     {
         return $this->hasMany(ProductDetail::class, 'product_id');
-<<<<<<< HEAD
     }
 
     public function transactionHistories()
     {
         return $this->hasMany(TransactionHistory::class, 'product_id');
-=======
->>>>>>> 183e60f (update from cpanel)
     }
 }

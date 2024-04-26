@@ -8,13 +8,11 @@
 
 
         <div class="row row-xs clearfix">
-            @can('event_create')
-                <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('admin.event.create') }}">
-                        Tambah Event
-                    </a>
-                </div>
-            @endcan
+            <div class="my-4">
+                <a class="btn btn-primary" href="{{ route('admin.event.create') }}">
+                    Tambah Event
+                </a>
+            </div>
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
@@ -70,21 +68,16 @@
                                         <td>
                                             {{ $event->location ?? '' }}
                                         </td>
-                                        <td>
+                                        <td width="100">
+                                            <a class="btn btn-sm btn-primary"
+                                                href="{{ route('admin.event.edit', $event->id) }}">Edit</a>
 
                                             <form action="{{ route('admin.event.destroy', $event->id) }}" method="POST"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                 @csrf
                                                 @method('DELETE')
-<<<<<<< HEAD
-                                                <i class="fa fa-trash"></i>
-                                            </form>
-
-
-=======
                                                 <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
                                             </form>
->>>>>>> 183e60f (update from cpanel)
                                         </td>
                                     </tr>
                                 @endforeach

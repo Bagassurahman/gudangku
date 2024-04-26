@@ -7,21 +7,31 @@
 </div>
 
 <div class="row row-xs clearfix">
-<<<<<<< HEAD
-    <div class="col-12 col-sm-6 col-md-6 col-lg-3">
-        <div class="card">
-            <div class="card-body">
-                <h6 class="tx-12 text-uppercase tx-spacing-1 tx-color-02 tx-semibold text-dark">Point Kamu</h6>
-
-                <h4 class="tx-normal tx-rubik tx-spacing--1 mg-b-5">
-                    {{ \App\Point::where('user_id', Auth::user()->id)->sum('point') }}</h4>
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <div class="card card-dashboard">
+                    <div class="card-body">
+                        <h4 class="text-dark">Total Transaksi</h4>
+                        <h2 class="text-dark">Rp. {{ number_format(Auth::user()->totalTransaction(), 0, ',', '.') }}
+                        </h2>
+                    </div>
+                </div>
             </div>
+
+            <div class="col-12 col-md-4">
+                <div class="card card-dashboard">
+                    <div class="card-body">
+                        <h4 class="text-dark">Total Point</h4>
+                        <h2 class="text-dark">{{ Auth::user()->point }}</h2>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
-    <div class="col-12 mt-5">
-=======
-    <div class="col-12">
->>>>>>> 183e60f (update from cpanel)
+    <div class="col-12 mt-4">
         <h4 class="text-dark">Event Kami</h4>
         <div class="row mt-2">
             @foreach ($events as $event)

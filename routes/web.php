@@ -39,50 +39,7 @@ Route::get('tes', function () {
 
 
 Auth::routes();
-// Admin
 
-<<<<<<< HEAD
-=======
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
-    // Permissions
-    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
-    Route::resource('permissions', 'PermissionsController');
-
-    // Roles
-    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
-    Route::resource('roles', 'RolesController');
-
-    // Users
-    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
-    Route::resource('users', 'UsersController');
-
-    // Gudang
-    Route::resource('manajemen-gudang', 'WarehouseManagementController');
-
-    // Outlet
-    Route::resource('manajemen-outlet', 'OutletManagementController');
-
-    // Data Satuan
-    Route::resource('data-satuan', 'UnitDataController');
-
-    // Data Bahan
-    Route::resource('data-bahan', 'MaterialDataController');
-
-    // Biaya
-    Route::resource('biaya', 'CostController');
-
-    // Produk
-    Route::resource('produk', 'ProductController');
-
-    Route::resource('persediaan-outlet', 'InventoryOutletController');
-
-    Route::post('persediaan-outlet-edit', 'InventoryOutletController@update')->name('update-persediaan');
-
-    Route::get('laporan-aktivitas', 'ActivityLogController@index')->name('log.index');
-
-    Route::resource('event', 'EventController');
-});
->>>>>>> 183e60f (update from cpanel)
 
 Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Warehouse', 'middleware' => ['auth']], function () {
 
@@ -197,14 +154,11 @@ Route::group(['prefix' => 'finance', 'as' => 'finance.', 'namespace' => 'Finance
 Route::group(['prefix' => 'customer', 'as' => 'customer.', 'namespace' => 'Customer', 'middleware' => ['auth']], function () {
     Route::get('event', 'EventController@index')->name('event.index');
     Route::get('event/{slug}', 'EventController@show')->name('event.show');
-<<<<<<< HEAD
 
     Route::get('hadiah', 'RewardController@index')->name('reward.index');
     Route::get('hadiah/{slug}', 'RewardController@show')->name('reward.show');
 
     Route::get('transaksi-saya', 'TransactionController@index')->name('transaction.index');
-=======
->>>>>>> 183e60f (update from cpanel)
 });
 
 

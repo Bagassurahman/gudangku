@@ -114,7 +114,7 @@
                             <!-- row -->
                             <div class="form-layout-footer mt-3">
                                 <button class="btn btn-custom-primary" type="submit">Simpan</button>
-                                <a href="{{ route('admin.biaya.index') }}" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ route('admin.event.index') }}" class="btn btn-secondary">Cancel</a>
                             </div>
                             <!-- form-layout-footer -->
                         </form>

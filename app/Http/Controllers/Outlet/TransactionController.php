@@ -131,13 +131,14 @@ class TransactionController extends Controller
                     'date' => $request->order_date,
                 ]);
 
+                $user = User::find($request->member_id);
 
-                // send message to customer
+                $user->point += $product->point * $cartItem['count'];
 
+                $user->save();
             }
         }
 
-<<<<<<< HEAD
         if ($request->member_id != null) {
             $user = User::find($request->member_id);
             $productMessage = "Terima kasih telah berbelanja di Zam-zam Time. Berikut adalah detail belanja Anda: \n\n";
@@ -152,12 +153,12 @@ class TransactionController extends Controller
             }
 
             $productMessage .= 'Total: Rp ' . number_format($request->total_price, 0, ',', '.') . "\n" . 'Jumlah Bayar: Rp ' . number_format($request->input('paid_amount'), 0, ',', '.') . "\n" . 'Kembalian: Rp ' . number_format(($request->input('paid_amount') - $request->total_price), 0, ',', '.');
+            $productMessage .= "\n\n";
+            $productMessage .= "Total Point Kamu Sekarang: " . $user->point . "\n";
 
 
             SendWhatsAppNotification::dispatch($user->phone, $productMessage);
         }
-=======
->>>>>>> 183e60f (update from cpanel)
 
         foreach ($cartItems as $cartItem) {
             $productId = $cartItem['id'];
@@ -194,15 +195,6 @@ class TransactionController extends Controller
             }
         }
 
-<<<<<<< HEAD
-
-=======
-        ActivityLog::create([
-            'user_id' => auth()->user()->id,
-            'action' => 'Menambah data Transaksi penjualan',
-            'details' => 'Menambah data Transaksi penjualan dengan kode ' . $transaction->order_number . ' dan total harga Rp. ' . number_format($transaction->total, 0, ',', '.')
-        ]);
->>>>>>> 183e60f (update from cpanel)
 
         SweetAlert::success(
             'Transaksi Berhasil',

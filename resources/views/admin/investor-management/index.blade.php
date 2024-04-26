@@ -5,13 +5,11 @@
 @endsection
 @section('content')
     <div id="main-wrapper">
-
-
         <div class="row row-xs clearfix">
             @can('unit_data_create')
                 <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('admin.roles.create') }}">
-                        Tambah Role
+                    <a class="btn btn-primary" href="{{ route('admin.manajemen-outlet.create') }}">
+                        Tambah Manajemen Outlet
                     </a>
                 </div>
             @endcan
@@ -22,7 +20,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Role
+                            Data Manajemen Outlet
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -44,56 +42,71 @@
 
                                         </th>
                                         <th>
-                                            {{ trans('cruds.role.fields.id') }}
+                                            No
                                         </th>
                                         <th>
-                                            {{ trans('cruds.role.fields.title') }}
+                                            Nama Outlet
                                         </th>
                                         <th>
-                                            Izin
+                                            Penangung Jawab
                                         </th>
-                                        <th></th>
+                                        <th>
+                                            Alamat
+                                        </th>
+                                        <th>
+                                            Nomer Hp
+                                        </th>
+                                        <th>
+                                            Target
+                                        </th>
+
                                         <th>
                                             Aksi
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($roles as $key => $role)
-                                        <tr data-entry-id="{{ $role->id }}">
+                                    @foreach ($outlets as $key => $user)
+                                        <tr data-entry-id="{{ $user->id }}">
                                             <td>
 
                                             </td>
                                             <td>
-                                                {{ $role->id ?? '' }}
+                                                {{ $loop->iteration }}
                                             </td>
                                             <td>
-                                                {{ $role->title ?? '' }}
-                                            </td>
-                                            <td class="d-flex flex-wrap">
-                                                @foreach ($role->permissions as $key => $item)
-                                                    <span class="badge badge-pill badge-primary m-1">`
-                                                        {{ $item->title }}
-                                                    </span>
-                                                @endforeach
+                                                {{ $user->outlet->outlet_name ?? '' }}
                                             </td>
                                             <td>
-                                                @can('role_show')
-                                                    <a class="btn btn-primary"
-                                                        href="{{ route('admin.roles.show', $role->id) }}">
+                                                {{ $user->name ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $user->address ?? '' }}
+                                            </td>
+                                            <td>
+                                                {{ $user->phone }}
+                                            </td>
+                                            <td>
+                                                {{ $user->outlet->target ?? '' }}
+                                            </td>
+                                            <td>
+                                                @can('user_show')
+                                                    <a class="btn btn-warning"
+                                                        href="{{ route('admin.manajemen-outlet.show', $user->id) }}">
                                                         {{ trans('global.view') }}
                                                     </a>
                                                 @endcan
 
-                                                @can('role_edit')
-                                                    <a class="btn btn-warning text-white"
-                                                        href="{{ route('admin.roles.edit', $role->id) }}">
+                                                @can('user_edit')
+                                                    <a class="btn btn-primary"
+                                                        href="{{ route('admin.manajemen-outlet.edit', $user->id) }}">
                                                         {{ trans('global.edit') }}
                                                     </a>
                                                 @endcan
 
-                                                @can('role_delete')
-                                                    <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST"
+                                                @can('user_delete')
+                                                    <form action="{{ route('admin.manajemen-outlet.destroy', $user->id) }}"
+                                                        method="POST"
                                                         onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
                                                         style="display: inline-block;">
                                                         <input type="hidden" name="_method" value="DELETE">

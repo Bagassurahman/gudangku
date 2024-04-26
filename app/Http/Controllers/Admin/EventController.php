@@ -75,6 +75,9 @@ class EventController extends Controller
      */
     public function edit($id)
     {
+        $event = Event::findOrFail($id);
+
+        return view('admin.event.edit', compact('event'));
     }
 
     /**
@@ -86,7 +89,26 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $event = Event::findOrFail($id);
+
+        $data = $request->all();
+
+        if ($request->file('image')) {
+            $data['image'] = $request->file('image')->store(
+                'assets/event',
+                'public'
+            );
+        } else {
+            unset($data['image']);
+        }
+
+        $data['slug'] = Str::slug($request->name);
+
+        $event->update($data);
+
+        SweetAlert::success('Berhasil', 'Data Event Berhasil Diubah');
+
+        return redirect()->route('admin.event.index');
     }
 
     /**

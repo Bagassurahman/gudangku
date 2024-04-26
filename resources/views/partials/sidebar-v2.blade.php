@@ -21,7 +21,6 @@
                         <a href="{{ route('customer.event.index') }}"><i data-feather="layout"></i>
                             <span>Event</span></a>
                     </li>
-<<<<<<< HEAD
                     <li class="{{ request()->is('customer/transaksi-saya') ? ' active' : '' }}">
                         <a href="{{ route('customer.transaction.index') }}"><i data-feather="dollar-sign"></i>
                             <span>Transaksi Saya</span></a>
@@ -30,8 +29,6 @@
                         <a href="{{ route('customer.reward.index') }}"><i data-feather="shopping-bag"></i>
                             <span>Tukar Poin</span></a>
                     </li>
-=======
->>>>>>> 183e60f (update from cpanel)
                 @endcan
                 @can('transaction_access')
                     <li
@@ -247,20 +244,18 @@
                                         href="{{ route('admin.event.index') }}">Data Event</a>
                                 </li>
                             @endcan
-<<<<<<< HEAD
                             @can('reward_access')
                                 <li class="{{ request()->is('admin/reward*') ? ' active' : '' }}">
                                     <a href="{{ route('admin.reward.index') }}">Data Reward/Hadiah</a>
                                 </li>
                             @endcan
-=======
->>>>>>> 183e60f (update from cpanel)
+
                         </ul>
                     </li>
                 @endcan
                 @can('user_management_access')
                     <li
-                        class="{{ request()->is('admin/permissions*', 'admin/roles*', 'admin/users*', 'admin/manajemen-gudang*', 'admin/manajemen-outlet*') ? 'open active' : '' }}">
+                        class="{{ request()->is('admin/permissions*', 'admin/roles*', 'admin/users*', 'admin/manajemen-gudang*', 'admin/manajemen-outlet*', 'admin/manajemen-customer*') ? 'open active' : '' }}">
                         <a href=""><i data-feather="user"></i>
                             <span>Manajemen User</span><i class="accordion-icon fa fa-angle-left"></i></a>
                         <ul class="sub-menu" style="display: block;">
@@ -287,6 +282,11 @@
                             @can('user_access')
                                 <li class="{{ request()->is('admin/manajemen-outlet*') ? ' active' : '' }}"><a
                                         href="{{ route('admin.manajemen-outlet.index') }}">Manajemen Outlet</a>
+                                </li>
+                            @endcan
+                            @can('user_access')
+                                <li class="{{ request()->is('admin/manajemen-customer*') ? ' active' : '' }}"><a
+                                        href="{{ route('admin.manajemen-customer.index') }}">Manajemen Customer</a>
                                 </li>
                             @endcan
                         </ul>

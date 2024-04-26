@@ -40,6 +40,17 @@
                     </tr>
                 </table>
 
+                {{-- <form action="" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Tukar Hadiah</button>
+                </form> --}}
+                @if ($reward->stock > 0 && $reward->point <= Auth::user()->totalPoint())
+                    <button class="btn btn-primary w-100" id="redeem">Tukar Hadiah</button>
+                @elseif ($reward->stock == 0)
+                    <button class="btn btn-primary w-100" disabled>Stok Habis</button>
+                @else
+                    <button class="btn btn-primary w-100" disabled>Poin Kurang</button>
+                @endif
             </div>
         </div>
     </div>

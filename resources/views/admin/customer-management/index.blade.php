@@ -5,24 +5,15 @@
 @endsection
 @section('content')
     <div id="main-wrapper">
-
-
         <div class="row row-xs clearfix">
-            @can('unit_data_create')
-                <div class="my-4">
-                    <a class="btn btn-primary" href="{{ route('admin.roles.create') }}">
-                        Tambah Role
-                    </a>
-                </div>
-            @endcan
             <!--================================-->
             <!-- Basic dataTable Start -->
             <!--================================-->
-            <div class="col-md-12 col-lg-12">
+            <div class="col-md-12 col-lg-12 mt-4">
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Role
+                            Data Customer
                         </h4>
                         <div class="card-header-btn">
                             <a href="#" data-toggle="collapse" class="btn card-collapse" data-target="#collapse1"
@@ -44,67 +35,50 @@
 
                                         </th>
                                         <th>
-                                            {{ trans('cruds.role.fields.id') }}
+                                            No
                                         </th>
                                         <th>
-                                            {{ trans('cruds.role.fields.title') }}
+                                            Nama Customer
                                         </th>
                                         <th>
-                                            Izin
+                                            Nomor Hp
                                         </th>
-                                        <th></th>
                                         <th>
-                                            Aksi
+                                            Email
+                                        </th>
+                                        <th>
+                                            Jumlah Poin
+                                        </th>
+                                        <th>
+                                            Total Transaksi
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($roles as $key => $role)
-                                        <tr data-entry-id="{{ $role->id }}">
+                                    @foreach ($customers as $key => $customer)
+                                        <tr data-entry-id="{{ $customer->id }}">
                                             <td>
 
                                             </td>
                                             <td>
-                                                {{ $role->id ?? '' }}
+                                                {{ $loop->iteration }}
                                             </td>
                                             <td>
-                                                {{ $role->title ?? '' }}
+                                                {{ $customer->name ?? '' }}
                                             </td>
-                                            <td class="d-flex flex-wrap">
-                                                @foreach ($role->permissions as $key => $item)
-                                                    <span class="badge badge-pill badge-primary m-1">`
-                                                        {{ $item->title }}
-                                                    </span>
-                                                @endforeach
+
+                                            <td>
+                                                {{ $customer->phone ?? '' }}
                                             </td>
                                             <td>
-                                                @can('role_show')
-                                                    <a class="btn btn-primary"
-                                                        href="{{ route('admin.roles.show', $role->id) }}">
-                                                        {{ trans('global.view') }}
-                                                    </a>
-                                                @endcan
-
-                                                @can('role_edit')
-                                                    <a class="btn btn-warning text-white"
-                                                        href="{{ route('admin.roles.edit', $role->id) }}">
-                                                        {{ trans('global.edit') }}
-                                                    </a>
-                                                @endcan
-
-                                                @can('role_delete')
-                                                    <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST"
-                                                        onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
-                                                        style="display: inline-block;">
-                                                        <input type="hidden" name="_method" value="DELETE">
-                                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                        <input type="submit" class="btn btn-danger"
-                                                            value="{{ trans('global.delete') }}">
-                                                    </form>
-                                                @endcan
-
+                                                {{ $customer->email ?? '' }}
                                             </td>
-
+                                            <td>
+                                                {{ $customer->point }}
+                                            </td>
+                                            <td>
+                                                {{ $customer->transactions_history->sum('total_price') ?? '' }}
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -113,7 +87,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
