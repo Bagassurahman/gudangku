@@ -25,4 +25,9 @@ class Outlet extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function request_rewards()
+    {
+        return $this->hasMany(RequestReward::class);
+    }
 }

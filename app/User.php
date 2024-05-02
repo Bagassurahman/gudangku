@@ -106,4 +106,9 @@ class User extends Authenticatable
     {
         return $this->transactions_history()->sum('total_price');
     }
+
+    public function request_rewards()
+    {
+        return $this->hasMany(RequestReward::class, 'user_id', 'id');
+    }
 }

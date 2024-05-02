@@ -7,7 +7,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-a5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Transaksi Saya</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Riwayat Penukaran Poin</h1>
             </div>
 
         </div>
@@ -22,7 +22,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Transaksi Saya
+                            Riwayat Penukaran Poin
                         </h4>
 
                         <div class="card-header-btn">
@@ -47,71 +47,79 @@
                                         No
                                     </th>
                                     <th>
+                                        Kode Request
+                                    </th>
+                                    <th>
                                         Tanggal
                                     </th>
                                     <th>
-                                        Produk
+                                        Hadiah
                                     </th>
                                     <th>
-                                        Total Qty
+                                        Outlet Penukaran
                                     </th>
                                     <th>
-                                        Total Harga
+                                        Status
                                     </th>
                                     <th>
-                                        Poin Diterima
+                                        Poin Dibutuhkan
                                     </th>
-
+                                    <th>
+                                        Catatan
+                                    </th>
+                                    <th>
+                                        Bukti Pengambilan
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    $total = 0;
-                                    $total_point = 0;
-                                @endphp
-                                @foreach ($transactions as $transaction)
-                                    <tr>
+                                @foreach ($requests as $key => $request)
+                                    <tr data-entry-id="{{ $request->id }}">
                                         <td>
 
                                         </td>
                                         <td>
-                                            {{ $loop->iteration }}
+                                            {{ $key + 1 }}
                                         </td>
                                         <td>
-                                            {{ $transaction->date }}
+                                            {{ $request->code }}
                                         </td>
                                         <td>
-                                            {{ $transaction->product->name }}
+                                            {{ $request->created_at }}
                                         </td>
                                         <td>
-                                            {{ $transaction->quantity }}
+                                            {{ $request->reward->name }}
                                         </td>
                                         <td>
-                                            Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
+                                            {{ $request->outlet->outlet_name ?? 'Belum diproses' }}
                                         </td>
                                         <td>
-                                            {{ $transaction->product->point }}
+                                            <span
+                                                class="badge badge-{{ $request->status == 'pending' ? 'warning' : ($request->status == 'approved' ? 'success' : 'danger') }}">
+                                                {{ $request->status == 'approved' ? 'Disetujui Menunggu Pengambilan' : $request->status }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ $request->point }}
+                                        </td>
+                                        <td>
+                                            {{ $request->note }}
+                                        </td>
+                                        <td>
+                                            @if ($request->proof)
+                                                <img src="{{ asset('storage/' . $request->proof) }}" alt="Bukti Penukaran"
+                                                    style="width: 100px">
+                                            @else
+                                                Belum ada bukti penukaran
+                                            @endif
                                         </td>
                                     </tr>
-                                    @php
-                                        $total += $transaction->total_price;
-                                        $total_point += $transaction->product->point;
-                                    @endphp
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="5" style="text-align: right">Total</td>
-                                    <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
-                                    <td>{{ $total_point }}</td>
-                                </tr>
-                            </tfoot>
                         </table>
-
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

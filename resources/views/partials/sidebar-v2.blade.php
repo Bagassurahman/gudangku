@@ -25,9 +25,30 @@
                         <a href="{{ route('customer.transaction.index') }}"><i data-feather="dollar-sign"></i>
                             <span>Transaksi Saya</span></a>
                     </li>
+                    <li class="{{ request()->is('customer/poin') ? ' active' : '' }}">
+                        <a href="{{ route('customer.point.index') }}"><i data-feather="award"></i>
+                            <span>Histori Poin Saya</span></a>
+                    </li>
+                    <li class="{{ request()->is('customer/riwayat-penukaran-poin') ? ' active' : '' }}">
+                        <a href="{{ route('customer.request-reward.index') }}"><i data-feather="shopping-bag"></i>
+                            <span>Riwayat Penukaran Poin</span></a>
+                    </li>
+
                     <li class="{{ request()->is('customer/tukar-poin') ? ' active' : '' }}">
                         <a href="{{ route('customer.reward.index') }}"><i data-feather="shopping-bag"></i>
                             <span>Tukar Poin</span></a>
+                    </li>
+                @endcan
+                @can('request_reward_access')
+                    <li class="{{ request()->is('gudang/data-penukaran-poin') ? ' active' : '' }}">
+                        <a href="{{ route('warehouse.request-reward.index') }}"><i data-feather="shopping-bag"></i>
+                            <span>Data Penukaran Poin</span></a>
+                    </li>
+                @endcan
+                @can('outlet_request_reward_access')
+                    <li class="{{ request()->is('outlet/data-penukaran-poin') ? ' active' : '' }}">
+                        <a href="{{ route('outlet.request-reward.index') }}"><i data-feather="shopping-bag"></i>
+                            <span>Data Penukaran Poin</span></a>
                     </li>
                 @endcan
                 @can('transaction_access')

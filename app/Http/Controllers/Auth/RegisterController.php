@@ -80,8 +80,10 @@ class RegisterController extends Controller
             $user->roles()->attach(5);
 
             return $user;
-        } else {
+        } else if ($response->getStatusCode() == 400) {
             return redirect()->back()->with('error', 'Nomor Whatsapp tidak valid');
+        } else {
+            return redirect()->back()->with('error', 'Terjadi kesalahan, silahkan coba lagi');
         }
     }
 }

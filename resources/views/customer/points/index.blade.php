@@ -7,7 +7,7 @@
     <div id="main-wrapper">
         <div class="pageheader pd-t-25 pd-b-35">
             <div class="pd-t-a5 pd-b-5">
-                <h1 class="pd-0 mg-0 tx-20 text-overflow">Transaksi Saya</h1>
+                <h1 class="pd-0 mg-0 tx-20 text-overflow">Point Saya</h1>
             </div>
 
         </div>
@@ -22,7 +22,7 @@
                 <div class="card mg-b-20">
                     <div class="card-header">
                         <h4 class="card-header-title">
-                            Data Transaksi Saya
+                            Histori Poin Saya
                         </h4>
 
                         <div class="card-header-btn">
@@ -50,68 +50,45 @@
                                         Tanggal
                                     </th>
                                     <th>
-                                        Produk
+                                        Poin
                                     </th>
-                                    <th>
-                                        Total Qty
-                                    </th>
-                                    <th>
-                                        Total Harga
-                                    </th>
-                                    <th>
-                                        Poin Diterima
-                                    </th>
-
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
                                     $total = 0;
-                                    $total_point = 0;
                                 @endphp
-                                @foreach ($transactions as $transaction)
-                                    <tr>
+                                @foreach ($points as $key => $point)
+                                    <tr data-entry-id="{{ $point->id }}">
                                         <td>
 
                                         </td>
                                         <td>
-                                            {{ $loop->iteration }}
+                                            {{ $key + 1 }}
                                         </td>
                                         <td>
-                                            {{ $transaction->date }}
+                                            {{ $point->created_at }}
                                         </td>
                                         <td>
-                                            {{ $transaction->product->name }}
-                                        </td>
-                                        <td>
-                                            {{ $transaction->quantity }}
-                                        </td>
-                                        <td>
-                                            Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
-                                        </td>
-                                        <td>
-                                            {{ $transaction->product->point }}
+                                            {{ $point->point }}
                                         </td>
                                     </tr>
                                     @php
-                                        $total += $transaction->total_price;
-                                        $total_point += $transaction->product->point;
+                                        $total += $point->point;
                                     @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5" style="text-align: right">Total</td>
-                                    <td>Rp {{ number_format($total, 0, ',', '.') }}</td>
-                                    <td>{{ $total_point }}</td>
+                                    <td colspan="3" style="text-align: right;">Total Poin</td>
+                                    <td>{{ $total }}</td>
                                 </tr>
                             </tfoot>
                         </table>
-
+                        {{ $points->links() }}
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection

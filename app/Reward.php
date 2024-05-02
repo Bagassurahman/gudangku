@@ -34,4 +34,9 @@ class Reward extends Model
         $this->attributes['name'] = $value;
         $this->attributes['slug'] = Str::slug($value);
     }
+
+    public function requests()
+    {
+        return $this->hasMany(RequestReward::class);
+    }
 }

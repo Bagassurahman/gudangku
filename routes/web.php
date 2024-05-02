@@ -84,6 +84,11 @@ Route::group(['prefix' => 'gudang', 'as' => 'warehouse.', 'namespace' => 'Wareho
     // Route::get('laporan-distribusi/{date}', 'DistributionReportController@show')->name('laporan-distribusi.show');
 
     Route::post('data-request-bahan/reject', 'RequestDistributionController@reject')->name('request.reject');
+
+    Route::get('data-penukaran-poin', 'RequestRewardController@index')->name('request-reward.index');
+    Route::get('data-penukaran-poin/{id}', 'RequestRewardController@show')->name('request-reward.show');
+    Route::post('data-penukaran-poin/approve', 'RequestRewardController@approve')->name('request-reward.approve');
+    Route::post('data-penukaran-poin/reject', 'RequestRewardController@reject')->name('request-reward.reject');
 });
 
 Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 'middleware' => ['auth']], function () {
@@ -115,6 +120,10 @@ Route::group(['prefix' => 'outlet', 'as' => 'outlet.', 'namespace' => 'Outlet', 
 
     Route::resource('distribusi', 'DistributionController');
     Route::get('/distribusi/accept/{id}', 'DistributionController@accept')->name('distribusi.accept');
+
+    Route::get('/data-penukaran-poin', 'RequestRewardController@index')->name('request-reward.index');
+    Route::get('/data-penukaran-poin/{id}', 'RequestRewardController@show')->name('request-reward.show');
+    Route::put('/data-penukaran-poin/{id}', 'RequestRewardController@update')->name('request-reward.update');
 });
 Route::group(['prefix' => 'finance', 'as' => 'finance.', 'namespace' => 'Finance', 'middleware' => ['auth']], function () {
     Route::resource('laporan-distribusi', 'DistributionReportController');
@@ -158,9 +167,14 @@ Route::group(['prefix' => 'customer', 'as' => 'customer.', 'namespace' => 'Custo
     Route::get('hadiah', 'RewardController@index')->name('reward.index');
     Route::get('hadiah/{slug}', 'RewardController@show')->name('reward.show');
 
-    Route::get('transaksi-saya', 'TransactionController@index')->name('transaction.index');
-});
+    Route::post('hadiah/{id}', 'RewardController@redeem')->name('reward.redeem');
 
+    Route::get('poin', 'PointController@index')->name('point.index');
+
+    Route::get('transaksi-saya', 'TransactionController@index')->name('transaction.index');
+
+    Route::get('riwayat-penukaran-poin', 'RequestRewardController@index')->name('request-reward.index');
+});
 
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

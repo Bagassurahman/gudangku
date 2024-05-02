@@ -40,12 +40,12 @@
                     </tr>
                 </table>
 
-                {{-- <form action="" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-primary">Tukar Hadiah</button>
-                </form> --}}
-                @if ($reward->stock > 0 && $reward->point <= Auth::user()->totalPoint())
-                    <button class="btn btn-primary w-100" id="redeem">Tukar Hadiah</button>
+                @if ($reward->stock > 0 && $reward->point <= Auth::user()->point)
+                    <form action="{{ route('customer.reward.redeem', $reward->id) }}" method="POST"
+                        onsubmit="return confirm('Apakah Anda yakin ingin menukar poin Anda?')">
+                        @csrf
+                        <button type="submit" class="btn btn-primary w-100">Tukar Poin</button>
+                    </form>
                 @elseif ($reward->stock == 0)
                     <button class="btn btn-primary w-100" disabled>Stok Habis</button>
                 @else
