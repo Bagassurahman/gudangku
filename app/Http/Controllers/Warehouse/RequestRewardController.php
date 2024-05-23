@@ -37,14 +37,12 @@ class RequestRewardController extends Controller
             'approved_at' => now(),
         ]);
 
-
-        $message = "Halo, " . $rewardRequest->user->name . PHP_EOL .
-            "Permintaan reward Anda telah disetujui." . PHP_EOL .
-            "Kode reward: " . $rewardRequest->code . PHP_EOL .
-            "Reward: " . $rewardRequest->reward->name . PHP_EOL .
-            "Catatan: " . $rewardRequest->note . PHP_EOL .
-            "Silakan datang ke outlet " . $rewardRequest->outlet->outlet_name . " untuk melakukan redeem reward." . PHP_EOL .
-            "Terima kasih.";
+        $message = "Hadiah " . $rewardRequest->reward->name . " dari Sobtime.com" . PHP_EOL .
+            "Sudah bisa diambil di outlet " . $rewardRequest->outlet->outlet_name . PHP_EOL .
+            "Silahkan kunjungi outlet kami pada saat jam Buka." . PHP_EOL .
+            "Gunakan kode " . $rewardRequest->code . " untuk pengambilan hadiah." . PHP_EOL .
+            "Sehat dan sukses selalu Ka " . $rewardRequest->user->name . PHP_EOL .
+            "Jangan lupa ajak teman daftar di sobtime.com";
 
         SendWhatsAppNotification::dispatch($rewardRequest->user->phone, $message);
 

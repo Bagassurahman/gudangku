@@ -52,7 +52,12 @@ class RewardController extends Controller
             'date' => now(),
         ]);
 
-        SendWhatsAppNotification::dispatch($user->phone, "Halo {$user->name}, terima kasih telah menukarkan poin kamu dengan hadiah {$reward->name}. Silahkan tunggu konfirmasi dari admin ya.");
+        $message = "Pengajuan Penukaran point berhasil." . PHP_EOL .
+            "Selanjutnya akan kami informasikan jika hadiah sudah bisa diambil." . PHP_EOL .
+            "Sehat dan sukses selalu Ka " . $user->name . PHP_EOL .
+            "Jangan lupa ajak teman daftar di sobtime.com";
+
+        SendWhatsAppNotification::dispatch($user->phone, "Halo {$user->name}, " . $message);
 
         Swal::success('Success', 'Hadiah berhasil ditukarkan, silahkan tunggu konfirmasi dari admin');
 

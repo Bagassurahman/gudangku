@@ -67,7 +67,19 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $whatsapp = new WhatsappService();
-        $response = $whatsapp->sendMessage($data['phone'], "Ini hanya pesan validasi nomor whatsapp");
+        $response = $whatsapp->sendMessage(
+            $data['phone'],
+            "Selamat, Sobtime sudah terdaftar.\n\n" .
+                "Berikut data dari Sobtime\n" .
+                "Nama : " . $data['name'] . "\n" .
+                "No WhatsApp : " . $data['phone'] . "\n" .
+                "Email : " . $data['email'] . "\n\n" .
+                "Harap simpan data diatas. Untuk bisa login di Sobtime.com\n\n" .
+                "Untuk melihat jumlah point dan hadiah yang bisa ditukar dengan point Sobtime.\n\n" .
+                "Kumpulkan point dan tukarkan dengan hadiah yang Sobtime inginkan.\n\n" .
+                "Sukses dan Sehat selalu\n\n" .
+                "Jangan lupa ajak teman teman untuk daftar di sobtime.com"
+        );
 
         if ($response->getStatusCode() == 200) {
             $user =  User::create([

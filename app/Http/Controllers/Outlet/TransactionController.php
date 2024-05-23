@@ -141,20 +141,33 @@ class TransactionController extends Controller
 
         if ($request->member_id != null) {
             $user = User::find($request->member_id);
-            $productMessage = "Terima kasih telah berbelanja di Zam-zam Time. Berikut adalah detail belanja Anda: \n\n";
+
+            $productMessage = "Halo Sobtime " . $user->name . ",\n";
+            $productMessage .= "Terimakasih sudah berbelanja\n\n";
+            $productMessage .= "Berikut rincian belanja:\n";
+            $productMessage .= "Invoice : " . Auth::user()->outlet->outlet_name . "\n";
+            $productMessage .= "Nomor Invoice: " . $transaction->order_number . "\n";
+            $productMessage .= "Tanggal: " . $transaction->order_date . "\n\n";
 
             foreach ($cartItems as $cartItem) {
                 $product = Product::find($cartItem['id']);
-                $productMessage .=  "\n";
-                $productMessage .= "Nama Produk: " . $product->name . "\n";
-                $productMessage .= "Harga: Rp "  . number_format($cartItem['price'], 0, ',', '.') . "\n";
-                $productMessage .= "Jumlah: " . $cartItem['count'] . "\n";
-                $productMessage .= "\n";
+                $productMessage .= $cartItem['count'] . " x " . $product->name . " Rp " . number_format($cartItem['price'], 0, ',', '.') . "\n";
+                $productMessage .= "Point : " . $product->point * $cartItem['count'] . "\n\n";
             }
 
-            $productMessage .= 'Total: Rp ' . number_format($request->total_price, 0, ',', '.') . "\n" . 'Jumlah Bayar: Rp ' . number_format($request->input('paid_amount'), 0, ',', '.') . "\n" . 'Kembalian: Rp ' . number_format(($request->input('paid_amount') - $request->total_price), 0, ',', '.');
-            $productMessage .= "\n\n";
-            $productMessage .= "Total Point Kamu Sekarang: " . $user->point . "\n";
+            $productMessage .= "*Total Rp " . number_format($request->total_price, 0, ',', '.') . "*\n";
+            $productMessage .= "Pembayaran Rp " . number_format($request->input('paid_amount'), 0, ',', '.') . "\n";
+            $productMessage .= "Kembalian Rp " . number_format(($request->input('paid_amount') - $request->total_price), 0, ',', '.') . "\n";
+            $productMessage .= "Bayar " . $request->tipe_pembayaran . "\n\n";
+
+            $productMessage .= "Point yang didapat : " . $user->point . " point\n";
+            $productMessage .= "Saldo point saat ini : " . $user->point . " point\n\n";
+
+            $productMessage .= "Kumpulkan point dan tukarkan dengan hadiah yang Sobtime inginkan.\n\n";
+            $productMessage .= "Sukses dan Sehat selalu Ka " . $user->name . "\n\n";
+            $productMessage .= "Cek hadiah menarik dan point Sobtime di sobtime.com\n\n";
+            $productMessage .= "Jangan lupa ajak teman teman untuk daftar di sobtime.com";
+
 
 
             SendWhatsAppNotification::dispatch($user->phone, $productMessage);
