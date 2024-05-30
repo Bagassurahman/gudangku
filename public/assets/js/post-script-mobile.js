@@ -422,7 +422,7 @@ function displayCart() {
 
     // Route:: get('/get-member/{phoneNumber}', [MemberController:: class, 'getMemberByPhoneNumber']);\
 
-    $('.member-number').on('keyup', function () {
+    $('#search_member').on('click', function () {
         var memberNumber = $(this).val();
 
         $.ajax({

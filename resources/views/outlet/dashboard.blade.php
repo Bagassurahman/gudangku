@@ -41,9 +41,14 @@
                                 <option value="cash">Cash</option>
                                 <option value="qris">Qris</option>
                             </select>
-                            <label class="form-label mt-3">Masukan Nomor Member</label>
-                            <input type="text" class="form-control member-number" name="member_number"
-                                placeholder="Nomor Member" id="member_number" value="">
+
+                            <div class="d-flex align-items-center mt-3">
+                                <input type="text" class="form-control member-number" name="member_number"
+                                    placeholder="Nomor Member" id="member_number" value="">
+                                <button type="button" class="btn btn-primary ml-3" id="search_member">Cari
+                                    Member</button>
+                            </div>
+
                             <div id="result-member" class="mt-1"></div>
                             <input type="number" class="form-control mt-3 member-id" name="member_id" id="member-id"
                                 value="" hidden>

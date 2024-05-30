@@ -214,7 +214,7 @@ class TransactionController extends Controller
             'Kembalian : Rp. ' . number_format($request->input('paid_amount') - $request->input('total_price'), 0, ',', '.')
         );
 
-        return redirect()->back();
+        return redirect()->route('print.transaction', $transaction->id);
     }
 
     /**

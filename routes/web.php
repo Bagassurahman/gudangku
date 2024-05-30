@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\WarehouseManagementController;
+use App\Transaction;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -183,3 +184,10 @@ Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 
         Route::post('password', 'ChangePasswordController@update')->name('password.update');
     }
 });
+
+
+Route::get('/print-transaksi/{id}', function ($id) {
+    $transaction = Transaction::find($id);
+
+    return view('print.transaction', compact('transaction'));
+})->name('print.transaction');
