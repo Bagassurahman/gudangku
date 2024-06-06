@@ -423,7 +423,7 @@ function displayCart() {
     // Route:: get('/get-member/{phoneNumber}', [MemberController:: class, 'getMemberByPhoneNumber']);\
 
     $('#search_member').on('click', function () {
-        var memberNumber = $(this).val();
+        var memberNumber = $('#member_number').val();
 
         $.ajax({
             url: '/api/get-member/' + memberNumber,
