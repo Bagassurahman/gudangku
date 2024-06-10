@@ -79,7 +79,7 @@
                                             Nama Pelanggan
                                         </th>
                                         <td>
-                                            {{ $request->user->name }}
+                                            {{ $request->user->name ?? '-' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -87,7 +87,7 @@
                                             No. Telepon
                                         </th>
                                         <td>
-                                            {{ $request->user->phone }}
+                                            {{ $request->user->phone ?? '-' }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -95,7 +95,7 @@
                                             Hadiah
                                         </th>
                                         <td>
-                                            {{ $request->reward->name }}
+                                            {{ $request->reward->name ?? '-' }}
                                         </td>
                                     </tr>
                                     <tr>

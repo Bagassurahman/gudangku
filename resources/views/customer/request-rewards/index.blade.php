@@ -88,7 +88,7 @@
                                             {{ $request->created_at }}
                                         </td>
                                         <td>
-                                            {{ $request->reward->name }}
+                                            {{ $request->reward->name ?? '-' }}
                                         </td>
                                         <td>
                                             {{ $request->outlet->outlet_name ?? 'Belum diproses' }}
