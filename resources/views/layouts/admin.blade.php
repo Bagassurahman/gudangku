@@ -50,7 +50,7 @@
                         class="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:mr-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white"
                         type="button">
                         <span class="sr-only">Open user menu</span>
-                        <img class="w-8 h-8 mr-2 rounded-full" src="{{ asset('images/logo-zamzam.jpeg') }}"
+                        <img class="w-8 h-8 mr-2 rounded-full" src="{{ asset('images/logo-gudangku.png') }}"
                             alt="user photo" width="40">
                         Bonnie Green
                         <svg class="w-4 h-4 mx-1.5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"

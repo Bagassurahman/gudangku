@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="auth-card">
-        <img src="{{ asset('images/logo-zamzam.jpeg') }}" alt="" class="max-w-none mx-auto mb-3" width="100">
+        <img src="{{ asset('images/logo-gudangku.png') }}" alt="" class="max-w-none mx-auto mb-3" width="100">
         <div class="title">
             {{ trans('panel.site_title') }}
         </div>

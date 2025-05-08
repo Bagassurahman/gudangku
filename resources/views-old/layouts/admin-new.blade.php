@@ -28,7 +28,7 @@
     <link href="https://cdn.datatables.net/select/1.3.0/css/select.dataTables.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('images/logo-zamzam.jpeg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo-gudangku.png') }}" type="image/x-icon">
     <style>
         div.dt-buttons {
             position: relative;

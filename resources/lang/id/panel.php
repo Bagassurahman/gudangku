@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'site_title' => 'Zamzam Time',
+    'site_title' => 'Gudangku',
 
 ];

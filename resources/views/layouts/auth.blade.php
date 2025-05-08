@@ -15,7 +15,7 @@
     <link type="text/css" rel="stylesheet" href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" />
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('images/logo-zamzam.jpeg') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('images/logo-gudangku.png') }}" type="image/x-icon">
 
     @yield('style')
 </head>

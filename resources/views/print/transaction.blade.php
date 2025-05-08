@@ -54,7 +54,7 @@
     <div class="receipt">
         <div class="header">
             <h2>
-                ZamZam Time
+                Gudangku
             </h2>
             <p>Nomor Invoice: {{ $transaction->order_number }}</p>
             <p>Tanggal: {{ $transaction->order_date }}</p>
@@ -86,7 +86,7 @@
             </div>
         </div>
         <div class="footer">
-            Terima kasih telah berbelanja di <a href="{{ route('dashboard') }}">ZamZam Time</a>, daftarkan diri Anda sebagai member untuk mendapatkan poin dan diskon menarik!
+            Terima kasih telah berbelanja di <a href="{{ route('dashboard') }}">Gudangku</a>, daftarkan diri Anda sebagai member untuk mendapatkan poin dan diskon menarik!
         </div>
     </div>
 </body>

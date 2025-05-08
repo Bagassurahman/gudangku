@@ -5,22 +5,24 @@ RewriteRule ^(.*)$ public/$1 [L]
 # Allow all IP addresses to access the application
 <RequireAll>
   Require all granted
-</RequireAll>
+</RequireAll
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/ognibpsd/abuteam.com"
+PassengerAppRoot "/home/ognibpsd/sobtime.com"
 PassengerBaseURI "/"
-PassengerNodejs "/home/ognibpsd/nodevenv/abuteam/10/bin/node"
+PassengerNodejs "/home/ognibpsd/nodevenv/sobtime/10/bin/node"
 PassengerAppType node
 PassengerStartupFile app.js
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/ognibpsd/abuteam"
+PassengerAppRoot "/home/ognibpsd/sobtime"
 PassengerBaseURI "/"
-PassengerNodejs "/home/ognibpsd/nodevenv/abuteam/12/bin/node"
+PassengerNodejs "/home/ognibpsd/nodevenv/sobtime/12/bin/node"
 PassengerAppType node
 PassengerStartupFile app.js
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
-# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
-<IfModule Litespeed>
-</IfModule>
-# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
+
+deny from 103.55.39.194
